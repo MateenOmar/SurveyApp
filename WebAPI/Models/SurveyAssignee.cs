@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Models
 {
     [PrimaryKey("surveyID, userID")]
-    public class SurveyAssignees
+    public class SurveyAssignee
     {
         public int surveyID { get; set; }
         public int userID { get; set; }
