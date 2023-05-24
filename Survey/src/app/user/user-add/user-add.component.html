@@ -1,0 +1,125 @@
+<div class="row">
+  <div class="col-6 m-auto">
+    <div class="card m-auto">
+      <div class="card-header"><h3>Add User</h3></div>
+      <div class="card-body">
+        <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+          <div class="form-group col-12">
+            <label for="firstName" class="form-label">First Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="firstName"
+            />
+
+            <span
+              *ngIf="!firstName.valid && firstName.touched"
+              class="error-block"
+            >
+              Please provide first name
+            </span>
+          </div>
+
+          <div class="form-group col-12">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="lastName"
+            />
+
+            <span
+              *ngIf="!lastName.valid && lastName.touched"
+              class="error-block"
+            >
+              Please provide last name
+            </span>
+          </div>
+
+          <div class="form-group col-12">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" formControlName="email" />
+            <span *ngIf="!email.valid && email.touched" class="error-block">
+              <span *ngIf="email.hasError('required')">
+                Please provide email
+              </span>
+              <span *ngIf="email.hasError('email')">
+                Please provide valid email
+              </span>
+            </span>
+          </div>
+
+          <div class="form-group col-12">
+            <label for="name" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="userName"
+            />
+
+            <span
+              *ngIf="!userName.valid && userName.touched"
+              class="error-block"
+            >
+              Please provide a username
+            </span>
+          </div>
+
+          <div class="form-group col-12">
+            <label for="passwrod" class="form-label">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="password"
+            />
+            <span
+              *ngIf="!password.valid && password.touched"
+              class="error-block"
+            >
+              <span *ngIf="password.errors?.['required']">
+                Please provide password
+              </span>
+              <span *ngIf="password.errors?.['minlength']">
+                Password cannot be less than 8 chars
+              </span>
+            </span>
+          </div>
+
+          <div class="form-group col-12">
+            <label for="cpassword" class="form-label">Confirm Password</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="confirmPassword"
+            />
+            <span
+              *ngIf="!confirmPassword.valid && confirmPassword.touched"
+              class="error-block"
+            >
+              <span *ngIf="confirmPassword.errors?.['required']">
+                Please confirm password
+              </span>
+            </span>
+            <span
+              *ngIf="registrationForm.errors?.['notmatched'] && confirmPassword.valid"
+              class="error-block"
+            >
+              Passwords do not match
+            </span>
+          </div>
+
+          <div class="form-group col-12 m-2">
+            <button
+              [disabled]="!registrationForm.valid"
+              type="submit"
+              class="btn btn-primary me-2"
+            >
+              Submit
+            </button>
+            <button type="reset" class="btn btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/">SurveyApp</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li *ngIf="!admin" class="nav-item">
+          <a
+            class="nav-link"
+            aria-current="page"
+            [routerLinkActiveOptions]="{ exact: true }"
+            routerLinkActive="active"
+            routerLink="/user/surveys"
+            >Surveys</a
+          >
+        </li>
+        <li *ngIf="admin" class="nav-item">
+          <a
+            class="nav-link"
+            routerLinkActive="active"
+            routerLink="/admin/surveys"
+            >Surveys</a
+          >
+        </li>
+        <li *ngIf="admin" class="nav-item">
+          <a
+            class="nav-link"
+            routerLinkActive="active"
+            routerLink="/admin/results"
+            >Results</a
+          >
+        </li>
+        <li *ngIf="admin" class="nav-item">
+          <a
+            class="nav-link"
+            routerLinkActive="active"
+            routerLink="/admin/users"
+            >Users</a
+          >
+        </li>
+      </ul>
+
+      <div>
+        <ul class="nav navbar-nav">
+          <div class="dropdown me-5" dropdown>
+            <a
+              href="#"
+              class="dropdown-toggle text-light"
+              dropdownToggle
+              (click)="(false)"
+              >Welcome {{ loggedInUser }}</a
+            >
+            <div class="dropdown-menu" *dropdownMenu>
+              <a href="#" class="dropdown-item">
+                <i class="far fa-user-circle"></i>My Profile
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="fas fa-key"></i>Account
+              </a>
+              <a (click)="onLogout()" class="dropdown-item">
+                <i class="fas fa-sign-out-alt"></i>Logout
+              </a>
+            </div>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
