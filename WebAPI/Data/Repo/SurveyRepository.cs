@@ -39,7 +39,9 @@ namespace WebAPI.Data.Repo
         }
         public async Task<Survey> GetSurveyDetailAsync(int id)
         {
-            var surveys = await dc.Surveys.FirstAsync(id);
+            var surveys = await dc.Surveys
+            .Where(p => p.surveyID == id)
+            .FirstAsync();
             return surveys;
         }
 
