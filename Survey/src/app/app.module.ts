@@ -14,11 +14,19 @@ import { UserAddComponent } from './user/user-add/user-add.component';
 import { AlertifyService } from './services/alertify.service';
 import { HNavBarComponent } from './nav-bar/h-nav-bar/h-nav-bar.component';
 import { VNavBarComponent } from './nav-bar/v-nav-bar/v-nav-bar.component';
+import { AddSurveyComponent } from './admin/add-survey/add-survey.component';
+import { ManageSurveysComponent } from './admin/manage-surveys/manage-surveys.component';
+import { SurveyCardComponent } from './admin/survey-card/survey-card.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { EditSurveyComponent } from './admin/edit-survey/edit-survey.component';
+import { SurveyResultsComponent } from './admin/survey-results/survey-results.component';
 
 const appRoutes: Routes = [
-  { path: '', component: UserLoginComponent },
+  { path: '', component: ManageSurveysComponent },
   { path: 'register', component: UserAddComponent },
-  { path: '**', component: UserLoginComponent },
+  { path: 'edit-survey/:id', component: EditSurveyComponent },
+  { path: 'survey-results/:id', component: SurveyResultsComponent },
+  { path: '**', component: UserLoginComponent }
 ];
 
 @NgModule({
@@ -28,6 +36,12 @@ const appRoutes: Routes = [
     UserAddComponent,
     HNavBarComponent,
     VNavBarComponent,
+    AddSurveyComponent,
+    ManageSurveysComponent,
+    EditSurveyComponent,
+    SurveyCardComponent,
+    SurveyResultsComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -38,7 +52,7 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-    ButtonsModule.forRoot(),
+    ButtonsModule.forRoot()
   ],
   providers: [AlertifyService],
   bootstrap: [AppComponent],
