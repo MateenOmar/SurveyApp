@@ -10,6 +10,7 @@ namespace WebAPI.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Survey> Surveys { get; set; }
 
     }
 }

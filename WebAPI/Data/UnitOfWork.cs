@@ -18,6 +18,9 @@ namespace WebAPI.Data
 
         public IUserRepository UserRepository => 
             new UserRepository(dc);
+        
+        public ISurveyRepository SurveyRepository =>
+            new SurveyRepository(dc);
 
         public async Task<bool> SaveAsync()
         {
