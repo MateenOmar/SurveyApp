@@ -9,6 +9,7 @@ namespace WebAPI.Interfaces
     {
 
         IUserRepository UserRepository { get; }
+        ISurveyRepository SurveyRepository { get; }
 
          Task<bool> SaveAsync();    
     }
