@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using WebAPI.Dtos;
 using WebAPI.Models;
@@ -13,6 +9,10 @@ namespace WebAPI.Helpers
         public AutoMapperProfiles()
         {
             CreateMap<Survey, SurveyDto>().ReverseMap();
+
+            CreateMap<SurveyQuestion, SurveyQuestionDto>().ReverseMap();
+
+            CreateMap<SurveyOption, SurveyOptionDto>().ReverseMap();
         }
     }
 }
