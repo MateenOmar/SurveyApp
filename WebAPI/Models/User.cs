@@ -4,7 +4,7 @@ namespace WebAPI.Models
 {
     public class User
     {
-        public int UserID { get; set; } 
+        public int userID { get; set; } 
 
         [Required]
         public string userName { get; set; }

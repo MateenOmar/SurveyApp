@@ -8,7 +8,7 @@ namespace WebAPI.Dtos
 {
     public class SurveyDto
     {
-        public int id { get; set; }
+        public int surveyID { get; set; }
         [Required]
         public string name { get; set; }
         [Required]

@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> UpdateSurvey(int id, SurveyDto SurveyDto)
         {
             try {
-                if (id != SurveyDto.id) {
+                if (id != SurveyDto.surveyID) {
                     return BadRequest("Update not allowed");
                 }
                 var surveyFromDB = await uow.SurveyRepository.FindSurvey(id);

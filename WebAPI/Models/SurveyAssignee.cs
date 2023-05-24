@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Models
 {
-    [PrimaryKey("surveyID, userID")]
+    [PrimaryKey("surveyID", "userID")]
     public class SurveyAssignee
     {
         public int surveyID { get; set; }

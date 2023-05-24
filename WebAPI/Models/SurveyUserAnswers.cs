@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Models
 {
-    [PrimaryKey("surveyID, questionID, userID")]
+    [PrimaryKey("surveyID", "questionID", "userID")]
     public class SurveyUserAnswer
     {
         public int surveyID { get; set; }

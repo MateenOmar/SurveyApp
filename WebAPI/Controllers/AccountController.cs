@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var claims = new Claim[] {
                 new Claim(ClaimTypes.Name,user.userName),
-                new Claim(ClaimTypes.NameIdentifier,user.UserID.ToString())
+                new Claim(ClaimTypes.NameIdentifier,user.userID.ToString())
             };
 
             var signingCredentials = new SigningCredentials(key,SecurityAlgorithms.HmacSha256Signature);
