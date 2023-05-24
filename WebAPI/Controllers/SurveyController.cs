@@ -1,0 +1,96 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebAPI.DTOs;
+using WebAPI.Interfaces;
+using WebAPI.Models;
+
+namespace WebAPI.Controllers
+{
+    [Authorize]
+    public class SurveyController : BaseController
+    {
+        private readonly IUnitOfWork uow;
+        private readonly IMapper mapper;
+
+        public SurveyController(IUnitOfWork uow, IMapper mapper)
+        {
+            this.uow = uow;
+            this.mapper = mapper;
+        }
+
+        // GET api/survey -- Get all surveys
+        [HttpGet("surveys")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSurveys()
+        {
+            var surveys = await uow.SurveyRepository.GetSurveysAsync();
+            var surveyDTO = mapper.Map<IEnumerable<SurveyDTO>>(surveys);
+            return Ok(surveyDTO);
+        }
+
+        // POST api/survey/post -- Post data in JSON format
+        [HttpPost("post")]
+        public async Task<IActionResult> AddSurvey(SurveyDTO surveyDTO)
+        {
+            var survey = mapper.Map<Survey>(surveyDTO);
+            survey.LastUpdatedBy = 1;
+            survey.LastUpdatedOn = DateTime.Now;
+            uow.SurveyRepository.AddSurvey(survey);
+            await uow.SaveAsync();
+            return StatusCode(201);
+        }
+
+        // PUT api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateSurvey(int id, SurveyDTO surveyDTO)
+        {
+            try {
+                if (id != surveyDTO.ID) {
+                    return BadRequest("Update not allowed");
+                }
+                var surveyFromDB = await uow.SurveyRepository.FindSurvey(id);
+                if (surveyFromDB == null) {
+                    return BadRequest("Update not allowed");
+                }
+                surveyFromDB.LastUpdatedBy = 1;
+                surveyFromDB.LastUpdatedOn = DateTime.Now;
+                mapper.Map(surveyDTO, surveyFromDB);
+                await uow.SaveAsync();
+                return StatusCode(200);
+            } catch {
+                return BadRequest(400);
+
+            }
+        }
+
+        // PATCH api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
+        [HttpPatch("update/{id}")]
+        public async Task<IActionResult> UpdateSurveyPatch(int id, JsonPatchDocument<Survey> surveyToPatch)
+        {
+            var surveyFromDB = await uow.SurveyRepository.FindSurvey(id);
+            surveyFromDB.LastUpdatedBy = 1;
+            surveyFromDB.LastUpdatedOn = DateTime.Now;
+            surveyToPatch.ApplyTo(surveyFromDB, ModelState);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+
+        // DELETE api/survey/post -- Delete Survey
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteSurvey(int id)
+        {
+            uow.SurveyRepository.DeleteSurvey(id);
+            await uow.SaveAsync();
+            return Ok(id);
+        }
+
+        // Save survey as draft
+    }
+}
