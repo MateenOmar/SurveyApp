@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Interfaces;
 using WebAPI.Models;
@@ -45,5 +44,23 @@ namespace WebAPI.Data.Repo
             return surveys;
         }
 
+        public async Task<IEnumerable<SurveyQuestion>> GetSurveyQuestionsAsync(int surveyID)
+        {
+            var questions = await dc.SurveyQuestions
+            .Where(p => p.surveyID == surveyID)
+            .ToListAsync();
+
+            return questions;
+        }
+
+        public async Task<IEnumerable<SurveyOption>> GetQuestionsOptionsAsync(int surveyID, int questionID)
+        {
+            var answers = await dc.SurveyOptions
+            .Where(p => p.surveyID == surveyID)
+            .Where(p => p.questionID == questionID)
+            .ToListAsync();
+
+            return answers;
+        }
     }
 }

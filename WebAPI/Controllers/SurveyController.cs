@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -33,6 +29,26 @@ namespace WebAPI.Controllers
             var surveys = await uow.SurveyRepository.GetSurveysAsync(type);
             var SurveyDto = mapper.Map<IEnumerable<SurveyDto>>(surveys);
             return Ok(surveys);
+        }
+
+        // GET api/survey/questions/{surveyID} -- Get all questions for a survey
+        [HttpGet("questions/{surveyID}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSurveyQuestions(int surveyID)
+        {
+            var questions = await uow.SurveyRepository.GetSurveyQuestionsAsync(surveyID);
+            var surveyQuestionDto = mapper.Map<IEnumerable<SurveyQuestionDto>>(questions);
+            return Ok(surveyQuestionDto);
+        }
+
+        // GET api/survey/questions/answers/{surveyID}/{questionID} -- Get all answers for a question
+        [HttpGet("questions/options/{surveyID}/{questionID}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetQuestionOptions(int surveyID, int questionID)
+        {
+            var options = await uow.SurveyRepository.GetQuestionsOptionsAsync(surveyID, questionID);
+            var surveyOptionDto = mapper.Map<IEnumerable<SurveyOptionDto>>(options);
+            return Ok(surveyOptionDto);
         }
 
         // POST api/survey/post -- Post data in JSON format
