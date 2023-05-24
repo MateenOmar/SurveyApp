@@ -1,0 +1,29 @@
+<div class="card">
+  <div class="d-flex justify-content-between">
+    <div class="p-3">
+      <h1>{{survey.Title}}</h1>
+      <p>{{survey.Description}}</p>
+    </div>
+    <div class="my-auto p-3">
+      <div *ngIf="survey.Status == 'Draft'">
+        <ul class="list-inline m-auto">
+          <li class="list-inline-item">
+            <h3 class="link-animate" routerLinkActive="" routerLink="/edit-survey/{{survey.Id}}">Edit</h3>
+          </li>
+          <li class="list-inline-item">
+            <h3 class="link-animate" (click)="onPublish()">Publish</h3>
+          </li>
+          <li class="list-inline-item">
+            <h3 class="link-animate" (click)="onDelete()">Delete</h3>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="survey.Status == 'Published'">
+        <h3 class="link-animate" (click)="onClose()">Close survey</h3>
+      </div>
+      <div *ngIf="survey.Status == 'Finished'">
+        <h3 class="link-animate" routerLink="/survey-results/{{survey.Id}}">View results</h3>
+      </div>
+    </div>
+  </div>
+</div>

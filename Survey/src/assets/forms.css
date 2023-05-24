@@ -21,5 +21,18 @@
 .card-header {
   height: 42px;
   padding: 4px 10px !important;
-  background-color: #007bff !important;
+  background-color: black !important;
+}
+
+.link-animate:hover {
+  cursor: pointer;
+  color: skyblue;
+}
+
+.link-animate {
+  transition-duration: 0.3s;
+}
+
+.highlight {
+  color: skyblue;
 }
