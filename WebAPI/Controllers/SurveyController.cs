@@ -21,6 +21,8 @@ namespace WebAPI.Controllers
             this.mapper = mapper;
         }
 
+        // ADMIN FUNCTIONS -----------------------------------------------------------
+
         // GET api/survey -- Get all surveys
         [HttpGet("surveys")]
         [AllowAnonymous]
@@ -28,7 +30,7 @@ namespace WebAPI.Controllers
         {
             var surveys = await uow.SurveyRepository.GetSurveysAsync(type);
             var SurveyDto = mapper.Map<IEnumerable<SurveyDto>>(surveys);
-            return Ok(surveys);
+            return Ok(SurveyDto);
         }
 
         // GET api/survey/questions/{surveyID} -- Get all questions for a survey
@@ -41,7 +43,7 @@ namespace WebAPI.Controllers
             return Ok(surveyQuestionDto);
         }
 
-        // GET api/survey/questions/answers/{surveyID}/{questionID} -- Get all answers for a question
+        // GET api/survey/questions/options/{surveyID}/{questionID} -- Get all answers for a question
         [HttpGet("questions/options/{surveyID}/{questionID}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetQuestionOptions(int surveyID, int questionID)
@@ -61,15 +63,29 @@ namespace WebAPI.Controllers
             return StatusCode(201);
         }
 
+        // POST api/survey/questions/options/{surveyID}/{questionID}/submit -- Add user's answers to survey once submitted
+        [HttpPost("questions/options/{surveyID}/{questionID}/submit")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AddUserAnswers(SurveyUserAnswerDto[] UserAnswerDto)
+        {
+            foreach (var userAnswer in UserAnswerDto)
+            {
+                var answer = mapper.Map<SurveyUserAnswer>(userAnswer);
+                uow.SurveyRepository.AddUserAnswer(answer);
+            }
+            await uow.SaveAsync();
+            return StatusCode(201);
+        }
+
         // PUT api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateSurvey(int id, SurveyDto SurveyDto)
+        public async Task<IActionResult> UpdateSurvey(int surveyID, SurveyDto SurveyDto)
         {
             try {
-                if (id != SurveyDto.surveyID) {
+                if (surveyID != SurveyDto.surveyID) {
                     return BadRequest("Update not allowed");
                 }
-                var surveyFromDB = await uow.SurveyRepository.FindSurvey(id);
+                var surveyFromDB = await uow.SurveyRepository.FindSurvey(surveyID);
                 if (surveyFromDB == null) {
                     return BadRequest("Update not allowed");
                 }
@@ -103,5 +119,19 @@ namespace WebAPI.Controllers
 
         // Save survey as draft
         // TO BE IMPLEMENTED
+
+        // ---------------------------------------------------------------------------
+
+        // USER FUNCTIONS ----------------------------------------------------------------
+
+        // POST api/survey/submit
+        [HttpPost("submit")]
+        [Authorize]
+        public async Task<IActionResult> SubmitAnswer(SurveyDto surveyDto)
+        {
+            
+            
+            return StatusCode(201);
+        }
     }
 }
