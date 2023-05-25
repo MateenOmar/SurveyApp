@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
   AbstractControl,
   FormBuilder,
@@ -13,13 +13,35 @@ import { AlertifyService } from "src/app/services/alertify.service";
 import { AuthService } from "src/app/services/auth.service";
 
 @Component({
-  selector: "app-user-add",
-  templateUrl: "./user-add.component.html",
-  styleUrls: ["./user-add.component.css"],
+  selector: "app-user-edit",
+  templateUrl: "./user-edit.component.html",
+  styleUrls: ["./user-edit.component.css"],
 })
-export class UserAddComponent implements OnInit {
+export class UserEditComponent implements OnInit {
+  //Number(this.route.snapshot.params['id']);
+
   registrationForm!: FormGroup;
   user!: UserForRegister;
+
+  user2: UserForRegister = {
+    userName: "Billy",
+    password: "",
+    firstName: "Joe",
+    lastName: "Bills",
+    email: "billy@soti.net",
+  };
+
+  users: UserForRegister[] = [
+    {
+      userName: "Billy",
+      password: "",
+      firstName: "Joe",
+      lastName: "Bills",
+      email: "billy@soti.net",
+    },
+    { userName: "test", password: "test", firstName: "test", lastName: "test", email: "test" },
+    { userName: "test", password: "test", firstName: "test", lastName: "test", email: "test" },
+  ];
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,

@@ -1,0 +1,25 @@
+<app-h-nav-bar></app-h-nav-bar>
+<accordion [isAnimated]="true" [closeOthers]="oneAtATime">
+  <accordion-group [isOpen]="false" #accGroup *ngFor="let item of users" class="p-1">
+    Username: {{ item.userName }} <br />
+    Email: {{ item.email }}
+    <span class="header" accordion-heading class="float-start" style="width: 100%">
+      {{ item.firstName + " " + item.lastName }}
+      <i
+        class="fa float-end fa-lg p-2"
+        [ngClass]="{
+          'fas fa-angle-double-down': accGroup?.isOpen,
+          'fas fa-angle-double-up': !accGroup?.isOpen
+        }"></i>
+    </span>
+
+    <ul class="list-inline m-auto float-end">
+      <li class="list-inline-item">
+        <h3 class="link-animate" routerLinkActive="" routerLink="/admin/users/manage/edit">Edit</h3>
+      </li>
+      <li class="list-inline-item">
+        <h3 class="link-animate" (click)="onDelete()">Delete</h3>
+      </li>
+    </ul>
+  </accordion-group>
+</accordion>
