@@ -1,0 +1,47 @@
+<div class="row mt-3">
+  <div class="col-12 m-auto">
+    <div class="card">
+      <div class="card-header">
+        <h3>View surveys</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-2 m-auto">
+            <h2 class="link-animate" id="All" (click)="setSurveyFilter('All')">All</h2>
+            <h2 class="link-animate" id="Open" (click)="setSurveyFilter('Open')">Open</h2>
+            <h2 class="link-animate" id="InProgress" (click)="setSurveyFilter('In-Progress')">In-Progress</h2>
+            <h2 class="link-animate" id="Completed" (click)="setSurveyFilter('Completed')">Completed</h2>
+          </div>
+          <div class="col-10">
+            <div *ngFor="let survey of surveys | filter:searchByStatus:'Status'" class="shadow-sm mb-3">
+              <app-survey-card [survey]="survey" [parent]="this"></app-survey-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<label>Filter By Priority:</label>
+<input [(ngModel)]="priority">
+<button type="button" (click)="onPriorityFilter()">Search</button>
+<button type="button" (click)="onPriorityFilterClear()">Clear</button> &nbsp;
+
+<label>Sort by &nbsp;</label>
+<select [(ngModel)]="sortByParam">
+  <option value="Priorty">Priority</option>
+  <option value="Due Date">Due Date</option>
+</select>
+<button type="button" (click)="onSortDirection()">
+  <i *ngIf="sortDirection==='asc'" class="fa-solid fa-sort-up"></i>
+  <i *ngIf="sortDirection==='desc'" class="fa-solid fa-sort-down"></i>
+</button>
+
+<div class="row">
+  <div *ngFor="let survey of surveys.sort()|filter:searchPriority:'Priority'|sort:[sortByParam, sortDirection]" class="col-sm-4">
+    <div class="shadow-lg p-3 mb-4">
+    </div>
+  </div>
+</div>
