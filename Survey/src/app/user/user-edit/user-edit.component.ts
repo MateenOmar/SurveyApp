@@ -56,12 +56,12 @@ export class UserEditComponent implements OnInit {
   createRegistrationForm() {
     this.registrationForm = this.fb.group(
       {
-        firstName: [null, Validators.required],
-        lastName: [null, Validators.required],
-        userName: [null, Validators.required],
-        email: [null, [Validators.required, Validators.email]],
-        password: [null, [Validators.required, Validators.minLength(8)]],
-        confirmPassword: [null, Validators.required],
+        firstName: [this.user2.firstName, Validators.required],
+        lastName: [this.user2.lastName, Validators.required],
+        userName: [this.user2.userName],
+        email: [this.user2.email, [Validators.required, Validators.email]],
+        password: [null],
+        confirmPassword: [null],
       },
       { validators: this.passwordMatchingValidator }
     );
@@ -99,11 +99,11 @@ export class UserEditComponent implements OnInit {
 
   onSubmit() {
     if (this.registrationForm.valid) {
-      this.authService.registerUser(this.userData()).subscribe(() => {
-        this.registrationForm.reset();
-        this.alertify.success("User Added");
-        this.router.navigate(["/"]);
-      });
+      //this.authService.registerUser(this.userData()).subscribe(() => {
+      this.registrationForm.reset();
+      this.alertify.success("User Edited Successfully");
+      this.router.navigate(["/admin/users/manage"]);
+      //});
     }
   }
 
