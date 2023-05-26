@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Survey } from 'src/app/model/Survey';
 
 @Component({
@@ -10,11 +11,11 @@ import { Survey } from 'src/app/model/Survey';
 export class AddSurveyComponent implements OnInit {
   displayGeneralInfo: boolean = true;
   addSurveyForm: FormGroup;
-  currentDate: Date = new Date()
+  currentDate: Date = new Date();
   currSurvey: Survey = {
     SurveyID: 0,
     Title: '',
-    DueDate: new Date(),
+    DueDate: this.addWeeks(this.currentDate, 1),
     Description: '',
     QA: [
       {
@@ -32,7 +33,7 @@ export class AddSurveyComponent implements OnInit {
   }
   currQuestion: any;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
     this.addSurveyForm = new FormGroup({
@@ -40,11 +41,16 @@ export class AddSurveyComponent implements OnInit {
       due: new FormControl(null, Validators.required),
       description: new FormControl(null, Validators.required),
       priority: new FormControl(null, Validators.required)
-    });
+    }, this.dueDateValidator);
+  }
+
+  ngAfterViewInit() {
+    this.setDefaultDate(this.currSurvey.DueDate!);
   }
 
   onSubmit() {
     console.log(this.currSurvey);
+    console.log(this.addSurveyForm);
   }
 
   onSelectQuestion(id: number) {
@@ -81,6 +87,54 @@ export class AddSurveyComponent implements OnInit {
 
   onSelectGeneralInfo() {
     this.displayGeneralInfo = true;
+  }
+
+  addWeeks(date: Date, weeks: number) {
+    const dateCopy = new Date(date);
+    dateCopy.setDate(dateCopy.getDate() + 7 * weeks);
+    return dateCopy;
+  }
+
+  setDefaultDate(date: Date) {
+    let myDate: HTMLInputElement = (document.getElementById('due') as HTMLInputElement);
+    myDate.value = date.toISOString().substring(0, 10);
+  }
+
+  dueDateValidator(fc: AbstractControl): ValidationErrors | null {
+    let today = new Date().toISOString().substring(0, 10);
+    /*Before the user touches the date picker, fc.get('due').value returns a full date-time string,
+    which isn't comparable to today, and (fc.get('due')?.value > today) will return false, even though it's true.
+    As soon as the user touches the date component, it becomes of the same format as 'today' variable (10 digit date),
+    and now they are comparable. As the default value of date in datepicker
+    is valid initially (today + 1 week), if fc.get('due')?.value > 10, which means it hasn't been touched, return null (no errors)
+    */
+    return (fc.get('due')?.value > today || fc.get('due')?.value > 10) ? null : { lessThanToday: true }
+  }
+
+  onSaveAsDraft() {
+    let storageDrafts = localStorage.getItem('drafts')!;
+    if (!localStorage.getItem('drafts')) {
+      localStorage.setItem('drafts', JSON.stringify([this.currSurvey]));
+    } else {
+      localStorage.setItem('drafts', JSON.stringify(JSON.parse(storageDrafts).concat([this.currSurvey])));
+    }
+  }
+
+  onDiscard() {
+    this.router.navigate(["admin/surveys/manage"]);
+    console.log('sdds')
+  }
+
+  get Title() {
+    return this.addSurveyForm.controls['title'] as FormControl
+  }
+
+  get Description() {
+    return this.addSurveyForm.controls['description'] as FormControl
+  }
+
+  get Date() {
+    return this.addSurveyForm.controls['date'] as FormControl
   }
 
 }

@@ -26,8 +26,10 @@ import { UserManageComponent } from "./user/user-manage/user-manage.component";
 import { UserEditComponent } from "./user/user-edit/user-edit.component";
 
 const appRoutes: Routes = [
-  { path: "", component: ManageSurveysComponent },
+  { path: "", component: AddSurveyComponent },
   { path: "admin/register", component: UserAddComponent },
+  { path: "admin/surveys/manage", component: ManageSurveysComponent },
+  { path: "admin/surveys/add", component: AddSurveyComponent },
   { path: "admin/users/manage", component: UserManageComponent },
   { path: "admin/users/manage/edit", component: UserEditComponent },
   { path: "edit-survey/:id", component: EditSurveyComponent },
