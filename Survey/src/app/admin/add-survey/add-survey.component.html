@@ -36,14 +36,17 @@
                   <div class="col-6">
                     <label for="title">Survey title</label>
                     <input type="text" id="title" class="form-control mb-2" name="title" [(ngModel)]="currSurvey.Title" formControlName="title">
+                    <div class="error-block"*ngIf="Title.invalid && Title.touched">Please enter a title</div>
 
                     <label for="due">Due date</label>
                     <input type="date" id="due" class="form-control" name="due" [(ngModel)]="currSurvey.DueDate" formControlName="due">
+                    <div class="error-block"*ngIf="addSurveyForm.hasError('lessThanToday') && Description.touched">Date has to be more than today</div>                  
                   </div>
                   <div class="col-6">
                     <label for="description">Description</label>
                     <input type="text" id="description" class="form-control mb-2" name="description" [(ngModel)]="currSurvey.Description" formControlName="description">
-                    
+                    <div class="error-block"*ngIf="Description.invalid && Description.touched">Please enter description</div>
+
                     <label for="priority">Priority</label>
                     <select class="form-control" id="priority" name="priority" [(ngModel)]="currSurvey.Priority" formControlName="priority">
                       <option value="Low">Low</option>
@@ -73,7 +76,11 @@
               </div>
             </div>
           </div>
-          <button type="button" class="btn btn-success mt-2" (click)="onSubmit()">Publish survey</button>
+          <div class="mt-2">
+            <button type="button" [disabled]="addSurveyForm.invalid" class="btn btn-success me-2" (click)="onSubmit()">Publish survey</button>
+            <button type="button" class="btn btn-light me-2" (click)="onSaveAsDraft()">Save as a draft</button>
+            <button type="button" class="btn btn-danger" style="float: right" (click)="onDiscard()">Discard</button>
+          </div>
         </div>
       </form>
     </div>

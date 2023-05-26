@@ -28,8 +28,10 @@ import { UserHomeComponent } from './user/user-home/user-home.component';
 import { SortPipe } from './pipes/sort.pipe';
 
 const appRoutes: Routes = [
-  { path: "", component: ManageSurveysComponent },
+  { path: "", component: AddSurveyComponent },
   { path: "admin/register", component: UserAddComponent },
+  { path: "admin/surveys/manage", component: ManageSurveysComponent },
+  { path: "admin/surveys/add", component: AddSurveyComponent },
   { path: "admin/users/manage", component: UserManageComponent },
   { path: "admin/users/manage/edit", component: UserEditComponent },
   { path: "edit-survey/:id", component: EditSurveyComponent },
