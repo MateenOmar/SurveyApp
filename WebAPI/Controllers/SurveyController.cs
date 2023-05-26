@@ -156,7 +156,7 @@ namespace WebAPI.Controllers
         }
 
         // POST api/survey/remove/{surveyID}/{userID} -- Remove survey from user
-        [HttpDelete("remove/{surveyID}/{userName}")]
+        [HttpDelete("unassign/{surveyID}/{userName}")]
         [AllowAnonymous]
         public async Task<IActionResult> RemoveSurvey(int surveyID, string userName)
         {
@@ -176,7 +176,7 @@ namespace WebAPI.Controllers
         // GET api/survey/assignees/{surveyID} -- Get all users assigned to survey
         [HttpGet("assignees/{surveyID}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetSurveyAssignees(int surveyID)
+        public async Task<IActionResult> GetSurveyAssigneesBySurvey(int surveyID)
         {
             var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
             return Ok(assignees);
@@ -185,7 +185,7 @@ namespace WebAPI.Controllers
         // GET api/survey/assignees/{userName} -- Get all surveys assigned to user
         [HttpGet("assignees/user/{userName}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetUserAssignees(string userName)
+        public async Task<IActionResult> GetSurveysAssignedToUser(string userName)
         {
             var user = await uow.UserRepository.GetUserAsync(userName);
             if (user == null) {
