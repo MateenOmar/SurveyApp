@@ -7,8 +7,8 @@ namespace WebAPI.Models
         public DateTime dueDate { get; set; }
         public string description { get; set; }
         public int numberOfQuestions { get; set; }
-        public bool published { get; set; }
-        public int priority { get; set; }
+        public string status { get; set; }
+        public string priority { get; set; }
         // public bool Archived { get; set; } = false
 
 
