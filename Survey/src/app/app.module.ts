@@ -22,7 +22,7 @@ import { EditSurveyComponent } from './admin/edit-survey/edit-survey.component';
 import { SurveyResultsComponent } from './admin/survey-results/survey-results.component';
 
 const appRoutes: Routes = [
-  { path: '', component: ManageSurveysComponent },
+  { path: '', component: AddSurveyComponent },
   { path: 'register', component: UserAddComponent },
   { path: 'edit-survey/:id', component: EditSurveyComponent },
   { path: 'survey-results/:id', component: SurveyResultsComponent },

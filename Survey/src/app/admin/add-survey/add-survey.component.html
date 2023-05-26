@@ -1,3 +1,81 @@
-<p>
-  add-survey works!
-</p>
+<div class="row mt-3">
+  <div class="col-12 m-auto">
+    <div class="card">
+      <div class="card-header">
+        <h3>Add survey</h3>
+      </div>
+      <form [formGroup]="addSurveyForm" (ngSubmit)="onSubmit()">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-3">
+              <div class="card mb-3">
+                <div class="card-body m-auto p-2">
+                  <h3 class="link-animate" (click)="onSelectGeneralInfo()">General info</h3>
+                </div>
+              </div>
+              <h2>Questions</h2>
+              <div *ngFor="let question of currSurvey.QA; let i = index">
+                <div class="card mb-3">
+                  <div class="card-body p-3 d-flex justify-content-between">
+                    <h5 class="link-animate" (click)="onSelectQuestion(i)">{{question.QTitle}}</h5>
+                    <div *ngIf="currSurvey.QA.length > 1" class="mt-auto mb-auto">
+                      <i class="link-animate fas fa-trash fa-xl" (click)="onDeleteQuestion(i)"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body m-auto">
+                  <i class="link-animate fas fa-plus fa-2xl" (click)="onAddQuestion()"></i>
+                </div>
+              </div>
+            </div>
+            <div class="col-9">
+              <div *ngIf="displayGeneralInfo">
+                <div class="row">
+                  <div class="col-6">
+                    <label for="title">Survey title</label>
+                    <input type="text" id="title" class="form-control mb-2" name="title" [(ngModel)]="currSurvey.Title" formControlName="title">
+
+                    <label for="due">Due date</label>
+                    <input type="date" id="due" class="form-control" name="due" [(ngModel)]="currSurvey.DueDate" formControlName="due">
+                  </div>
+                  <div class="col-6">
+                    <label for="description">Description</label>
+                    <input type="text" id="description" class="form-control mb-2" name="description" [(ngModel)]="currSurvey.Description" formControlName="description">
+                    
+                    <label for="priority">Priority</label>
+                    <select class="form-control" id="priority" name="priority" [(ngModel)]="currSurvey.Priority" formControlName="priority">
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="!displayGeneralInfo">
+                <label for="qtitle">Question title</label>
+                <input type="text" id="qtitle" class="form-control mb-2" name="qtitle" [(ngModel)]="currQuestion.QTitle" [ngModelOptions]="{standalone: true}">
+                <div *ngFor="let answer of currQuestion.Answers; let i=index" class="mb-2">
+                  <label>Answer option {{i+1}}</label>
+                  <div class="d-flex">
+                    <input type="text" class="form-control" [(ngModel)]="currQuestion.Answers[i].Answer" [ngModelOptions]="{standalone: true}">
+                    <div *ngIf="currQuestion.Answers.length > 1" class="mt-auto mb-auto ms-2">
+                      <i class="link-animate mt-auto mb-auto fas fa-trash fa-xl" (click)="onDeleteAnswer(i)"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body m-auto">
+                    <i class="link-animate fas fa-plus fa-2xl" (click)="onAddAnswer()"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-success mt-2" (click)="onSubmit()">Publish survey</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
