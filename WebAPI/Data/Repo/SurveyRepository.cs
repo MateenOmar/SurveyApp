@@ -18,7 +18,6 @@ namespace WebAPI.Data.Repo
             dc.Surveys.Add(survey);
         }
 
-        // TO BE IMPLEMENTED
         public void DeleteSurvey(int surveyID)
         {
             var survey = dc.Surveys.Find(surveyID);
@@ -61,6 +60,16 @@ namespace WebAPI.Data.Repo
             .ToListAsync();
 
             return answers;
+        }
+
+        public void AddUserAnswer(SurveyUserAnswer userAnswer)
+        {
+            dc.SurveyUserAnswers.Add(userAnswer);
+        }
+
+        public void AssignUser(SurveyAssignee surveyAssignee)
+        {
+            dc.SurveyAssignees.Add(surveyAssignee);
         }
     }
 }
