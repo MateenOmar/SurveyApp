@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from "@angular/core";
 import {
   AbstractControl,
   FormBuilder,
@@ -6,16 +6,16 @@ import {
   FormGroup,
   ValidationErrors,
   Validators,
-} from '@angular/forms';
-import { Router } from '@angular/router';
-import { UserForRegister } from 'src/app/model/user';
-import { AlertifyService } from 'src/app/services/alertify.service';
-import { AuthService } from 'src/app/services/auth.service';
+} from "@angular/forms";
+import { Router } from "@angular/router";
+import { UserForRegister } from "src/app/model/user";
+import { AlertifyService } from "src/app/services/alertify.service";
+import { AuthService } from "src/app/services/auth.service";
 
 @Component({
-  selector: 'app-user-add',
-  templateUrl: './user-add.component.html',
-  styleUrls: ['./user-add.component.css'],
+  selector: "app-user-add",
+  templateUrl: "./user-add.component.html",
+  styleUrls: ["./user-add.component.css"],
 })
 export class UserAddComponent implements OnInit {
   registrationForm!: FormGroup;
@@ -46,41 +46,41 @@ export class UserAddComponent implements OnInit {
   }
 
   passwordMatchingValidator(fc: AbstractControl): ValidationErrors | null {
-    return fc.get('password')?.value === fc.get('confirmPassword')?.value
+    return fc.get("password")?.value === fc.get("confirmPassword")?.value
       ? null
       : { notmatched: true };
   }
 
   get firstName() {
-    return this.registrationForm.get('firstName') as FormControl;
+    return this.registrationForm.get("firstName") as FormControl;
   }
 
   get lastName() {
-    return this.registrationForm.get('lastName') as FormControl;
+    return this.registrationForm.get("lastName") as FormControl;
   }
 
   get email() {
-    return this.registrationForm.get('email') as FormControl;
+    return this.registrationForm.get("email") as FormControl;
   }
 
   get userName() {
-    return this.registrationForm.get('userName') as FormControl;
+    return this.registrationForm.get("userName") as FormControl;
   }
 
   get password() {
-    return this.registrationForm.get('password') as FormControl;
+    return this.registrationForm.get("password") as FormControl;
   }
 
   get confirmPassword() {
-    return this.registrationForm.get('confirmPassword') as FormControl;
+    return this.registrationForm.get("confirmPassword") as FormControl;
   }
 
   onSubmit() {
     if (this.registrationForm.valid) {
       this.authService.registerUser(this.userData()).subscribe(() => {
         this.registrationForm.reset();
-        this.alertify.success('User Added');
-        this.router.navigate(['/']);
+        this.alertify.success("User Added");
+        this.router.navigate(["/"]);
       });
     }
   }

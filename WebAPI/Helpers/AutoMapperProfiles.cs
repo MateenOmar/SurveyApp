@@ -13,6 +13,8 @@ namespace WebAPI.Helpers
             CreateMap<SurveyQuestion, SurveyQuestionDto>().ReverseMap();
 
             CreateMap<SurveyOption, SurveyOptionDto>().ReverseMap();
+
+            CreateMap<User, UserDto>().ReverseMap();
         }
     }
 }

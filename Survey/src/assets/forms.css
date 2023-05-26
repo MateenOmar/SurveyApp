@@ -18,11 +18,11 @@
   color: white;
 }
 
-.card-header {
+/* .card-header {
   height: 42px;
   padding: 4px 10px !important;
   background-color: black !important;
-}
+} */
 
 .link-animate:hover {
   cursor: pointer;
@@ -35,4 +35,8 @@
 
 .highlight {
   color: skyblue;
+}
+
+input[readOnly] {
+  opacity: 0.5;
 }
