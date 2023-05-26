@@ -18,6 +18,6 @@ namespace WebAPI.Dtos
 
         public string priority { get; set; }
 
-        public List<JObject> questions { get; set; }
+        public List<JObject> questionsAndAnswers { get; set; }
     }
 }
