@@ -1,17 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'app-survey-card',
-  templateUrl: './survey-card.component.html',
-  styleUrls: ['./survey-card.component.css']
+  selector: "app-survey-card",
+  templateUrl: "./survey-card.component.html",
+  styleUrls: ["./survey-card.component.css"],
 })
 export class SurveyCardComponent implements OnInit {
-@Input() survey: any;
-@Input() parent: any;
-  constructor() { }
+  @Input() survey: any;
+  @Input() parent: any;
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onDelete() {
     this.parent.removeSurvey(this.survey.Id);
@@ -24,5 +23,4 @@ export class SurveyCardComponent implements OnInit {
   onClose() {
     this.parent.closeSurvey(this.survey.Id);
   }
-
 }

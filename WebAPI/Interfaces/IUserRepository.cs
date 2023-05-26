@@ -9,5 +9,11 @@ namespace WebAPI.Interfaces
         void Register(string userName, string password, string firstName, string lastName, string email);
 
         Task<bool> UserAlreadyExists(string userName);
+
+        Task<IEnumerable<User>> GetUsersAsync();
+
+        Task<User> GetUserAsync(string userName);
+
+        void DeleteUser(string userName);
     }
 }

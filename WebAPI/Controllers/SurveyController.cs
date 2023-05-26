@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using WebAPI.Dtos;
 using WebAPI.Interfaces;
 using WebAPI.Models;
@@ -33,24 +34,39 @@ namespace WebAPI.Controllers
             return Ok(SurveyDto);
         }
 
-        // GET api/survey/questions/{surveyID} -- Get all questions for a survey
-        [HttpGet("questions/{surveyID}")]
+        [HttpGet("surveys/{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetSurveyQuestions(int surveyID)
+        public async Task<IActionResult> GetSurvey(int id)
         {
-            var questions = await uow.SurveyRepository.GetSurveyQuestionsAsync(surveyID);
-            var surveyQuestionDto = mapper.Map<IEnumerable<SurveyQuestionDto>>(questions);
-            return Ok(surveyQuestionDto);
-        }
+            var survey = await uow.SurveyRepository.FindSurvey(id);
+            var surveyCompleteDto = mapper.Map<SurveyCompleteDto>(survey);
+            var questions = await uow.SurveyRepository.GetSurveyQuestionsAsync(id);
+            var surveyQuestionsDto = mapper.Map<IEnumerable<SurveyQuestionDto>>(questions);
 
-        // GET api/survey/questions/options/{surveyID}/{questionID} -- Get all answers for a question
-        [HttpGet("questions/options/{surveyID}/{questionID}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetQuestionOptions(int surveyID, int questionID)
-        {
-            var options = await uow.SurveyRepository.GetQuestionsOptionsAsync(surveyID, questionID);
-            var surveyOptionDto = mapper.Map<IEnumerable<SurveyOptionDto>>(options);
-            return Ok(surveyOptionDto);
+            var jsonQuestionsList = new List<JObject>();
+
+            foreach (SurveyQuestionDto question in surveyQuestionsDto) {
+                var jsonQuestion =  JObject.FromObject(question);
+
+                var options = await uow.SurveyRepository.GetQuestionsOptionsAsync(id, question.questionID);
+                var surveyOptionsDto = mapper.Map<IEnumerable<SurveyOptionDto>>(options);
+
+                var jsonOptionsList = new List<JObject>();
+
+                foreach (SurveyOptionDto option in surveyOptionsDto) {
+                    var jsonOption = JObject.FromObject(option);
+                    jsonOptionsList.Add(jsonOption);
+                }
+                
+                
+                jsonQuestion.Add("options", JArray.FromObject(jsonOptionsList));
+
+                jsonQuestionsList.Add(jsonQuestion);
+            }
+
+            surveyCompleteDto.questions = jsonQuestionsList;
+
+            return Ok(surveyCompleteDto);
         }
 
         // POST api/survey/post -- Post data in JSON format
