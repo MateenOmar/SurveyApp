@@ -9,11 +9,18 @@
           <div class="col-2 m-auto">
             <h2 class="link-animate" id="Draft" (click)="setSurveyFilter('Draft')">Draft</h2>
             <h2 class="link-animate" id="Published" (click)="setSurveyFilter('Published')">Open</h2>
-            <h2 class="link-animate" id="Finished" (click)="setSurveyFilter('Finished')">Finished</h2>
+            <h2 class="link-animate" id="Finished" (click)="setSurveyFilter('Finished')">
+              Finished
+            </h2>
           </div>
+
           <div class="col-10">
-            <div *ngFor="let survey of Surveys|filter:SearchByStatus:'Status'" class="shadow-sm mb-3">
-              <app-survey-card [survey]="survey" [parent]="this"></app-survey-card>
+            <div
+              *ngFor="let survey of Surveys | filter : SearchByStatus : 'Status'"
+              class="shadow-sm mb-3">
+              <accordion [isAnimated]="true"
+                ><app-survey-card [survey]="survey" [parent]="this"></app-survey-card
+              ></accordion>
             </div>
           </div>
         </div>

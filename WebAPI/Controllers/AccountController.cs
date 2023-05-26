@@ -6,6 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 using WebAPI.Dtos;
 using WebAPI.Interfaces;
 using WebAPI.Models;
+using AutoMapper;
+using Azure;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace WebAPI.Controllers
 {
@@ -13,11 +16,13 @@ namespace WebAPI.Controllers
     {
         private readonly IUnitOfWork uow;
         private readonly IConfiguration configuration;
+        private readonly IMapper mapper;
 
-        public AccountController(IUnitOfWork uow, IConfiguration configuration)
+        public AccountController(IUnitOfWork uow, IConfiguration configuration, IMapper mapper)
         {
             this.uow = uow;
             this.configuration = configuration;
+            this.mapper = mapper;
         }
 
         [HttpPost("login")]
@@ -46,7 +51,7 @@ namespace WebAPI.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var claims = new Claim[] {
                 new Claim(ClaimTypes.Name,user.userName),
-                new Claim(ClaimTypes.NameIdentifier,user.UserID.ToString())
+                new Claim(ClaimTypes.NameIdentifier,user.userID.ToString())
             };
 
             var signingCredentials = new SigningCredentials(key,SecurityAlgorithms.HmacSha256Signature);
@@ -82,6 +87,35 @@ namespace WebAPI.Controllers
             await uow.SaveAsync();
 
             return StatusCode(201);
+        }
+
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers() {
+            var users = await uow.UserRepository.GetUsersAsync();
+            var usersDto = mapper.Map<IEnumerable<UserDto>>(users);
+            return Ok(usersDto);
+        }
+
+        [HttpGet("users/{userName}")]
+        public async Task<IActionResult> GetUser(string userName) {
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            var userDto =  mapper.Map<UserDto>(user);
+            return Ok(userDto);
+        }
+
+        [HttpDelete("users/delete/{userName}")]
+        public async Task<IActionResult> DeleteUser(string userName) {
+            uow.UserRepository.DeleteUser(userName);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+
+        [HttpPatch("users/update/{userName}")]
+        public async Task<IActionResult> UpdateUserPatch(string userName, JsonPatchDocument<User> userToPatch) {
+            var userFromDB = await uow.UserRepository.GetUserAsync(userName);
+            userToPatch.ApplyTo(userFromDB, ModelState);
+            await uow.SaveAsync();
+            return StatusCode(200);
         }
     }
 }
