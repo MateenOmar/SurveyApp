@@ -18,5 +18,12 @@ namespace WebAPI.Interfaces
         void AddUserAnswer(SurveyUserAnswer userAnswer);
 
         void AssignUser(SurveyAssignee surveyAssignee);
+
+        Task<IEnumerable<SurveyAssignee>> GetSurveyAssigneesBySurveyAsync(int surveyID);
+
+        Task<IEnumerable<SurveyAssignee>> GetSurveysAssignedToUserAsync(int userID);
+
+        void DeleteSurveyAssignee(int surveyID, int userID);
+    
     }
 }

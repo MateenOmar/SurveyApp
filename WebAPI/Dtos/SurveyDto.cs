@@ -6,7 +6,7 @@ namespace WebAPI.Dtos
     {
         public int surveyID { get; set; }
         [Required]
-        public string name { get; set; }
+        public string title { get; set; }
         [Required]
         public DateTime dueDate { get; set; }
         [Required]
