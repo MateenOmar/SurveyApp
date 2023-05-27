@@ -133,6 +133,71 @@ namespace WebAPI.Controllers
             return Ok(id);
         }
 
+        // POST api/survey/assign/{surveyID}/{userID} -- Assign survey to user
+        [HttpPost("assign/{surveyID}/{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AssignSurvey(int surveyID, string userName)
+        {
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+
+            var surveyAssignee = new SurveyAssignee();
+
+            surveyAssignee.surveyID = surveyID;
+            surveyAssignee.userID = userID;
+            uow.SurveyRepository.AssignUser(surveyAssignee);
+            await uow.SaveAsync();
+
+            return StatusCode(201);
+        }
+
+        // POST api/survey/remove/{surveyID}/{userID} -- Remove survey from user
+        [HttpDelete("unassign/{surveyID}/{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RemoveSurvey(int surveyID, string userName)
+        {
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+
+            uow.SurveyRepository.DeleteSurveyAssignee(surveyID, userID);
+            await uow.SaveAsync();
+
+            return StatusCode(201);
+        }
+
+        // GET api/survey/assignees/{surveyID} -- Get all users assigned to survey
+        [HttpGet("assignees/{surveyID}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSurveyAssigneesBySurvey(int surveyID)
+        {
+            var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
+            return Ok(assignees);
+        }
+
+        // GET api/survey/assignees/{userName} -- Get all surveys assigned to user
+        [HttpGet("assignees/user/{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSurveysAssignedToUser(string userName)
+        {
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+
+            var assignees = await uow.SurveyRepository.GetSurveysAssignedToUserAsync(userID);
+            return Ok(assignees);
+        }
+
         // Save survey as draft
         // TO BE IMPLEMENTED
 

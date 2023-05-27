@@ -10,10 +10,11 @@ namespace WebAPI.Models
         [Required]
         [ForeignKey("Survey")]
         public int surveyID { get; set; }
+
         [Required]
         [ForeignKey("User")]
         public int userID { get; set; }
-        public bool drafted { get; set; } = false;
-        public bool submitted { get; set; } = false;
+
+        public string status { get; set; } = "Assigned";
     }
 }

@@ -14,11 +14,23 @@ export class SurveyService {
     return this.http.get(this.baseURL + "/survey/surveys");
   }
 
-  getSurveyQuestions(surveyID: number) {
-    return this.http.get(this.baseURL + "/survey/questions/" + surveyID);
+  getSurveyByID(surveyID: number) {
+    return this.http.get(this.baseURL + "/survey/surveys/" + surveyID);
   }
 
-  getQuestionAnswers(surveyID: number, questionID: number) {
-    return this.http.get(this.baseURL + "/survey/questions/options/" + surveyID + "/" + questionID);
+  getSurveyAssigneesBySurveyID(surveyID: number) {
+    return this.http.get(this.baseURL + "/survey/assignees/" + surveyID);
+  }
+
+  getSurveyAssigneesByUser(userName: string) {
+    return this.http.get(this.baseURL + "/survey/assignees/user/" + userName);
+  }
+
+  assignSurveyToUser(surveyID: number, userName: string) {
+    return this.http.post(this.baseURL + "/survey/assign/" + surveyID + "/" + userName, null);
+  }
+
+  unassignSurveyFromUser(surveyID: number, userName: string) {
+    return this.http.delete(this.baseURL + "/survey/unassign/" + surveyID + "/" + userName);
   }
 }
