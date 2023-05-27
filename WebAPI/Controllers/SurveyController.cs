@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
                 jsonQuestionsList.Add(jsonQuestion);
             }
 
-            surveyCompleteDto.questions = jsonQuestionsList;
+            surveyCompleteDto.questionsAndAnswers = jsonQuestionsList;
 
             return Ok(surveyCompleteDto);
         }

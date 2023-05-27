@@ -37,10 +37,6 @@ namespace WebAPI.Migrations
                     b.Property<DateTime>("dueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("numberOfQuestions")
                         .HasColumnType("int");
 
@@ -49,6 +45,10 @@ namespace WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -65,9 +65,15 @@ namespace WebAPI.Migrations
                     b.Property<int>("userID")
                         .HasColumnType("int");
 
+                    b.Property<bool>("drafted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("submitted")
+                        .HasColumnType("bit");
+
                     b.HasKey("surveyID", "userID");
 
-                    b.ToTable("SurveyAssiggnees");
+                    b.ToTable("SurveyAssignees");
                 });
 
             modelBuilder.Entity("WebAPI.Models.SurveyOption", b =>
