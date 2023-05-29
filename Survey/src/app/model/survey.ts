@@ -1,7 +1,12 @@
+import { Question } from "./question";
+
 export interface Survey {
-    id: number;
-    title: string;
+    surveyID: number;
+    name: string;
+    dueDate: Date;
     description: string;
-    numberOfQuestions: string;
+    numberOfQuestions: number;
+    status: string;
     priority: string;
+    questions: Array<Question>;
   }

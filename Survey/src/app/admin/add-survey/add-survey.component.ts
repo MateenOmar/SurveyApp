@@ -1,7 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Survey } from 'src/app/model/Survey';
+import { Question } from 'src/app/model/question';
+import { Survey } from 'src/app/model/survey';
 
 @Component({
   selector: 'app-add-survey',
@@ -12,28 +14,31 @@ export class AddSurveyComponent implements OnInit {
   displayGeneralInfo: boolean = true;
   addSurveyForm: FormGroup;
   currentDate: Date = new Date();
+  currQuestion: Question;
   currSurvey: Survey = {
-    SurveyID: 0,
-    Title: '',
-    DueDate: this.addWeeks(this.currentDate, 1),
-    Description: '',
-    QA: [
+    surveyID: 0,
+    name: '',
+    dueDate: this.addWeeks(this.currentDate, 1),
+    description: '',
+    numberOfQuestions: 1,
+    status: 'Drafted',
+    priority: 'Medium',
+    questions: [
       {
-        QId: 1,
-        QTitle: 'Question 1',
-        Answers: [
-          {AId:0, Answer:''},
-          {AId:1, Answer:''},
-          {AId:2, Answer:''},
-          {AId:3, Answer:''}
+        questionID: 1,
+        question: 'Question 1',
+        numberOfAnswers: 4,
+        options: [
+          {answerID: 0, answer: ''},
+          {answerID: 1, answer: ''},
+          {answerID: 2, answer: ''},
+          {answerID: 3, answer: ''}
         ]
       }
-    ],
-    Priority: 'Medium'
-  }
-  currQuestion: any;
+    ]
+  };
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit() {
     this.addSurveyForm = new FormGroup({
@@ -45,44 +50,46 @@ export class AddSurveyComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.setDefaultDate(this.currSurvey.DueDate!);
+    this.setDefaultDate(this.currSurvey.dueDate!);
   }
 
   onSubmit() {
+    this.http.post('http://localhost:5000/api/survey/post', this.currSurvey);
     console.log(this.currSurvey);
     console.log(this.addSurveyForm);
   }
 
   onSelectQuestion(id: number) {
-    this.currQuestion = this.currSurvey.QA[id];
+    this.currQuestion = this.currSurvey.questions[id];
     this.displayGeneralInfo = false;
   }
 
   onDeleteQuestion(id: number) {
-    this.currSurvey.QA.splice(id, 1);
+    this.currSurvey.questions.splice(id, 1);
   }
 
   onDeleteAnswer(id: number) {
-    this.currQuestion.Answers.splice(id, 1)
+    this.currQuestion.options.splice(id, 1)
   }
 
   onAddQuestion() {
-    let qid = this.currSurvey.QA[this.currSurvey.QA.length - 1].QId + 1
-    this.currSurvey.QA.push({
-      QId: qid,
-      QTitle: 'Question ' + qid,
-      Answers: [
-        {AId:0, Answer:''},
-        {AId:1, Answer:''},
-        {AId:2, Answer:''},
-        {AId:3, Answer:''}
+    let qid = this.currSurvey.questions[this.currSurvey.questions.length - 1].questionID + 1
+    this.currSurvey.questions.push({
+      questionID: qid,
+      question: 'Question ' + qid,
+      numberOfAnswers: 4,
+      options: [
+        {answerID:0, answer:''},
+        {answerID:1, answer:''},
+        {answerID:2, answer:''},
+        {answerID:3, answer:''}
       ]
     });
   }
 
   onAddAnswer() {
-    let aid = this.currQuestion.Answers[this.currQuestion.Answers.length - 1].AId + 1;
-    this.currQuestion.Answers.push({AId: aid, Answer: ''});
+    let aid = this.currQuestion.options[this.currQuestion.options.length - 1].answerID + 1;
+    this.currQuestion.options.push({answerID: aid, answer: ''});
   }
 
   onSelectGeneralInfo() {
@@ -122,7 +129,6 @@ export class AddSurveyComponent implements OnInit {
 
   onDiscard() {
     this.router.navigate(["admin/surveys/manage"]);
-    console.log('sdds')
   }
 
   get Title() {
