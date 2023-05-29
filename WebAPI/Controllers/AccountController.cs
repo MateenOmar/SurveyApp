@@ -25,6 +25,7 @@ namespace WebAPI.Controllers
             this.mapper = mapper;
         }
 
+        // POST api/account/login -- Authenticate user
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginReqDto loginReq){
             var user = await uow.UserRepository.Authenticate(loginReq.userName, loginReq.password);
@@ -46,6 +47,7 @@ namespace WebAPI.Controllers
             return Ok(loginRes);
         }
 
+        // Create JWT token
         private string CreateJWT(User user) {
             var secretKey = configuration.GetSection("AppSettings:Key").Value;
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
@@ -67,6 +69,7 @@ namespace WebAPI.Controllers
             return tokenHandler.WriteToken(token);
         }
 
+        // POST api/account/register -- Register user
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterReqDto registerReq){
             // ApiError apiError = new ApiError();
@@ -89,6 +92,7 @@ namespace WebAPI.Controllers
             return StatusCode(201);
         }
 
+        // GET api/account/users -- Get all users
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers() {
             var users = await uow.UserRepository.GetUsersAsync();
@@ -96,6 +100,7 @@ namespace WebAPI.Controllers
             return Ok(usersDto);
         }
 
+        // GET api/account/users/{userName} -- Get user by userName
         [HttpGet("users/{userName}")]
         public async Task<IActionResult> GetUser(string userName) {
             var user = await uow.UserRepository.GetUserAsync(userName);
@@ -103,6 +108,7 @@ namespace WebAPI.Controllers
             return Ok(userDto);
         }
 
+        // DELETE api/account/users/delete/{userName} -- Delete user by userName
         [HttpDelete("users/delete/{userName}")]
         public async Task<IActionResult> DeleteUser(string userName) {
             uow.UserRepository.DeleteUser(userName);
@@ -110,6 +116,7 @@ namespace WebAPI.Controllers
             return StatusCode(200);
         }
 
+        // PATCH api/account/users/update/{userName} -- Update user by userName
         [HttpPatch("users/update/{userName}")]
         public async Task<IActionResult> UpdateUserPatch(string userName, JsonPatchDocument<User> userToPatch) {
             var userFromDB = await uow.UserRepository.GetUserAsync(userName);
