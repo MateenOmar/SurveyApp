@@ -3,7 +3,7 @@
   <div class="col-6 m-auto">
     <div class="card m-auto">
       <div class="card-header">
-        <h3>Edit User: {{ user2.firstName + " " + user2.lastName }}</h3>
+        <h3>Edit User: {{ user.firstName + " " + user.lastName }}</h3>
       </div>
       <div class="card-body">
         <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">

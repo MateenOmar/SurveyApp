@@ -30,6 +30,13 @@ export class SurveyService {
     return this.http.post(this.baseURL + "/survey/assign/" + surveyID + "/" + userName, null);
   }
 
+  assignSurveyToUsers(surveyID: number, userNames: string[]) {
+    return this.http.post(this.baseURL + "/survey/assign", {
+      surveyID: surveyID,
+      assignees: userNames,
+    });
+  }
+
   unassignSurveyFromUser(surveyID: number, userName: string) {
     return this.http.delete(this.baseURL + "/survey/unassign/" + surveyID + "/" + userName);
   }

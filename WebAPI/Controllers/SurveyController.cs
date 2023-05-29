@@ -155,6 +155,18 @@ namespace WebAPI.Controllers
             return StatusCode(201);
         }
 
+        // POST api/survey/assign/{surveyID} -- Assign survey to multiple users
+        [HttpPost("assign")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AssignUsersSurvey(SurveyAssignReq surveyAssignReq)
+        {
+            foreach (var userName in surveyAssignReq.assignees){
+                await AssignSurvey(surveyAssignReq.surveyID, userName);
+            }
+
+            return StatusCode(201);
+        }
+
         // POST api/survey/remove/{surveyID}/{userID} -- Remove survey from user
         [HttpDelete("unassign/{surveyID}/{userName}")]
         [AllowAnonymous]

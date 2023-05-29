@@ -1,7 +1,8 @@
-export interface Survey {
-    id: number;
-    title: string;
-    description: string;
-    numberOfQuestions: string;
-    priority: string;
-  }
+export class Survey {
+  SurveyID: number;
+  Title: string;
+  DueDate?: Date;
+  Description: string;
+  QA: Array<any>;
+  Priority?: string;
+}

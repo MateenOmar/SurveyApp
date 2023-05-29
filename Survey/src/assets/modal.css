@@ -2,6 +2,11 @@
   backdrop-filter: blur(4px);
 }
 
+.custom-checkbox {
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
 .custom-checkbox input {
   height: 0;
   width: 0;
@@ -44,11 +49,6 @@
 .modal-body {
   background-color: #ebf0ff;
   border-radius: 10px;
-}
-
-.row {
-  margin-left: 100px;
-  margin-right: 100px;
 }
 
 .user-info {

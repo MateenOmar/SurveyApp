@@ -9,6 +9,7 @@ using WebAPI.Models;
 using AutoMapper;
 using Azure;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
@@ -110,6 +111,7 @@ namespace WebAPI.Controllers
 
         // DELETE api/account/users/delete/{userName} -- Delete user by userName
         [HttpDelete("users/delete/{userName}")]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteUser(string userName) {
             uow.UserRepository.DeleteUser(userName);
             await uow.SaveAsync();
@@ -118,6 +120,7 @@ namespace WebAPI.Controllers
 
         // PATCH api/account/users/update/{userName} -- Update user by userName
         [HttpPatch("users/update/{userName}")]
+        [AllowAnonymous]
         public async Task<IActionResult> UpdateUserPatch(string userName, JsonPatchDocument<User> userToPatch) {
             var userFromDB = await uow.UserRepository.GetUserAsync(userName);
             userToPatch.ApplyTo(userFromDB, ModelState);
