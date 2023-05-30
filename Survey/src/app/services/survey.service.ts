@@ -47,4 +47,8 @@ export class SurveyService {
   submitUserAnswers(surveyID: number, userAnswers: UserAnswers) {
     return this.http.post(this.baseURL + "/submitAnswers/" + surveyID, userAnswers);
   }
+
+  addSurvey(survey: Survey) {
+    return this.http.post("http://localhost:5000/api/survey/post", survey);
+  }
 }
