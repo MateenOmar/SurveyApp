@@ -11,6 +11,5 @@ namespace WebAPI.Models
         public string priority { get; set; }
         // public bool Archived { get; set; } = false
 
-
     }
 }

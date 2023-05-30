@@ -10,7 +10,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
-    [Authorize]
+   // [Authorize]
     public class SurveyController : BaseController
     {
         private readonly IUnitOfWork uow;
@@ -71,10 +71,28 @@ namespace WebAPI.Controllers
 
         // POST api/survey/post -- Post data in JSON format
         [HttpPost("post")]
-        public async Task<IActionResult> AddSurvey(SurveyDto SurveyDto)
+        public async Task<IActionResult> AddSurvey(SurveyCompleteDto SurveyDto)
         {
             var survey = mapper.Map<Survey>(SurveyDto);
             uow.SurveyRepository.AddSurvey(survey);
+
+            SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
+            foreach (JObject q in SurveyDto.questionsAndAnswers) {
+                SurveyQuestion surveyQuestion = new SurveyQuestion();
+                surveyQuestion.questionID = int.Parse(q["questionID"].ToString());
+                surveyQuestion.surveyID = SurveyDto.surveyID;
+                surveyQuestion.question = q["question"].ToString();
+                surveyQuestion.numberOfAnswers = int.Parse(q["numberOfAnswers"].ToString());
+                uow.SurveyRepository.AddSurveyQuestion(surveyQuestion);
+                JArray qOptions = (JArray) q["options"];
+                foreach (JObject o in qOptions) {
+                    SurveyOption surveyOption = new SurveyOption();
+                    surveyOption.answerID = int.Parse(o["answerID"].ToString());
+                    surveyOption.surveyID = SurveyDto.surveyID;
+                    surveyOption.answer = o["answer"].ToString();
+                    uow.SurveyRepository.AddSurveyOption(surveyOption);
+                }
+            }
             await uow.SaveAsync();
             return StatusCode(201);
         }

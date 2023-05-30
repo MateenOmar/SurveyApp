@@ -31,10 +31,13 @@ import { SortPipe } from "./pipes/sort.pipe";
 import { AssignSurveyComponent } from "./admin/assign-survey/assign-survey.component";
 
 const appRoutes: Routes = [
+
   { path: "", component: UserLoginComponent },
   { path: "admin/users/register", component: UserAddComponent },
   { path: "admin/surveys/manage", component: ManageSurveysComponent },
   { path: "admin/surveys/add", component: AddSurveyComponent },
+  { path: "admin/surveys/edit/:id", component: EditSurveyComponent },
+  { path: "admin/surveys/results/:id", component: SurveyResultsComponent },
   { path: "admin/users/manage", component: UserManageComponent },
   { path: "admin/users/manage/edit/:userName", component: UserEditComponent },
   { path: "edit-survey/:id", component: EditSurveyComponent },
