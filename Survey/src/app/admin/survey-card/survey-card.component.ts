@@ -1,18 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'app-survey-card',
-  templateUrl: './survey-card.component.html',
-  styleUrls: ['./survey-card.component.css']
+  selector: "app-survey-card",
+  templateUrl: "./survey-card.component.html",
+  styleUrls: ["./survey-card.component.css"],
 })
 export class SurveyCardComponent implements OnInit {
-@Input() survey: any;
-@Input() parent: any;
-@Input() userType!: string;
+  @Input() survey: any;
+  @Input() parent: any;
+  @Input() userType!: string;
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onDelete() {
     this.parent.removeSurvey(this.survey.id);

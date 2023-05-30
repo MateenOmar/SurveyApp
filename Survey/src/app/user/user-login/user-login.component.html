@@ -1,4 +1,3 @@
-<app-h-nav-bar></app-h-nav-bar>
 <app-v-nav-bar></app-v-nav-bar>
 <div class="row">
   <div class="col-6 m-auto">
@@ -13,21 +12,11 @@
 
           <div class="form-group col-12">
             <label>Password:</label>
-            <input
-              type="password"
-              class="form-control"
-              required
-              ngModel
-              name="password"
-            />
+            <input type="password" class="form-control" required ngModel name="password" />
           </div>
 
           <div class="form-group col-12">
-            <button
-              [disabled]="!loginForm.valid"
-              type="submit"
-              class="btn btn-primary"
-            >
+            <button [disabled]="!loginForm.valid" type="submit" class="btn btn-primary">
               Login
             </button>
             <button type="reset" class="btn btn-secondary m-2">Cancel</button>
@@ -37,3 +26,4 @@
     </div>
   </div>
 </div>
+<app-user-manage></app-user-manage>

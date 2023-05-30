@@ -14,7 +14,7 @@ namespace WebAPI.Dtos
         [Required]
         public int numberOfQuestions { get; set; }
         [Required]
-        public bool published { get; set; }
-        public int priority { get; set; }
+        public string status { get; set; }
+        public string priority { get; set; }
     }
 }

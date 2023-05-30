@@ -44,11 +44,13 @@ namespace WebAPI.Migrations
                     b.Property<int>("numberOfQuestions")
                         .HasColumnType("int");
 
-                    b.Property<int>("priority")
-                        .HasColumnType("int");
+                    b.Property<string>("priority")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("published")
-                        .HasColumnType("bit");
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("surveyID");
 
