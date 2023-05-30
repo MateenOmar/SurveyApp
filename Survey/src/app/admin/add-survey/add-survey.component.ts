@@ -10,13 +10,13 @@ import {
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { Survey } from "src/app/model/Survey";
+import { Survey } from "src/app/model/survey";
 import { UserData } from "src/app/model/user";
 import { AuthService } from "src/app/services/auth.service";
 import { SurveyService } from "src/app/services/survey.service";
 import Swal from "sweetalert2";
-import { HttpClient } from '@angular/common/http';
-import { Question } from 'src/app/model/question';
+import { HttpClient } from "@angular/common/http";
+import { Question } from "src/app/model/question";
 
 @Component({
   selector: "app-add-survey",
@@ -25,7 +25,7 @@ import { Question } from 'src/app/model/question';
 })
 export class AddSurveyComponent implements OnInit {
   @Input() surveyForEdit: Survey;
-  
+
   displayGeneralInfo: boolean = true;
   addSurveyForm: FormGroup;
   currentDate: Date = new Date();
@@ -33,43 +33,50 @@ export class AddSurveyComponent implements OnInit {
   currQuestion: Question;
   currSurvey: Survey;
 
-  constructor(private router: Router, private http: HttpClient, private modalService: BsModalService,
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private modalService: BsModalService,
     private survey: SurveyService,
-    private auth: AuthService) { }
+    private auth: AuthService
+  ) {}
 
   ngOnInit() {
-    this.addSurveyForm = new FormGroup({
-      title: new FormControl(null, Validators.required),
-      due: new FormControl(null, Validators.required),
-      description: new FormControl(null, Validators.required),
-      priority: new FormControl(null, Validators.required)
-    }, this.dueDateValidator);
-    
+    this.addSurveyForm = new FormGroup(
+      {
+        title: new FormControl(null, Validators.required),
+        due: new FormControl(null, Validators.required),
+        description: new FormControl(null, Validators.required),
+        priority: new FormControl(null, Validators.required),
+      },
+      this.dueDateValidator
+    );
+
     if (this.surveyForEdit) {
-      this.currSurvey = this.surveyForEdit
+      this.currSurvey = this.surveyForEdit;
     } else {
       this.currSurvey = {
         surveyID: 0,
-        name: '',
+        name: "",
         dueDate: this.addWeeks(this.currentDate, 1),
-        description: '',
+        description: "",
         numberOfQuestions: 1,
-        status: 'Drafted',
-        priority: 'Medium',
+        status: "Drafted",
+        priority: "Medium",
         questions: [
           {
             questionID: 1,
-            question: 'Question 1',
+            question: "Question 1",
             numberOfAnswers: 4,
             options: [
-              {answerID: 0, answer: ''},
-              {answerID: 1, answer: ''},
-              {answerID: 2, answer: ''},
-              {answerID: 3, answer: ''}
-            ]
-          }
-        ]
-      };  
+              { answerID: 0, answer: "" },
+              { answerID: 1, answer: "" },
+              { answerID: 2, answer: "" },
+              { answerID: 3, answer: "" },
+            ],
+          },
+        ],
+      };
     }
     this.auth.getUsers().subscribe((res: any) => {
       this.users = res as UserData[];
@@ -81,7 +88,7 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onSubmit() {
-    this.http.post('http://localhost:5000/api/survey/post', this.currSurvey);
+    this.http.post("http://localhost:5000/api/survey/post", this.currSurvey);
     console.log(this.currSurvey);
     console.log(this.addSurveyForm);
   }
@@ -96,27 +103,27 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onDeleteAnswer(id: number) {
-    this.currQuestion.options.splice(id, 1)
+    this.currQuestion.options.splice(id, 1);
   }
 
   onAddQuestion() {
-    let qid = this.currSurvey.questions[this.currSurvey.questions.length - 1].questionID + 1
+    let qid = this.currSurvey.questions[this.currSurvey.questions.length - 1].questionID + 1;
     this.currSurvey.questions.push({
       questionID: qid,
-      question: 'Question ' + qid,
+      question: "Question " + qid,
       numberOfAnswers: 4,
       options: [
-        {answerID:0, answer:''},
-        {answerID:1, answer:''},
-        {answerID:2, answer:''},
-        {answerID:3, answer:''}
-      ]
+        { answerID: 0, answer: "" },
+        { answerID: 1, answer: "" },
+        { answerID: 2, answer: "" },
+        { answerID: 3, answer: "" },
+      ],
     });
   }
 
   onAddAnswer() {
     let aid = this.currQuestion.options[this.currQuestion.options.length - 1].answerID + 1;
-    this.currQuestion.options.push({answerID: aid, answer: ''});
+    this.currQuestion.options.push({ answerID: aid, answer: "" });
   }
 
   onSelectGeneralInfo() {

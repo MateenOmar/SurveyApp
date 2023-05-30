@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Survey } from "src/app/model/Survey";
+import { Survey } from "src/app/model/survey";
 import { SurveyService } from "src/app/services/survey.service";
 import { SurveyCardComponent } from "../../admin/survey-card/survey-card.component";
 
