@@ -1,7 +1,10 @@
 <div class="row mt-3">
   <div class="col-12 m-auto">
     <div class="card">
-      <div class="card-header">
+      <div *ngIf="surveyForEdit" class="card-header">
+        <h3>Edit survey</h3>
+      </div>
+      <div *ngIf="!surveyForEdit" class="card-header">
         <h3>Add survey</h3>
       </div>
       <form [formGroup]="addSurveyForm" (ngSubmit)="onSubmit()">

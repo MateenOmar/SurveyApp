@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { UserForLogin, UserForRegister } from "../model/user";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
+import { Observable } from "rxjs";
+import { Survey } from "../model/survey";
 
 @Injectable({
   providedIn: "root",
@@ -11,11 +13,11 @@ export class SurveyService {
   constructor(private http: HttpClient) {}
 
   getSurveys() {
-    return this.http.get(this.baseURL + "/survey/surveys");
+    return this.http.get<Survey[]>(this.baseURL + "/survey/surveys");
   }
 
   getSurveyByID(surveyID: number) {
-    return this.http.get(this.baseURL + "/survey/surveys/" + surveyID);
+    return this.http.get<Survey>(this.baseURL + "/survey/surveys/" + surveyID);
   }
 
   getSurveyAssigneesBySurveyID(surveyID: number) {
