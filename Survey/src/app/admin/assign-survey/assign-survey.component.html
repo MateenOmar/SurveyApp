@@ -1,9 +1,9 @@
 <button type="button" class="btn btn-primary" (click)="openModal(template)">Open modal</button>
 <br />
 
-<ng-template #template>
+<ng-template #template class="modal">
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Modal</h4>
+    <h4 class="modal-title pull-left">Invite</h4>
     <button
       type="button"
       class="btn-close close pull-right"
@@ -13,10 +13,20 @@
     </button>
   </div>
   <div class="modal-body">
-    <p *ngFor="let item of items">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque delectus enim esse excepturi,
-      impedit, iste magnam officia optio, quam quis quisquam saepe sint unde velit vitae! Animi in
-      iusto ut?
-    </p>
+    <div *ngFor="let user of users" class="row custom-checkbox">
+      <div class="form-group">
+        <p class="user-info">
+          <i class="bi bi-person-fill"></i>
+          {{ user.userName }}
+        </p>
+        <input
+          type="checkbox"
+          name="week"
+          id="{{ user.userName }}"
+          (change)="onChange(user.userName, $any($event.target).checked)" />
+        <label for="{{ user.userName }}" class="float-end"><i class="bi bi-check-lg"></i></label>
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary float-end m-1" (click)="invite()">Invite!</button>
   </div>
 </ng-template>

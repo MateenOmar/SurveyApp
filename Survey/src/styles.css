@@ -1,4 +1,10 @@
 @import "assets/forms.css";
+@import "assets/modal.css";
 @import "../node_modules/alertifyjs/build/css/alertify.min.css";
 @import "../node_modules/alertifyjs/build/css/themes/bootstrap.min.css";
 @import "../node_modules/font-awesome/css/font-awesome.css";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+body {
+  background-color: #ebf0ff;
+}

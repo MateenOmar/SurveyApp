@@ -12,3 +12,10 @@ export interface UserForLogin {
   password: string;
   token: string;
 }
+
+export interface UserData {
+  userName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}

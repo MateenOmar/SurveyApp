@@ -7,8 +7,8 @@ import {
   ValidationErrors,
   Validators,
 } from "@angular/forms";
-import { Router } from "@angular/router";
-import { UserForRegister } from "src/app/model/user";
+import { ActivatedRoute, Router } from "@angular/router";
+import { UserData, UserForRegister } from "src/app/model/user";
 import { AlertifyService } from "src/app/services/alertify.service";
 import { AuthService } from "src/app/services/auth.service";
 
@@ -18,48 +18,34 @@ import { AuthService } from "src/app/services/auth.service";
   styleUrls: ["./user-edit.component.css"],
 })
 export class UserEditComponent implements OnInit {
-  //Number(this.route.snapshot.params['id']);
+  username = this.route.snapshot.paramMap.get("userName");
 
   registrationForm!: FormGroup;
-  user!: UserForRegister;
+  user!: UserData;
+  userEdit!: UserForRegister;
 
-  user2: UserForRegister = {
-    userName: "Billy",
-    password: "",
-    firstName: "Joe",
-    lastName: "Bills",
-    email: "billy@soti.net",
-  };
-
-  users: UserForRegister[] = [
-    {
-      userName: "Billy",
-      password: "",
-      firstName: "Joe",
-      lastName: "Bills",
-      email: "billy@soti.net",
-    },
-    { userName: "test", password: "test", firstName: "test", lastName: "test", email: "test" },
-    { userName: "test", password: "test", firstName: "test", lastName: "test", email: "test" },
-  ];
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private auth: AuthService,
     private alertify: AlertifyService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.createRegistrationForm();
+    this.auth.getUserByUser(this.username!).subscribe((res: any) => {
+      this.user = res;
+      this.createRegistrationForm();
+    });
   }
 
   createRegistrationForm() {
     this.registrationForm = this.fb.group(
       {
-        firstName: [this.user2.firstName, Validators.required],
-        lastName: [this.user2.lastName, Validators.required],
-        userName: [this.user2.userName],
-        email: [this.user2.email, [Validators.required, Validators.email]],
+        firstName: [this.user.firstName, Validators.required],
+        lastName: [this.user.lastName, Validators.required],
+        userName: [this.user.userName],
+        email: [this.user.email, [Validators.required, Validators.email]],
         password: [null],
         confirmPassword: [null],
       },
@@ -99,16 +85,16 @@ export class UserEditComponent implements OnInit {
 
   onSubmit() {
     if (this.registrationForm.valid) {
-      //this.authService.registerUser(this.userData()).subscribe(() => {
-      this.registrationForm.reset();
-      this.alertify.success("User Edited Successfully");
-      this.router.navigate(["/admin/users/manage"]);
-      //});
+      this.auth.updateUser(this.username!, this.userData(), this.user).subscribe(() => {
+        this.registrationForm.reset();
+        this.alertify.success("User Edited Successfully");
+        this.router.navigate(["/admin/users/manage"]);
+      });
     }
   }
 
   userData(): UserForRegister {
-    return (this.user = {
+    return (this.userEdit = {
       userName: this.userName.value,
       password: this.password.value,
       firstName: this.firstName.value,

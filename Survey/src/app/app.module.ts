@@ -8,6 +8,8 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { ButtonsModule } from "ngx-bootstrap/buttons";
 import { AccordionModule } from "ngx-bootstrap/accordion";
+import { ModalModule } from "ngx-bootstrap/modal";
+import { TypeaheadModule } from "ngx-bootstrap/typeahead";
 
 import { AppComponent } from "./app.component";
 import { UserLoginComponent } from "./user/user-login/user-login.component";
@@ -29,15 +31,18 @@ import { SortPipe } from "./pipes/sort.pipe";
 import { AssignSurveyComponent } from "./admin/assign-survey/assign-survey.component";
 
 const appRoutes: Routes = [
-  { path: "", component: ManageSurveysComponent },
-  { path: "admin/register", component: UserAddComponent },
+
+  { path: "", component: UserLoginComponent },
+  { path: "admin/users/register", component: UserAddComponent },
   { path: "admin/surveys/manage", component: ManageSurveysComponent },
   { path: "admin/surveys/add", component: AddSurveyComponent },
   { path: "admin/surveys/edit/:id", component: EditSurveyComponent },
   { path: "admin/surveys/results/:id", component: SurveyResultsComponent },
   { path: "admin/users/manage", component: UserManageComponent },
-  { path: "admin/users/manage/edit", component: UserEditComponent },
-  { path: "home", component: UserHomeComponent },
+  { path: "admin/users/manage/edit/:userName", component: UserEditComponent },
+  { path: "edit-survey/:id", component: EditSurveyComponent },
+  { path: "admin/survey-results/:id", component: SurveyResultsComponent },
+  { path: "user/home", component: UserHomeComponent },
   { path: "admin/surveys/add/assign-survey", component: AssignSurveyComponent },
   { path: "**", component: UserLoginComponent },
 ];
@@ -72,6 +77,8 @@ const appRoutes: Routes = [
     TabsModule.forRoot(),
     ButtonsModule.forRoot(),
     AccordionModule.forRoot(),
+    ModalModule.forRoot(),
+    TypeaheadModule.forRoot(),
   ],
   providers: [AlertifyService, SurveyService],
   bootstrap: [AppComponent],

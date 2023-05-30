@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { AccordionConfig } from "ngx-bootstrap/accordion";
-import { UserForRegister } from "src/app/model/user";
+import { UserData } from "src/app/model/user";
+import { AuthService } from "src/app/services/auth.service";
 import Swal from "sweetalert2";
 
 @Component({
@@ -11,20 +12,14 @@ import Swal from "sweetalert2";
 export class UserManageComponent implements OnInit {
   oneAtATime = true;
   isContentOpen: boolean = false;
-  users: UserForRegister[] = [
-    {
-      userName: "Billy",
-      password: "",
-      firstName: "Joe",
-      lastName: "Bills",
-      email: "billy@soti.net",
-    },
-    { userName: "test", password: "test", firstName: "test", lastName: "test", email: "test" },
-    { userName: "test", password: "test", firstName: "test", lastName: "test", email: "test" },
-  ];
-  constructor() {}
+  users: UserData[];
+  constructor(private auth: AuthService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.auth.getUsers().subscribe((res: any) => {
+      this.users = res as UserData[];
+    });
+  }
 
   onDelete(userName: string) {
     console.log(userName);
@@ -37,6 +32,7 @@ export class UserManageComponent implements OnInit {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, remove",
     }).then((result) => {
+      this.auth.deleteUser(userName).subscribe((res: any) => {});
       if (result.isConfirmed) {
         Swal.fire("Deleted!", "The user has been removed.", "success");
       }

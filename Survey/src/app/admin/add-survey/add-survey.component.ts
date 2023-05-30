@@ -1,14 +1,27 @@
+import { Component, OnInit, TemplateRef, Input } from "@angular/core";
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from "@angular/forms";
+import { Router } from "@angular/router";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { Survey } from "src/app/model/Survey";
+import { UserData } from "src/app/model/user";
+import { AuthService } from "src/app/services/auth.service";
+import { SurveyService } from "src/app/services/survey.service";
+import Swal from "sweetalert2";
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Question } from 'src/app/model/question';
-import { Survey } from 'src/app/model/survey';
 
 @Component({
-  selector: 'app-add-survey',
-  templateUrl: './add-survey.component.html',
-  styleUrls: ['./add-survey.component.css']
+  selector: "app-add-survey",
+  templateUrl: "./add-survey.component.html",
+  styleUrls: ["./add-survey.component.css"],
 })
 export class AddSurveyComponent implements OnInit {
   @Input() surveyForEdit: Survey;
@@ -16,10 +29,13 @@ export class AddSurveyComponent implements OnInit {
   displayGeneralInfo: boolean = true;
   addSurveyForm: FormGroup;
   currentDate: Date = new Date();
+
   currQuestion: Question;
   currSurvey: Survey;
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient, private modalService: BsModalService,
+    private survey: SurveyService,
+    private auth: AuthService) { }
 
   ngOnInit() {
     this.addSurveyForm = new FormGroup({
@@ -53,9 +69,11 @@ export class AddSurveyComponent implements OnInit {
             ]
           }
         ]
-      };
+      };  
     }
-    
+    this.auth.getUsers().subscribe((res: any) => {
+      this.users = res as UserData[];
+    });
   }
 
   ngAfterViewInit() {
@@ -112,7 +130,7 @@ export class AddSurveyComponent implements OnInit {
   }
 
   setDefaultDate(date: Date) {
-    let myDate: HTMLInputElement = (document.getElementById('due') as HTMLInputElement);
+    let myDate: HTMLInputElement = document.getElementById("due") as HTMLInputElement;
     myDate.value = date.toISOString().substring(0, 10);
   }
 
@@ -124,15 +142,20 @@ export class AddSurveyComponent implements OnInit {
     and now they are comparable. As the default value of date in datepicker
     is valid initially (today + 1 week), if fc.get('due')?.value > 10, which means it hasn't been touched, return null (no errors)
     */
-    return (fc.get('due')?.value > today || fc.get('due')?.value > 10) ? null : { lessThanToday: true }
+    return fc.get("due")?.value > today || fc.get("due")?.value > 10
+      ? null
+      : { lessThanToday: true };
   }
 
   onSaveAsDraft() {
-    let storageDrafts = localStorage.getItem('drafts')!;
-    if (!localStorage.getItem('drafts')) {
-      localStorage.setItem('drafts', JSON.stringify([this.currSurvey]));
+    let storageDrafts = localStorage.getItem("drafts")!;
+    if (!localStorage.getItem("drafts")) {
+      localStorage.setItem("drafts", JSON.stringify([this.currSurvey]));
     } else {
-      localStorage.setItem('drafts', JSON.stringify(JSON.parse(storageDrafts).concat([this.currSurvey])));
+      localStorage.setItem(
+        "drafts",
+        JSON.stringify(JSON.parse(storageDrafts).concat([this.currSurvey]))
+      );
     }
   }
 
@@ -141,15 +164,58 @@ export class AddSurveyComponent implements OnInit {
   }
 
   get Title() {
-    return this.addSurveyForm.controls['title'] as FormControl
+    return this.addSurveyForm.controls["title"] as FormControl;
   }
 
   get Description() {
-    return this.addSurveyForm.controls['description'] as FormControl
+    return this.addSurveyForm.controls["description"] as FormControl;
   }
 
   get Date() {
-    return this.addSurveyForm.controls['date'] as FormControl
+    return this.addSurveyForm.controls["date"] as FormControl;
   }
 
+  addUsers: string[] = [];
+  modalRef?: BsModalRef;
+  config = {
+    animated: true,
+    keyboard: true,
+    backdrop: true,
+    ignoreBackdropClick: false,
+    class: "modal-lg",
+  };
+  users: UserData[];
+
+  openModal(template: TemplateRef<any>) {
+    this.addUsers = [];
+    this.modalRef = this.modalService.show(template, this.config);
+  }
+
+  onChange(userName: string, isChecked: boolean) {
+    if (isChecked) {
+      this.addUsers.push(userName);
+    } else {
+      let index = this.addUsers.findIndex((x) => x == userName);
+      this.addUsers.splice(index, 1);
+    }
+    console.log(this.addUsers);
+  }
+
+  invite() {
+    this.modalRef?.hide();
+    this.survey.assignSurveyToUsers(2, this.addUsers).subscribe((res) => {
+      console.log(res);
+    });
+    Swal.fire({
+      title: "Users invited!",
+      icon: "success",
+      timer: 2000,
+      showCancelButton: false,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Done",
+    });
+  }
+
+  onAssignUsers() {}
 }

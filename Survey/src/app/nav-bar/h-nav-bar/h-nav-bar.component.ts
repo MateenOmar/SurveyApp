@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AlertifyService } from "src/app/services/alertify.service";
+import { AuthService } from "src/app/services/auth.service";
 
 @Component({
   selector: "app-h-nav-bar",
@@ -10,7 +11,11 @@ import { AlertifyService } from "src/app/services/alertify.service";
 export class HNavBarComponent implements OnInit {
   loggedInUser!: string;
   admin!: boolean;
-  constructor(private alertify: AlertifyService, private router: Router) {}
+  constructor(
+    private alertify: AlertifyService,
+    private router: Router,
+    public auth: AuthService
+  ) {}
 
   ngOnInit() {
     this.loggedInUser = localStorage.getItem("userName")!;
@@ -18,10 +23,6 @@ export class HNavBarComponent implements OnInit {
   }
 
   onLogout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("admin");
-    this.alertify.success("You have been logged out!");
-    this.router.navigate(["/"]);
+    this.auth.logout();
   }
 }
