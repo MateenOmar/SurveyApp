@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { Observable } from "rxjs";
 import { Survey } from "../model/survey";
+import { UserAnswers } from "../model/userAnswers";
 
 @Injectable({
   providedIn: "root",
@@ -43,7 +44,7 @@ export class SurveyService {
     return this.http.delete(this.baseURL + "/survey/unassign/" + surveyID + "/" + userName);
   }
 
-  submitUserAnswers(surveyID: number, userAnswers: any[]) {
+  submitUserAnswers(surveyID: number, userAnswers: UserAnswers) {
     return this.http.post(this.baseURL + "/submitAnswers/" + surveyID, userAnswers);
   }
 }

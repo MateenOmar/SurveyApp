@@ -38,7 +38,7 @@
                 <div class="row">
                   <div class="col-6">
                     <label for="title">Survey title</label>
-                    <input type="text" id="title" class="form-control mb-2" name="title" [(ngModel)]="currSurvey.name" formControlName="title">
+                    <input type="text" id="title" class="form-control mb-2" name="title" [(ngModel)]="currSurvey.title" formControlName="title">
                     <div class="error-block"*ngIf="Title.invalid && Title.touched">Please enter a title</div>
 
                     <label for="due">Due date</label>

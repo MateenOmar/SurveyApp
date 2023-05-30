@@ -5,8 +5,8 @@
           <div class="col-12">
             <!-- Vertical Navbar -->
             <div *ngFor="let question of allQuestions">
-              <h4 class="link-animate" (click)="changeQuestion(question.id - 1)">
-                Question {{question.id}}
+              <h4 class="link-animate" (click)="changeQuestion(question.questionID - 1)">
+                Question {{question.questionID}}
               </h4>
             </div>
         </div>
@@ -21,14 +21,14 @@
       <form [formGroup]="userSubmissionForm" (ngSubmit)="onSubmit()">
         <div class="card-body">
           <div class="col-sm-6 m-auto">
-            <h3>{{ currQuestion.text }}</h3>
+            <h3>{{ currQuestion.question }}</h3>
             <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2" btnRadioGroup>
               <div class="d-flex">
-                <input type="radio" [id]="answer.id" [value]="answer.id"
-                [checked]="currQuestion.selectedAnswerID === answer.id"
-                (click)="updateSelectedAnswer(answer.id)"
-                formControlName="question{{currQuestion.id}}">
-                <label class="me-2" for="{{answer.id}}"> {{ answer.answer }} </label>
+                <input type="radio" [id]="answer.answerID" [value]="answer.answerID"
+                [checked]="checkIfAnswered(answer.answerID)"
+                (click)="updateSelectedAnswer(answer.answerID)"
+                formControlName="question{{currQuestion.questionID}}">
+                <label class="me-2" for="{{answer.answerID}}"> {{ answer.answer }} </label>
               </div>         
             </div>
           </div>

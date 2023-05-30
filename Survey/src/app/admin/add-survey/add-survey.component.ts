@@ -57,7 +57,7 @@ export class AddSurveyComponent implements OnInit {
     } else {
       this.currSurvey = {
         surveyID: 0,
-        name: "",
+        title: "",
         dueDate: this.addWeeks(this.currentDate, 1),
         description: "",
         numberOfQuestions: 1,
