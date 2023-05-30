@@ -4,25 +4,46 @@
       <h1>{{survey.Title}}</h1>
       <p>{{survey.Description}}</p>
     </div>
-    <div class="my-auto p-3">
-      <div *ngIf="survey.Status == 'Draft'">
-        <ul class="list-inline m-auto">
-          <li class="list-inline-item">
-            <h3 class="link-animate" routerLinkActive="" routerLink="/edit-survey/{{survey.Id}}">Edit</h3>
-          </li>
-          <li class="list-inline-item">
-            <h3 class="link-animate" (click)="onPublish()">Publish</h3>
-          </li>
-          <li class="list-inline-item">
-            <h3 class="link-animate" (click)="onDelete()">Delete</h3>
-          </li>
-        </ul>
+    <div *ngIf="userType == 'admin'">
+      <div class="my-auto p-3">
+        <div *ngIf="survey.Status == 'Draft'">
+          <ul class="list-inline m-auto">
+            <li class="list-inline-item">
+              <h3 class="link-animate" routerLinkActive="" routerLink="/edit-survey/{{survey.id}}">Edit</h3>
+            </li>
+            <li class="list-inline-item">
+              <h3 class="link-animate" (click)="onPublish()">Publish</h3>
+            </li>
+            <li class="list-inline-item">
+              <h3 class="link-animate" (click)="onDelete()">Delete</h3>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="survey.Status == 'Published'">
+          <h3 class="link-animate" (click)="onClose()">Close survey</h3>
+        </div>
+        <div *ngIf="survey.Status == 'Finished'">
+          <h3 class="link-animate" routerLink="/survey-results/{{survey.id}}">View results</h3>
+        </div>
       </div>
-      <div *ngIf="survey.Status == 'Published'">
-        <h3 class="link-animate" (click)="onClose()">Close survey</h3>
-      </div>
-      <div *ngIf="survey.Status == 'Finished'">
-        <h3 class="link-animate" routerLink="/survey-results/{{survey.Id}}">View results</h3>
+    </div>
+    <div *ngIf="userType == 'user'">
+      <div class="my-auto p-3">
+        <div *ngIf="survey.Status == 'Open'">
+          <ul class="list-inline m-auto">
+            <li class="list-inline-item">
+              <h3 class="link-animate" 
+              routerLinkActive="" routerLink="/fill-out/{{survey.id}}"
+              >Fill Out</h3>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="survey.Status == 'In-Progress'">
+          <h3 class="link-animate" routerLinkActive="" routerLink="/fill-out/{{survey.id}}">Continue</h3>
+        </div>
+        <div *ngIf="survey.Status == 'Completed'">
+          <h3 class="link-animate" routerLink="/survey-results/{{survey.id}}">View Results</h3>
+        </div>
       </div>
     </div>
   </div>

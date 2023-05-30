@@ -22,6 +22,7 @@ import { EditSurveyComponent } from './admin/edit-survey/edit-survey.component';
 import { SurveyResultsComponent } from './admin/survey-results/survey-results.component';
 import { UserHomeComponent } from './user/user-home/user-home.component';
 import { SortPipe } from './pipes/sort.pipe';
+import { UserFillOutComponent } from './user/user-fill-out/user-fill-out.component';
 
 const appRoutes: Routes = [
   { path: '', component: ManageSurveysComponent },
@@ -29,6 +30,7 @@ const appRoutes: Routes = [
   { path: 'edit-survey/:id', component: EditSurveyComponent },
   { path: 'survey-results/:id', component: SurveyResultsComponent },
   { path: 'home', component: UserHomeComponent},
+  { path: 'fill-out/:id', component: UserFillOutComponent},
   { path: '**', component: UserLoginComponent }
 ];
 
@@ -46,7 +48,8 @@ const appRoutes: Routes = [
     SurveyResultsComponent,
     FilterPipe,
     SortPipe,
-    UserHomeComponent
+    UserHomeComponent,
+    UserFillOutComponent
   ],
   imports: [
     BrowserModule,

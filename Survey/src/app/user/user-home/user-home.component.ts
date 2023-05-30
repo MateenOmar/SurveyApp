@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Survey } from 'src/app/model/survey';
 import { SurveyService } from 'src/app/services/survey.service';
 import { SurveyCardComponent } from '../../admin/survey-card/survey-card.component';
@@ -11,10 +11,11 @@ import { SurveyCardComponent } from '../../admin/survey-card/survey-card.compone
   styleUrls: ['./user-home.component.css']
 })
 export class UserHomeComponent implements OnInit {
+  //userType: string = "user";
   // surveys: Array<Survey>;
   surveys: Array<any> = [
     {
-    "Id": 1,
+    "id": 1,
     "Title": "Survey1",
     "Description": "This is a survey",
     "Status": "Open",
@@ -24,7 +25,7 @@ export class UserHomeComponent implements OnInit {
       }
     },
     {
-      "Id": 2,
+      "id": 2,
       "Title": "Survey2",
       "Description": "This is a survey2",
       "Status": "Open",
@@ -34,7 +35,7 @@ export class UserHomeComponent implements OnInit {
       }
     },
     {
-      "Id": 3,
+      "id": 3,
       "Title": "Survey3",
       "Description": "This is a survey3",
       "Status": "In-Progress",
@@ -44,7 +45,7 @@ export class UserHomeComponent implements OnInit {
       }
     },
     {
-      "Id": 4,
+      "id": 4,
       "Title": "Survey4",
       "Description": "This is a survey",
       "Status": "Completed",
@@ -59,9 +60,10 @@ export class UserHomeComponent implements OnInit {
   searchPriority = "";
   sortByParam = "";
   sortDirection = "desc";
-  searchByStatus: string = "All";
+  searchByStatus: string = "";
 
-  constructor(private surveyService: SurveyService) {
+  constructor(private route: Router,
+              private surveyService: SurveyService) {
     // this.surveys = [];
   }
 
@@ -108,6 +110,5 @@ export class UserHomeComponent implements OnInit {
     else {
       this.searchByStatus = filter;
     }
-    
   }
 }

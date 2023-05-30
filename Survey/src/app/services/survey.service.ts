@@ -21,4 +21,8 @@ export class SurveyService {
   getQuestionAnswers(surveyID: number, questionID: number) {
     return this.http.get(this.baseURL + "/survey/questions/options/" + surveyID + "/" + questionID);
   }
+
+  submitUserAnswers(surveyID: number, userAnswers: any[]) {
+    return this.http.post(this.baseURL + "/submitAnswers/" + surveyID, userAnswers);
+  }
 }

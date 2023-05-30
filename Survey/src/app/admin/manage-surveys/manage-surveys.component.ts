@@ -11,9 +11,9 @@ export class ManageSurveysComponent implements OnInit {
   SearchByStatus: string = 'Draft';
   Surveys: Array<any> = [
     {
-    "Id": 1,
+    "id": 1,
     "Title": "Survey1",
-    "Description": "This is a survey",
+    "Description": "This is a survey1",
     "Status": "Draft",
     "QA": {
       "question1": ["option1", "option2"],
@@ -21,7 +21,7 @@ export class ManageSurveysComponent implements OnInit {
       }
     },
     {
-      "Id": 2,
+      "id": 2,
       "Title": "Survey2",
       "Description": "This is a survey2",
       "Status": "Published",
@@ -31,7 +31,7 @@ export class ManageSurveysComponent implements OnInit {
       }
     },
     {
-      "Id": 3,
+      "id": 3,
       "Title": "Survey3",
       "Description": "This is a survey3",
       "Status": "Finished",
@@ -41,7 +41,7 @@ export class ManageSurveysComponent implements OnInit {
       }
     },
     {
-      "Id": 4,
+      "id": 4,
       "Title": "Survey4",
       "Description": "This is a survey",
       "Status": "Draft",
@@ -59,13 +59,13 @@ export class ManageSurveysComponent implements OnInit {
   }
 
   removeSurvey(surveyID: number) {
-    this.Surveys = this.Surveys.filter(survey => survey.Id != surveyID)
+    this.Surveys = this.Surveys.filter(survey => survey.id != surveyID)
     this.alertify.success("You have successfully removed survey with ID " + surveyID)
   }
 
   publishSurvey(surveyID: number) {
     this.Surveys = this.Surveys.map(survey =>{
-      if (survey.Id == surveyID) {
+      if (survey.id == surveyID) {
         survey.Status = "Published";
       }
       return survey;
@@ -75,7 +75,7 @@ export class ManageSurveysComponent implements OnInit {
 
   closeSurvey(surveyID: number) {
     this.Surveys = this.Surveys.map(survey =>{
-      if (survey.Id == surveyID) {
+      if (survey.id == surveyID) {
         survey.Status = "Finished";
       }
       return survey;

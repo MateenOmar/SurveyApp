@@ -8,21 +8,21 @@ import { Component, Input, OnInit } from '@angular/core';
 export class SurveyCardComponent implements OnInit {
 @Input() survey: any;
 @Input() parent: any;
+@Input() userType!: string;
   constructor() { }
 
   ngOnInit() {
   }
 
   onDelete() {
-    this.parent.removeSurvey(this.survey.Id);
+    this.parent.removeSurvey(this.survey.id);
   }
 
   onPublish() {
-    this.parent.publishSurvey(this.survey.Id);
+    this.parent.publishSurvey(this.survey.id);
   }
 
   onClose() {
-    this.parent.closeSurvey(this.survey.Id);
+    this.parent.closeSurvey(this.survey.id);
   }
-
 }
