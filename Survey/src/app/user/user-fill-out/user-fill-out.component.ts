@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Questions } from 'src/app/model/questions';
+import { Answer } from 'src/app/model/answer';
+import { Question } from 'src/app/model/question';
 import { Survey } from 'src/app/model/survey';
+import { UserAnswers } from 'src/app/model/userAnswers';
 import { AlertifyService } from 'src/app/services/alertify.service';
 import { SurveyService } from 'src/app/services/survey.service';
 
@@ -15,44 +17,38 @@ export class UserFillOutComponent implements OnInit {
 
   public surveyID!: number;
   userSubmissionForm!: FormGroup;
-  userAnswers: any;
-  allQuestions: Questions[] = [];
+  allQuestions: Array<Question> = [];
   totalQuestions: number = 0;
-  currSubmission: { surveyID: number, questionsAndAnswers: { [key: number]: number} } = {
-    surveyID: 0,
-    questionsAndAnswers: {}
-  };
-
-  currQuestion!: Questions;
+  currSubmission: UserAnswers = { surveyID: 0, questionsAndAnswers: {} };;
+  currQuestion!: Question;
   currQuestionID: number = 0;
-  // survey = new Survey();
   survey: Survey =
     {
-    "id": 1,
+    "surveyID": 1,
     "title": "Survey1",
     "description": "This is a survey",
     "status": "Open",
     "numberOfQuestions": 2,
     "priority": "low",
-    "dueDate": Date.now().toString(),
-    "QA":[ 
+    "dueDate": new Date(),
+    "questions":[ 
       {
-        "id": 1,
-        "text": "Favourite color",
+        "questionID": 1,
+        "question": "Favourite color",
+        "numberOfAnswers": 2,
         "options": [
-          {"id": 1, "answer": "option1"}, 
-          {"id": 2, "answer": "option2"}
-        ],
-        "selectedAnswerID": null,
+          {"answerID": 1, "answer": "option1"}, 
+          {"answerID": 2, "answer": "option2"}
+        ]
       },
       {
-        "id": 2,
-        "text": "Favourite object",
+        "questionID": 2,
+        "question": "Favourite object",
+        "numberOfAnswers": 2,
         "options": [
-          {"id": 1, "answer": "option1"}, 
-          {"id": 2, "answer": "option2"}
-        ],
-        "selectedAnswerID": null,
+          {"answerID": 1, "answer": "option1"}, 
+          {"answerID": 2, "answer": "option2"}
+        ]
       }
       ]
     }
@@ -66,22 +62,27 @@ export class UserFillOutComponent implements OnInit {
     this.userSubmissionForm = this.formBuilder.group({});
     this.surveyID = +this.route.snapshot.params['id'];
 
-    this.allQuestions = this.survey.QA;
+    this.allQuestions = this.survey.questions;
     this.totalQuestions = this.allQuestions.length;
     this.currQuestion = this.allQuestions[this.currQuestionID];
-    console.log(this.allQuestions);
-    console.log(this.currQuestionID);
-    console.log(this.currQuestion);
+    // console.log(this.allQuestions);
+    // console.log(this.currQuestionID);
+    // console.log(this.currQuestion);
 
     // Initialize the questions in the currentSubmission JSON
+    console.log(this.surveyID);
     this.currSubmission.surveyID = this.surveyID;
     for (const questionKey in this.allQuestions) {
       const question = this.allQuestions[questionKey];
-      this.currSubmission.questionsAndAnswers[question.id] = 0;
-      this.userSubmissionForm.addControl(`question${question.id}`, new FormControl(null, Validators.required));
+      this.currSubmission.questionsAndAnswers[question.questionID] = 0;
+      this.userSubmissionForm.addControl(`question${question.questionID}`, new FormControl(null, Validators.required));
     }
     console.log(this.currSubmission);
     console.log(this.userSubmissionForm);
+  }
+
+  checkIfAnswered(answerID: number) {
+    return this.currSubmission.questionsAndAnswers[this.currQuestion.questionID] === answerID;
   }
 
   changeQuestion(questionID: number) {
@@ -92,45 +93,25 @@ export class UserFillOutComponent implements OnInit {
     }
     else {
       // Store selected answer ID in currSubmission
-      const formControl = this.userSubmissionForm.get("answers");
-      console.log(formControl);
       this.currQuestionID = questionID;
       this.currQuestion = this.allQuestions[this.currQuestionID];
       console.log(this.currSubmission);
       console.log(this.currQuestion);
-      if (this.currQuestion.selectedAnswerID === null) {
-        console.log("Hello");
-        formControl?.reset();
-      }
-      else {
-
-      }
     }
   }
 
   updateSelectedAnswer(selectedAnswerID: number) {
-    this.allQuestions[this.currQuestionID].selectedAnswerID = selectedAnswerID;
-    this.currSubmission.questionsAndAnswers[this.currQuestionID + 1] = Number(this.allQuestions[this.currQuestionID].selectedAnswerID);
+    this.currSubmission.questionsAndAnswers[this.currQuestionID + 1] = selectedAnswerID;
   }
 
   saveAsDraft() {
     console.log(this.currSubmission);
-    const draft = {
-      surveyID: this.currSubmission.surveyID,
-      questionsAndAnswers: { ...this.currSubmission.questionsAndAnswers }
-    };
-  
-    let storageDrafts = localStorage.getItem('userDraft')!;
-    if (!localStorage.getItem('userDraft')) {
-      localStorage.setItem('userDraft', JSON.stringify([draft]));
-    } else {
-      localStorage.setItem('userDraft', JSON.stringify(JSON.parse(storageDrafts).concat([draft])));
-    }
+    localStorage.setItem('userDraft', JSON.stringify([this.currSubmission]));
   }
 
   onSubmit() {
     if (this.userSubmissionForm.valid && this.currQuestionID == this.totalQuestions - 1) {
-      this.surveyService.submitUserAnswers(this.surveyID, this.userAnswers).subscribe(
+      this.surveyService.submitUserAnswers(this.surveyID, this.currSubmission).subscribe(
         () => {
           this.alertify.success('Answers submitted');
           console.log(this.userSubmissionForm);

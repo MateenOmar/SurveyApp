@@ -61,8 +61,7 @@ export class UserHomeComponent implements OnInit {
   sortDirection = "desc";
   searchByStatus: string = "";
 
-  constructor(private route: Router,
-              private surveyService: SurveyService) {
+  constructor(private surveyService: SurveyService) {
     // this.surveys = [];
   }
 

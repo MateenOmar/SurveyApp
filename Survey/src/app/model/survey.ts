@@ -2,7 +2,7 @@ import { Question } from "./question";
 
 export interface Survey {
     surveyID: number;
-    name: string;
+    title: string;
     dueDate: Date;
     description: string;
     numberOfQuestions: number;
