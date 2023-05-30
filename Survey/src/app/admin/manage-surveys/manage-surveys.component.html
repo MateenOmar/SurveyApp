@@ -12,7 +12,7 @@
             <h2 class="link-animate" id="Finished" (click)="setSurveyFilter('Finished')">Finished</h2>
           </div>
 
-          <div class="col-10 container-btn pb-5">
+          <div class="col-10">
             <div
               *ngFor="let survey of Surveys | filter : SearchByStatus : 'Status'"
               class="shadow-sm mb-3">
@@ -20,7 +20,6 @@
                 ><app-survey-card [survey]="survey" [parent]="this"></app-survey-card
               ></accordion>
             </div>
-            <button type="button" class="newsurvey-btn btn btn-success me-2" routerLink="/admin/surveys/add">Add survey</button>
           </div>
         </div>
       </div>

@@ -8,9 +8,6 @@ namespace WebAPI.Interfaces
         
         Task<Survey> GetSurveyDetailAsync(int id);
         void AddSurvey(Survey survey);
-        void AddSurveyQuestion(SurveyQuestion surveyQ);
-
-        void AddSurveyOption(SurveyOption surveyO);
         void DeleteSurvey(int id);
         Task<Survey> FindSurvey(int id);
 
