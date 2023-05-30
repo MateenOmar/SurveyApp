@@ -11,5 +11,8 @@ namespace WebAPI.Models
         public string priority { get; set; }
         // public bool Archived { get; set; } = false
 
+        public ICollection<SurveyQuestion> SurveyQuestions { get; set; }
+
+        //public ICollection<SurveyAssignee> SurveyAssignees { get; set; }
     }
 }
