@@ -1,0 +1,57 @@
+<div class="row shadow">
+  <div class="col-sm-4 p-0">
+    <div class="card">
+      <div class="card-body">
+          <div class="col-12">
+            <!-- Vertical Navbar -->
+            <div *ngFor="let question of allQuestions">
+              <h4 class="link-animate" (click)="changeQuestion(question.id - 1)">
+                Question {{question.id}}
+              </h4>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-8 p-0">
+    <div class="card">
+      <div class="card-header">
+        <h3>{{survey.title}} | {{survey.description}} | Due: {{survey.dueDate}}</h3>
+      </div>
+      <form [formGroup]="userSubmissionForm" (ngSubmit)="onSubmit()">
+        <div class="card-body">
+          <div class="col-sm-6 m-auto">
+            <h3>{{ currQuestion.text }}</h3>
+            <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2" btnRadioGroup>
+              <div class="d-flex">
+                <input type="radio" [id]="answer.id" [value]="answer.id"
+                [checked]="currQuestion.selectedAnswerID === answer.id"
+                (click)="updateSelectedAnswer(answer.id)"
+                formControlName="question{{currQuestion.id}}">
+                <label class="me-2" for="{{answer.id}}"> {{ answer.answer }} </label>
+              </div>         
+            </div>
+          </div>
+          <div class="form-group col-12 mt-3">
+            <button type="button" class="btn btn-primary col-12 mt-3"
+            (click)="changeQuestion(currQuestionID - 1)">
+              Back
+            </button>
+            <button type="button" class="btn btn-primary col-12 mt-3"
+            (click)="changeQuestion(currQuestionID + 1)">
+              Next
+            </button>
+            <button type="button" class="btn btn-light col-12 mt-3"
+            (click)="saveAsDraft()">
+              Save
+            </button>
+            <button type="submit" class="btn btn-success col-12 mt-3"
+            [disabled]="userSubmissionForm.invalid || currQuestionID < totalQuestions - 1">
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

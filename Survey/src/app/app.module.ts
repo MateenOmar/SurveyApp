@@ -26,8 +26,9 @@ import { SurveyResultsComponent } from "./admin/survey-results/survey-results.co
 import { SurveyService } from "./services/survey.service";
 import { UserManageComponent } from "./user/user-manage/user-manage.component";
 import { UserEditComponent } from "./user/user-edit/user-edit.component";
-import { UserHomeComponent } from "./user/user-home/user-home.component";
-import { SortPipe } from "./pipes/sort.pipe";
+import { UserHomeComponent } from './user/user-home/user-home.component';
+import { SortPipe } from './pipes/sort.pipe';
+import { UserFillOutComponent } from './user/user-fill-out/user-fill-out.component';
 import { AssignSurveyComponent } from "./admin/assign-survey/assign-survey.component";
 
 const appRoutes: Routes = [
@@ -36,14 +37,14 @@ const appRoutes: Routes = [
   { path: "admin/users/register", component: UserAddComponent },
   { path: "admin/surveys/manage", component: ManageSurveysComponent },
   { path: "admin/surveys/add", component: AddSurveyComponent },
+  { path: "admin/surveys/add/assign-survey", component: AssignSurveyComponent },
   { path: "admin/surveys/edit/:id", component: EditSurveyComponent },
   { path: "admin/surveys/results/:id", component: SurveyResultsComponent },
   { path: "admin/users/manage", component: UserManageComponent },
   { path: "admin/users/manage/edit/:userName", component: UserEditComponent },
   { path: "edit-survey/:id", component: EditSurveyComponent },
-  { path: "admin/survey-results/:id", component: SurveyResultsComponent },
+  { path: 'fill-out/:id', component: UserFillOutComponent},
   { path: "user/home", component: UserHomeComponent },
-  { path: "admin/surveys/add/assign-survey", component: AssignSurveyComponent },
   { path: "**", component: UserLoginComponent },
 ];
 
@@ -64,7 +65,8 @@ const appRoutes: Routes = [
     UserEditComponent,
     SortPipe,
     UserHomeComponent,
-    AssignSurveyComponent,
+    UserFillOutComponent,
+    AssignSurveyComponent
   ],
   imports: [
     BrowserModule,

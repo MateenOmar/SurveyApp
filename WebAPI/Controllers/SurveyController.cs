@@ -97,19 +97,31 @@ namespace WebAPI.Controllers
             return StatusCode(201);
         }
 
-        // POST api/survey/questions/options/{surveyID}/{questionID}/submit -- Add user's answers to survey once submitted
-        [HttpPost("questions/options/{surveyID}/{questionID}/submit")]
+        [HttpPost("submitAnswers/{surveyID}/{questionID}/{optionID}")]
+        public async Task<IActionResult> AddUserAnswer(int surveyID, int questionID, int answerID, int userID) {
+            var userAnswer = new SurveyUserAnswer();
+            userAnswer.surveyID = surveyID;
+            userAnswer.questionID = questionID;
+            userAnswer.answerID = answerID;
+            userAnswer.userID = userID;
+            uow.SurveyRepository.AddUserAnswer(userAnswer);
+            await uow.SaveAsync();
+
+            return StatusCode(201);
+        }
+
+        // POST api/survey/questions/options/{surveyID}/{questionID} -- Add user's answers to survey once submitted
+        [HttpPost("submitAnswers/{surveyID}/{userID}")]
         [AllowAnonymous]
-        public async Task<IActionResult> AddUserAnswers(SurveyUserAnswerDto[] UserAnswerDto)
+        public async Task<IActionResult> ProcessUserAnswers(int surveyID, SurveyUserAnswerDto[] UserAnswerDto)
         {
             foreach (var userAnswer in UserAnswerDto)
             {
-                var answer = mapper.Map<SurveyUserAnswer>(userAnswer);
-                uow.SurveyRepository.AddUserAnswer(answer);
+                await AddUserAnswer(surveyID, userAnswer.questionID, userAnswer.answerID, 1);
             }
-            await uow.SaveAsync();
             return StatusCode(201);
         }
+
 
         // PUT api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
         [HttpPut("update/{id}")]

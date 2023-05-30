@@ -42,4 +42,8 @@ export class SurveyService {
   unassignSurveyFromUser(surveyID: number, userName: string) {
     return this.http.delete(this.baseURL + "/survey/unassign/" + surveyID + "/" + userName);
   }
+
+  submitUserAnswers(surveyID: number, userAnswers: any[]) {
+    return this.http.post(this.baseURL + "/submitAnswers/" + surveyID, userAnswers);
+  }
 }

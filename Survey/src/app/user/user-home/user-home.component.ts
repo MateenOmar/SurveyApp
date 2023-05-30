@@ -10,6 +10,7 @@ import { SurveyCardComponent } from "../../admin/survey-card/survey-card.compone
   styleUrls: ["./user-home.component.css"],
 })
 export class UserHomeComponent implements OnInit {
+  //userType: string = "user";
   // surveys: Array<Survey>;
   surveys: Array<any> = [
     {
@@ -58,9 +59,10 @@ export class UserHomeComponent implements OnInit {
   searchPriority = "";
   sortByParam = "";
   sortDirection = "desc";
-  searchByStatus: string = "All";
+  searchByStatus: string = "";
 
-  constructor(private surveyService: SurveyService) {
+  constructor(private route: Router,
+              private surveyService: SurveyService) {
     // this.surveys = [];
   }
 
