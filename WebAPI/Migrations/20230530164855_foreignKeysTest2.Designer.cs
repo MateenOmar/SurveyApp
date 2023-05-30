@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Data;
 
@@ -11,9 +12,11 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230530164855_foreignKeysTest2")]
+    partial class foreignKeysTest2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,7 +206,7 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.SurveyOption", b =>
                 {
                     b.HasOne("WebAPI.Models.SurveyQuestion", "SurveyQuestion")
-                        .WithMany("SurveyOptions")
+                        .WithMany()
                         .HasForeignKey("surveyID", "questionID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -214,7 +217,7 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.SurveyQuestion", b =>
                 {
                     b.HasOne("WebAPI.Models.Survey", "Survey")
-                        .WithMany("SurveyQuestions")
+                        .WithMany()
                         .HasForeignKey("surveyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -247,16 +250,6 @@ namespace WebAPI.Migrations
                     b.Navigation("SurveyQuestion");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WebAPI.Models.Survey", b =>
-                {
-                    b.Navigation("SurveyQuestions");
-                });
-
-            modelBuilder.Entity("WebAPI.Models.SurveyQuestion", b =>
-                {
-                    b.Navigation("SurveyOptions");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<nav *ngIf="auth.getIsLoggedIn | async" class="navbar navbar-expand-lg fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/">SurveyApp</a>
+    <a *ngIf="admin" class="navbar-brand" routerLink="/admin/surveys/manage">SurveyApp</a>
+    <a *ngIf="!admin" class="navbar-brand" routerLink="/user/home">SurveyApp</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -19,25 +20,29 @@
             aria-current="page"
             [routerLinkActiveOptions]="{ exact: true }"
             routerLinkActive="active"
-            routerLink="/user/surveys"
+            routerLink="/user/home"
             >Surveys</a
           >
         </li>
         <li *ngIf="admin" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" routerLink="/admin/surveys">Surveys</a>
+          <a class="nav-link" routerLinkActive="active" routerLink="/admin/surveys/manage"
+            >Surveys</a
+          >
         </li>
         <li *ngIf="admin" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" routerLink="/admin/results">Results</a>
+          <a class="nav-link" routerLinkActive="active" routerLink="/admin/survey-results"
+            >Results</a
+          >
         </li>
         <li *ngIf="admin" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" routerLink="/admin/users">Users</a>
+          <a class="nav-link" routerLinkActive="active" routerLink="/admin/users/manage">Users</a>
         </li>
       </ul>
 
       <div>
         <ul class="nav navbar-nav">
           <div class="dropdown me-5" dropdown>
-            <a href="#" class="dropdown-toggle text-light" dropdownToggle (click)="(false)"
+            <a href="#" class="dropdown-toggle text-dark nav-link" dropdownToggle (click)="(false)"
               >Welcome {{ loggedInUser }}</a
             >
             <div class="dropdown-menu" *dropdownMenu>

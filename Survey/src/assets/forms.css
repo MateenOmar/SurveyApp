@@ -18,12 +18,11 @@
   color: white;
 }
 
-/* .card-header {
+.card-header {
   height: 42px;
   padding: 4px 10px !important;
   background-color: #212529 !important;
 }
-*/
 
 .link-animate:hover {
   cursor: pointer;

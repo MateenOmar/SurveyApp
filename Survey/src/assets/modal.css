@@ -1,0 +1,72 @@
+.modal {
+  backdrop-filter: blur(4px);
+}
+
+.custom-checkbox {
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.custom-checkbox input {
+  height: 0;
+  width: 0;
+  opacity: 0;
+}
+
+.custom-checkbox .form-group {
+  margin: 5px;
+  padding: 5px;
+  background-color: rgba(128, 128, 128, 0.075);
+  border-radius: 10px;
+}
+
+.custom-checkbox .form-group label {
+  display: inline-flex;
+  box-sizing: border-box;
+  height: 42px;
+  width: 42px;
+  border-radius: 50%;
+  background: transparent;
+  border: 3px solid black;
+  align-items: center;
+  justify-content: center;
+  font: 14px helvetica, arial, sans-serif;
+  cursor: pointer;
+  transition: linear 0.2s;
+}
+
+.custom-checkbox input:checked + label {
+  background: #96c362;
+  color: black;
+  border: 2px solid black;
+  text-shadow: 0 0 2px #000;
+}
+
+.modal-header {
+  background-color: #ebf0ff;
+}
+
+.modal-body {
+  background-color: #ebf0ff;
+  border-radius: 10px;
+}
+
+.user-info {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+  font-size: 25px;
+}
+
+.bi-person-fill {
+  font-size: 30px;
+  margin-right: 15px;
+}
+
+.bi-check-lg {
+  font-size: 35px;
+}
+
+.bs-modal {
+  background-color: yellowgreen;
+}

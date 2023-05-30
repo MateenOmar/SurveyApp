@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { UserForLogin, UserForRegister } from "../model/user";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
+import { Observable } from "rxjs";
+import { Survey } from "../model/survey";
 
 @Injectable({
   providedIn: "root",
@@ -11,15 +13,34 @@ export class SurveyService {
   constructor(private http: HttpClient) {}
 
   getSurveys() {
-    return this.http.get(this.baseURL + "/survey/surveys");
+    return this.http.get<Survey[]>(this.baseURL + "/survey/surveys");
   }
 
-  getSurveyQuestions(surveyID: number) {
-    return this.http.get(this.baseURL + "/survey/questions/" + surveyID);
+  getSurveyByID(surveyID: number) {
+    return this.http.get<Survey>(this.baseURL + "/survey/surveys/" + surveyID);
   }
 
-  getQuestionAnswers(surveyID: number, questionID: number) {
-    return this.http.get(this.baseURL + "/survey/questions/options/" + surveyID + "/" + questionID);
+  getSurveyAssigneesBySurveyID(surveyID: number) {
+    return this.http.get(this.baseURL + "/survey/assignees/" + surveyID);
+  }
+
+  getSurveyAssigneesByUser(userName: string) {
+    return this.http.get(this.baseURL + "/survey/assignees/user/" + userName);
+  }
+
+  assignSurveyToUser(surveyID: number, userName: string) {
+    return this.http.post(this.baseURL + "/survey/assign/" + surveyID + "/" + userName, null);
+  }
+
+  assignSurveyToUsers(surveyID: number, userNames: string[]) {
+    return this.http.post(this.baseURL + "/survey/assign", {
+      surveyID: surveyID,
+      assignees: userNames,
+    });
+  }
+
+  unassignSurveyFromUser(surveyID: number, userName: string) {
+    return this.http.delete(this.baseURL + "/survey/unassign/" + surveyID + "/" + userName);
   }
 
   submitUserAnswers(surveyID: number, userAnswers: any[]) {
