@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Question } from 'src/app/model/question';
@@ -11,32 +11,13 @@ import { Survey } from 'src/app/model/survey';
   styleUrls: ['./add-survey.component.css']
 })
 export class AddSurveyComponent implements OnInit {
+  @Input() surveyForEdit: Survey;
+  
   displayGeneralInfo: boolean = true;
   addSurveyForm: FormGroup;
   currentDate: Date = new Date();
   currQuestion: Question;
-  currSurvey: Survey = {
-    surveyID: 0,
-    name: '',
-    dueDate: this.addWeeks(this.currentDate, 1),
-    description: '',
-    numberOfQuestions: 1,
-    status: 'Drafted',
-    priority: 'Medium',
-    questions: [
-      {
-        questionID: 1,
-        question: 'Question 1',
-        numberOfAnswers: 4,
-        options: [
-          {answerID: 0, answer: ''},
-          {answerID: 1, answer: ''},
-          {answerID: 2, answer: ''},
-          {answerID: 3, answer: ''}
-        ]
-      }
-    ]
-  };
+  currSurvey: Survey;
 
   constructor(private router: Router, private http: HttpClient) { }
 
@@ -47,6 +28,34 @@ export class AddSurveyComponent implements OnInit {
       description: new FormControl(null, Validators.required),
       priority: new FormControl(null, Validators.required)
     }, this.dueDateValidator);
+    
+    if (this.surveyForEdit) {
+      this.currSurvey = this.surveyForEdit
+    } else {
+      this.currSurvey = {
+        surveyID: 0,
+        name: '',
+        dueDate: this.addWeeks(this.currentDate, 1),
+        description: '',
+        numberOfQuestions: 1,
+        status: 'Drafted',
+        priority: 'Medium',
+        questions: [
+          {
+            questionID: 1,
+            question: 'Question 1',
+            numberOfAnswers: 4,
+            options: [
+              {answerID: 0, answer: ''},
+              {answerID: 1, answer: ''},
+              {answerID: 2, answer: ''},
+              {answerID: 3, answer: ''}
+            ]
+          }
+        ]
+      };
+    }
+    
   }
 
   ngAfterViewInit() {

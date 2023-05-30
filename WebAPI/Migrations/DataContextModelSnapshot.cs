@@ -91,6 +91,8 @@ namespace WebAPI.Migrations
 
                     b.HasKey("answerID", "surveyID", "questionID");
 
+                    b.HasIndex("surveyID", "questionID");
+
                     b.ToTable("SurveyOptions");
                 });
 
@@ -171,6 +173,34 @@ namespace WebAPI.Migrations
                     b.HasKey("userID");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.SurveyOption", b =>
+                {
+                    b.HasOne("WebAPI.Models.SurveyQuestion", null)
+                        .WithMany("options")
+                        .HasForeignKey("surveyID", "questionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebAPI.Models.SurveyQuestion", b =>
+                {
+                    b.HasOne("WebAPI.Models.Survey", null)
+                        .WithMany("questionsAndAnswers")
+                        .HasForeignKey("surveyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Survey", b =>
+                {
+                    b.Navigation("questionsAndAnswers");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.SurveyQuestion", b =>
+                {
+                    b.Navigation("options");
                 });
 #pragma warning restore 612, 618
         }

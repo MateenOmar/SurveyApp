@@ -18,6 +18,16 @@ namespace WebAPI.Data.Repo
             dc.Surveys.Add(survey);
         }
 
+        public void AddSurveyQuestion(SurveyQuestion surveyQ)
+        {
+            dc.SurveyQuestions.Add(surveyQ);
+        }
+
+        public void AddSurveyOption(SurveyOption surveyO)
+        {
+            dc.SurveyOptions.Add(surveyO);
+        }
+
         public void DeleteSurvey(int surveyID)
         {
             var survey = dc.Surveys.Find(surveyID);

@@ -18,6 +18,5 @@ namespace WebAPI.Models
 
         [Required]
         public int numberOfAnswers { get; set; }
-        
     }
 }
