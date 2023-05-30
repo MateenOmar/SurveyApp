@@ -1,13 +1,8 @@
-import { ISurveyBase } from './isurveybase';
-import { Questions } from './questions';
-
-export class Survey implements ISurveyBase {
-    id!: number;
-    title!: string;
-    description!: string;
-    numberOfQuestions!: number;
-    priority!: string;
-    dueDate!: string;
-    status!: string;
-    QA!: Questions[]
-  }
+export class Survey {
+    SurveyID: number;
+    Title: string;
+    DueDate?: Date;
+    Description: string;
+    QA: Array<any>;
+    Priority?: string;
+}
