@@ -10,7 +10,7 @@ namespace WebAPI.Models
         [Required]
         public int questionID { get; set; }
 
-        [ForeignKey("Survey")]
+        [Required]
         public int surveyID { get; set; }
 
         [Required]
@@ -18,6 +18,10 @@ namespace WebAPI.Models
 
         [Required]
         public int numberOfAnswers { get; set; }
-        
+
+        [ForeignKey("surveyID")]
+        public Survey Survey { get; set; }
+
+        public ICollection<SurveyOption> SurveyOptions { get; set; }
     }
 }

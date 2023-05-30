@@ -10,7 +10,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
-    [Authorize]
+   // [Authorize]
     public class SurveyController : BaseController
     {
         private readonly IUnitOfWork uow;
@@ -64,17 +64,35 @@ namespace WebAPI.Controllers
                 jsonQuestionsList.Add(jsonQuestion);
             }
 
-            surveyCompleteDto.questions = jsonQuestionsList;
+            surveyCompleteDto.questionsAndAnswers = jsonQuestionsList;
 
             return Ok(surveyCompleteDto);
         }
 
         // POST api/survey/post -- Post data in JSON format
         [HttpPost("post")]
-        public async Task<IActionResult> AddSurvey(SurveyDto SurveyDto)
+        public async Task<IActionResult> AddSurvey(SurveyCompleteDto SurveyDto)
         {
             var survey = mapper.Map<Survey>(SurveyDto);
             uow.SurveyRepository.AddSurvey(survey);
+
+            SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
+            foreach (JObject q in SurveyDto.questionsAndAnswers) {
+                SurveyQuestion surveyQuestion = new SurveyQuestion();
+                surveyQuestion.questionID = int.Parse(q["questionID"].ToString());
+                surveyQuestion.surveyID = SurveyDto.surveyID;
+                surveyQuestion.question = q["question"].ToString();
+                surveyQuestion.numberOfAnswers = int.Parse(q["numberOfAnswers"].ToString());
+                uow.SurveyRepository.AddSurveyQuestion(surveyQuestion);
+                JArray qOptions = (JArray) q["options"];
+                foreach (JObject o in qOptions) {
+                    SurveyOption surveyOption = new SurveyOption();
+                    surveyOption.answerID = int.Parse(o["answerID"].ToString());
+                    surveyOption.surveyID = SurveyDto.surveyID;
+                    surveyOption.answer = o["answer"].ToString();
+                    uow.SurveyRepository.AddSurveyOption(surveyOption);
+                }
+            }
             await uow.SaveAsync();
             return StatusCode(201);
         }
@@ -144,6 +162,86 @@ namespace WebAPI.Controllers
             await uow.SaveAsync();
             return Ok(id);
         }
+
+        // POST api/survey/assign/{surveyID}/{userID} -- Assign survey to user
+        [HttpPost("assign/{surveyID}/{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AssignSurvey(int surveyID, string userName)
+        {
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+
+            var surveyAssignee = new SurveyAssignee();
+
+            surveyAssignee.surveyID = surveyID;
+            surveyAssignee.userID = userID;
+            uow.SurveyRepository.AssignUser(surveyAssignee);
+            await uow.SaveAsync();
+
+            return StatusCode(201);
+        }
+
+        // POST api/survey/assign/{surveyID} -- Assign survey to multiple users
+        [HttpPost("assign")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AssignUsersSurvey(SurveyAssignReq surveyAssignReq)
+        {
+            foreach (var userName in surveyAssignReq.assignees){
+                await AssignSurvey(surveyAssignReq.surveyID, userName);
+            }
+
+            return StatusCode(201);
+        }
+
+        // POST api/survey/remove/{surveyID}/{userID} -- Remove survey from user
+        [HttpDelete("unassign/{surveyID}/{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RemoveSurvey(int surveyID, string userName)
+        {
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+
+            uow.SurveyRepository.DeleteSurveyAssignee(surveyID, userID);
+            await uow.SaveAsync();
+
+            return StatusCode(201);
+        }
+
+        // GET api/survey/assignees/{surveyID} -- Get all users assigned to survey
+        [HttpGet("assignees/{surveyID}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSurveyAssigneesBySurvey(int surveyID)
+        {
+            var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
+            return Ok(assignees);
+        }
+
+        // GET api/survey/assignees/{userName} -- Get all surveys assigned to user
+        [HttpGet("assignees/user/{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSurveysAssignedToUser(string userName)
+        {
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+
+            var assignees = await uow.SurveyRepository.GetSurveysAssignedToUserAsync(userID);
+            return Ok(assignees);
+        }
+
+        // Save survey as draft
+        // TO BE IMPLEMENTED
 
         // ---------------------------------------------------------------------------
 

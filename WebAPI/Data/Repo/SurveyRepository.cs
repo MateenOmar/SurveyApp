@@ -18,6 +18,16 @@ namespace WebAPI.Data.Repo
             dc.Surveys.Add(survey);
         }
 
+        public void AddSurveyQuestion(SurveyQuestion surveyQ)
+        {
+            dc.SurveyQuestions.Add(surveyQ);
+        }
+
+        public void AddSurveyOption(SurveyOption surveyO)
+        {
+            dc.SurveyOptions.Add(surveyO);
+        }
+
         public void DeleteSurvey(int surveyID)
         {
             var survey = dc.Surveys.Find(surveyID);
@@ -70,6 +80,31 @@ namespace WebAPI.Data.Repo
         public void AssignUser(SurveyAssignee surveyAssignee)
         {
             dc.SurveyAssignees.Add(surveyAssignee);
+        }
+
+        public async Task<IEnumerable<SurveyAssignee>> GetSurveyAssigneesBySurveyAsync(int surveyID)
+        {
+            var assignees = await dc.SurveyAssignees
+            .Where(p => p.surveyID == surveyID)
+            .ToListAsync();
+
+            return assignees;
+        }
+
+        public async Task<IEnumerable<SurveyAssignee>> GetSurveysAssignedToUserAsync(int userID)
+        {
+            var surveys = await dc.SurveyAssignees
+            .Where(p => p.userID == userID)
+            .ToListAsync();
+
+            return surveys;
+        }
+
+        public void DeleteSurveyAssignee(int surveyID, int userID)
+        {   
+            var assignee = dc.SurveyAssignees.Find(surveyID, userID);
+
+            dc.SurveyAssignees.Remove(assignee);
         }
     }
 }

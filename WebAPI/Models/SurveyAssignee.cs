@@ -8,12 +8,17 @@ namespace WebAPI.Models
     public class SurveyAssignee
     {
         [Required]
-        [ForeignKey("Survey")]
         public int surveyID { get; set; }
+
         [Required]
-        [ForeignKey("User")]
         public int userID { get; set; }
-        public bool drafted { get; set; } = false;
-        public bool submitted { get; set; } = false;
+
+        public string status { get; set; } = "Assigned";
+
+        [ForeignKey("surveyID")]
+        public Survey Survey { get; set; }
+
+        [ForeignKey("userID")]
+        public User User { get; set; }
     }
 }

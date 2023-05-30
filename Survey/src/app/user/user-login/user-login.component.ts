@@ -9,24 +9,11 @@ import { AuthService } from "src/app/services/auth.service";
   styleUrls: ["./user-login.component.css"],
 })
 export class UserLoginComponent implements OnInit {
-  constructor(
-    private auth: AuthService,
-    private alertify: AlertifyService,
-    private router: Router
-  ) {}
+  constructor(private auth: AuthService) {}
 
   ngOnInit() {}
 
   onLogin(loginForm: NgForm) {
-    console.log(loginForm.value);
-    this.auth.authUser(loginForm.value).subscribe((response: any) => {
-      console.log(response);
-      const user = response;
-      localStorage.setItem("token", user.token);
-      localStorage.setItem("userName", user.userName);
-      localStorage.setItem("admin", user.admin);
-      this.alertify.success("Login Successful");
-      this.router.navigate(["/admin/register"]);
-    });
+    this.auth.login(loginForm);
   }
 }

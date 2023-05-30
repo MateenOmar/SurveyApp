@@ -9,7 +9,6 @@ namespace WebAPI.Dtos
     {
         public int surveyID { get; set; }
         public int userID { get; set; }
-        public bool drafted { get; set; }
-        public bool submitted { get; set; }
+        public string status { get; set; }
     }
 }
