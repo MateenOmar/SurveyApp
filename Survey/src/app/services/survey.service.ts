@@ -51,4 +51,12 @@ export class SurveyService {
   addSurvey(survey: Survey) {
     return this.http.post("http://localhost:5000/api/survey/post", survey);
   }
+
+  editSurvey(surveyID: number, patchDoc: string) {
+    return this.http.patch("http://localhost:5000/api/survey/update/" + surveyID, patchDoc);
+  }
+
+  deleteSurvey(surveyID: number) {
+    return this.http.delete("http://localhost:5000/api/survey/delete/" + surveyID);
+  }
 }

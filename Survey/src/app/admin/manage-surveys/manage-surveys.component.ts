@@ -22,6 +22,7 @@ export class ManageSurveysComponent implements OnInit {
 
   removeSurvey(surveyID: number) {
     this.Surveys = this.Surveys.filter((survey) => survey.surveyID != surveyID);
+    this.surveyService.deleteSurvey(surveyID);
     this.alertify.success("You have successfully removed survey with ID " + surveyID);
   }
 
@@ -32,6 +33,14 @@ export class ManageSurveysComponent implements OnInit {
       }
       return survey;
     });
+    let patchDoc = `[
+      {
+        "op": "replace",
+        "path": "/status",
+        "value": "Published"
+      }
+    ]`;
+    this.surveyService.editSurvey(surveyID, patchDoc);
     this.alertify.success("You have successfully published survey with ID" + surveyID);
   }
 
@@ -42,6 +51,14 @@ export class ManageSurveysComponent implements OnInit {
       }
       return survey;
     });
+    let patchDoc = `[
+      {
+        "op": "replace",
+        "path": "/status",
+        "value": "Finished"
+      }
+    ]`;
+    this.surveyService.editSurvey(surveyID, patchDoc);
     this.alertify.success("You have successfully closed survey with ID" + surveyID);
   }
 

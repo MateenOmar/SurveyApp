@@ -8,7 +8,7 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { ButtonsModule } from "ngx-bootstrap/buttons";
 import { AccordionModule } from "ngx-bootstrap/accordion";
-import { ModalModule } from "ngx-bootstrap/modal";
+import { BsModalService, ModalModule } from "ngx-bootstrap/modal";
 import { TypeaheadModule } from "ngx-bootstrap/typeahead";
 
 import { AppComponent } from "./app.component";
@@ -31,6 +31,7 @@ import { SortPipe } from './pipes/sort.pipe';
 import { UserFillOutComponent } from './user/user-fill-out/user-fill-out.component';
 import { AssignSurveyComponent } from "./admin/assign-survey/assign-survey.component";
 import { SurveyLinkComponent } from "./admin/survey-link/survey-link.component";
+import { AuthService } from "./services/auth.service";
 
 const appRoutes: Routes = [
 
@@ -84,7 +85,7 @@ const appRoutes: Routes = [
     ModalModule.forRoot(),
     TypeaheadModule.forRoot(),
   ],
-  providers: [AlertifyService, SurveyService],
+  providers: [AlertifyService, SurveyService, AuthService, BsModalService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

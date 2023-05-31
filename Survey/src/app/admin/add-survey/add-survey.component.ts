@@ -91,7 +91,7 @@ export class AddSurveyComponent implements OnInit {
     this.currSurvey.status = "Published";
     this.surveyService.addSurvey(this.currSurvey);
     console.log(this.currSurvey);
-    this.router.navigate(["admin/surveys/add/success"], {state: {id: this.currSurvey.surveyID}});
+    this.router.navigate(["/admin/surveys/add/success"], {state: {id: this.currSurvey.surveyID}});
   }
 
   onSelectQuestion(id: number) {
@@ -165,13 +165,13 @@ export class AddSurveyComponent implements OnInit {
   //       JSON.stringify(JSON.parse(storageDrafts).concat([this.currSurvey]))
   //     );
   //   }
-  this.surveyService.addSurvey(this.currSurvey);
-  console.log(this.currSurvey);
-  this.router.navigate(["/admin/manage-surveys"]);
+    this.surveyService.addSurvey(this.currSurvey);
+    console.log(this.currSurvey);
+    this.router.navigate(["/admin/manage-surveys"]);
   }
 
   onDiscard() {
-    this.router.navigate(["admin/surveys/manage"]);
+    this.router.navigate(["/admin/surveys/manage"]);
   }
 
   get Title() {

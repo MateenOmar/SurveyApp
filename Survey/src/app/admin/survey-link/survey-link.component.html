@@ -1,9 +1,23 @@
-<div class="card mt-3 m-auto">
-  <h3>Success!</h3>
-  <p>You have successfully created a survey</p>
-  <p>Share the link below for access to the survey:</p>
-  {{this.baseURL}}
-  <button type="button" class="btn btn-light me-2" routerLink="/admin/manage-surveys">
-    Save as a draft
-  </button>
+<div class="row mt-3">
+  <div class="col-12 m-auto">
+    <div class="card">
+      <div class="card-header text-center">
+        <h1>Success!</h1>
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-4">
+          <p>You have successfully created a survey</p>
+          <p>Share the link below for access to the survey:</p>
+          <div class="link-container p-3 m-auto">
+            <a routerLink="/fill-out/{{id}}">{{this.baseURL + id}}</a>
+          </div>
+        </div>
+        <div class="text-center d-grid">
+          <button type="button" class="btn btn-light me-2" routerLink="/admin/manage-surveys">
+            Return to manage surveys
+          </button>
+        </div>
+        </div>
+    </div>
+  </div>
 </div>

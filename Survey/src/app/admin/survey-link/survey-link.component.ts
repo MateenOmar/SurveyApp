@@ -10,12 +10,12 @@ export class SurveyLinkComponent implements OnInit {
   id: number;
   baseURL: string;
 
-  constructor(private router: Router, private location: Location) {
+  constructor(private router: Router) {
+    this.id = this.router.getCurrentNavigation()?.extras.state?.['id'];
   }
 
   ngOnInit() {
-    this.id = this.router.getCurrentNavigation()?.extras.state?.['id'];
-    this.baseURL = this.location.toString();
+    this.baseURL = window.location.origin + "/fill-out/";
   }
 
 }

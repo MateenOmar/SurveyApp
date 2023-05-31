@@ -154,7 +154,7 @@ namespace WebAPI.Controllers
             return StatusCode(200);
         }
 
-        // DELETE api/survey/post -- Delete Survey
+        // DELETE api/survey/delete/{id} -- Delete Survey
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteSurvey(int id)
         {
