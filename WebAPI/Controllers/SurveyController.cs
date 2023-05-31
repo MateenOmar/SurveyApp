@@ -75,12 +75,13 @@ namespace WebAPI.Controllers
         {
             var survey = mapper.Map<Survey>(SurveyDto);
             uow.SurveyRepository.AddSurvey(survey);
+            await uow.SaveAsync();
 
             SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
             foreach (JObject q in SurveyDto.questionsAndAnswers) {
                 SurveyQuestion surveyQuestion = new SurveyQuestion();
                 surveyQuestion.questionID = int.Parse(q["questionID"].ToString());
-                surveyQuestion.surveyID = SurveyDto.surveyID;
+                surveyQuestion.surveyID = survey.surveyID;
                 surveyQuestion.question = q["question"].ToString();
                 surveyQuestion.numberOfAnswers = int.Parse(q["numberOfAnswers"].ToString());
                 uow.SurveyRepository.AddSurveyQuestion(surveyQuestion);
@@ -88,7 +89,8 @@ namespace WebAPI.Controllers
                 foreach (JObject o in qOptions) {
                     SurveyOption surveyOption = new SurveyOption();
                     surveyOption.answerID = int.Parse(o["answerID"].ToString());
-                    surveyOption.surveyID = SurveyDto.surveyID;
+                    surveyOption.surveyID = survey.surveyID;
+                    surveyOption.questionID = surveyQuestion.questionID;
                     surveyOption.answer = o["answer"].ToString();
                     uow.SurveyRepository.AddSurveyOption(surveyOption);
                 }
