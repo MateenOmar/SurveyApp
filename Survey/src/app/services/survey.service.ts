@@ -5,6 +5,7 @@ import { environment } from "src/environments/environment";
 import { Observable } from "rxjs";
 import { Survey } from "../model/survey";
 import { UserAnswers } from "../model/userAnswers";
+import { BasicSurvey } from "../model/basicSurvey";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +15,11 @@ export class SurveyService {
   constructor(private http: HttpClient) {}
 
   getBasicSurveys() {
-    return this.http.get<Survey[]>(this.baseURL + "/survey/surveys");
+    return this.http.get<BasicSurvey[]>(this.baseURL + "/survey/surveys");
+  }
+
+  getCompleteSurveys() {
+    return this.http.get<Survey[]>(this.baseURL + "/survey/completeSurveys");
   }
 
   getCompleteSurveyByID(surveyID: number) {
