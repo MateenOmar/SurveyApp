@@ -13,11 +13,11 @@ export class SurveyService {
   baseURL = environment.baseUrl;
   constructor(private http: HttpClient) {}
 
-  getSurveys() {
+  getBasicSurveys() {
     return this.http.get<Survey[]>(this.baseURL + "/survey/surveys");
   }
 
-  getSurveyByID(surveyID: number) {
+  getCompleteSurveyByID(surveyID: number) {
     return this.http.get<Survey>(this.baseURL + "/survey/surveys/" + surveyID);
   }
 
@@ -48,19 +48,19 @@ export class SurveyService {
     return this.http.delete(this.baseURL + "/survey/unassign/" + surveyID + "/" + userName);
   }
 
-  submitUserAnswers(surveyID: number, userAnswers: UserAnswers) {
-    return this.http.post(this.baseURL + "/submitAnswers/" + surveyID, userAnswers);
+  submitUserAnswers(userAnswers: UserAnswers) {
+    return this.http.post(this.baseURL + "/survey/submitAnswers", userAnswers);
   }
 
   addSurvey(survey: Survey) {
-    return this.http.post("http://localhost:5000/api/survey/post", survey);
+    return this.http.post(this.baseURL + "/survey/post", survey);
   }
 
   editSurvey(surveyID: number, patchDoc: string) {
-    return this.http.patch("http://localhost:5000/api/survey/update/" + surveyID, patchDoc);
+    return this.http.patch(this.baseURL + "/survey/update/" + surveyID, patchDoc);
   }
 
   deleteSurvey(surveyID: number) {
-    return this.http.delete("http://localhost:5000/api/survey/delete/" + surveyID);
+    return this.http.delete(this.baseURL + "/survey/delete/" + surveyID);
   }
 }

@@ -38,7 +38,7 @@ export class AuthService {
       if (user.admin) {
         this.router.navigate(["/admin/surveys/manage"]);
       } else {
-        this.router.navigate(["/user/home"]);
+        this.router.navigate(["/user/surveys"]);
       }
     });
   }
