@@ -1,8 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ChartData, ChartEvent, ChartType } from "chart.js";
 import { SurveyService } from "src/app/services/survey.service";
 import { Survey } from "src/app/model/survey";
-import { Chart, Colors } from "chart.js/auto";
+import { Chart } from "chart.js/auto";
+import { TabsetComponent } from "ngx-bootstrap/tabs";
 
 @Component({
   selector: "app-survey-results",
@@ -10,13 +11,40 @@ import { Chart, Colors } from "chart.js/auto";
   styleUrls: ["./survey-results.component.css"],
 })
 export class SurveyResultsComponent implements OnInit {
+  @ViewChild("tabset") tabset: TabsetComponent;
   //surveys: Survey[];
   surveys: Survey;
   surveyLabels: string[][] = [];
   surveyData: object[] = [];
   surveyQuestions: string[] = [];
   chart: Chart;
+  surveyNames: string[];
+  currentSurvey: number = 0;
   currentQuestion: number = 0;
+  currentQuestionText: string = "";
+  currentQuestionNumberOfAnswers: number = 0;
+  defaultColors = [
+    "#3366CC",
+    "#DC3912",
+    "#FF9900",
+    "#109618",
+    "#990099",
+    "#3B3EAC",
+    "#0099C6",
+    "#DD4477",
+    "#66AA00",
+    "#B82E2E",
+    "#316395",
+    "#994499",
+    "#22AA99",
+    "#AAAA11",
+    "#6633CC",
+    "#E67300",
+    "#8B0707",
+    "#329262",
+    "#5574A6",
+    "#651067",
+  ];
   constructor(private surveyService: SurveyService) {}
 
   ngOnInit() {
@@ -27,11 +55,6 @@ export class SurveyResultsComponent implements OnInit {
     responsive: true,
     maintainAspectRatio: false,
     aspectRatio: 1 / 2,
-    plugins: {
-      colors: {
-        forceOverride: true,
-      },
-    },
   };
 
   public chartClicked({ event, active }: { event: ChartEvent; active: {}[] }): void {
@@ -48,6 +71,7 @@ export class SurveyResultsComponent implements OnInit {
       //this.surveys = res;
       this.surveys = res;
       this.populateData();
+      this.surveyNames = ["Survey 1", "Survey 2", "Survey 3"];
     });
   }
 
@@ -75,7 +99,7 @@ export class SurveyResultsComponent implements OnInit {
         this.surveyData[res[i].questionID - 1].data[res[i].answerID - 1] += 1;
       }
 
-      this.createChart("doughnut");
+      this.onQuestionSelect(0);
     });
   }
 
@@ -93,6 +117,7 @@ export class SurveyResultsComponent implements OnInit {
             label: this.surveys.questionsAndAnswers[this.currentQuestion].question,
             //label: this.surveys[0].questionsAndAnswers[this.currentQuestion].question,
             data: this.surveyData[this.currentQuestion]["data" as keyof object],
+            backgroundColor: this.defaultColors,
           },
         ],
       },
@@ -101,13 +126,26 @@ export class SurveyResultsComponent implements OnInit {
   }
 
   onTabSelect(event: any) {
-    // if (this.currentQuestion == 0) {
-    //   this.currentQuestion = 1;
-    // } else {
-    //   this.currentQuestion = 0;
-    // }
-
     this.chart.destroy();
     this.createChart(event.id);
+  }
+
+  onQuestionSelect(questionID: number) {
+    this.currentQuestion = questionID;
+    this.currentQuestionText = this.surveyQuestions[questionID];
+    this.currentQuestionNumberOfAnswers =
+      // @ts-ignore: Argument of type 'string' is not assignable to parameter of type 'number'
+      this.surveyData[this.currentQuestion]["data" as keyof object].length;
+    this.tabset.tabs[0].active = true;
+    this.createChart("doughnut");
+  }
+
+  onSurveySelect(surveyID: number) {
+    console.log("hello");
+    // this.currentSurvey = surveyID;
+    // this.surveyQuestions = [];
+    // this.surveyLabels = [];
+    // this.surveyData = [];
+    // this.populateData();
   }
 }
