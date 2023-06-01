@@ -122,7 +122,7 @@ namespace WebAPI.Data.Repo
             .Select(assignee => assignee.completionStatus).FirstAsync();
 
             return completionStatus;
-
+        }
         public async Task<IEnumerable<SurveyUserAnswer>> GetSurveyAnswersAsync(int surveyID)
         {
             var answers = await dc.SurveyUserAnswers
