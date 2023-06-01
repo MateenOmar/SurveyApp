@@ -14,7 +14,7 @@ namespace WebAPI.Data
 
         public DbSet<SurveyAssignee> SurveyAssignees { get; set; }
 
-        public DbSet<SurveyUserAnswer> SurveyUserAnswers { get; set; }
+        public DbSet<SurveyUserAnswer> SurveyUserAnswers { get; set; }
 
         public DbSet<SurveyQuestion> SurveyQuestions { get; set; }
 

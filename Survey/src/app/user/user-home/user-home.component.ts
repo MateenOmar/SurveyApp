@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Survey } from "src/app/model/survey";
 import { SurveyService } from "src/app/services/survey.service";
 import { SurveyCardComponent } from "../../admin/survey-card/survey-card.component";
+import { SurveyAssignee } from "src/app/model/surveyAssignee";
 
 @Component({
   selector: "app-user-home",
@@ -10,80 +11,40 @@ import { SurveyCardComponent } from "../../admin/survey-card/survey-card.compone
   styleUrls: ["./user-home.component.css"],
 })
 export class UserHomeComponent implements OnInit {
-  //userType: string = "user";
-  // surveys: Array<Survey>;
-  surveys: Array<any> = [
-    {
-      Id: 1,
-      Title: "Survey1",
-      Description: "This is a survey",
-      Status: "Open",
-      QA: {
-        question1: ["option1", "option2"],
-        question2: ["option1", "option2"],
-      },
-    },
-    {
-      Id: 2,
-      Title: "Survey2",
-      Description: "This is a survey2",
-      Status: "Open",
-      QA: {
-        question1: ["option1", "option2"],
-        question2: ["option1", "option2"],
-      },
-    },
-    {
-      Id: 3,
-      Title: "Survey3",
-      Description: "This is a survey3",
-      Status: "In-Progress",
-      QA: {
-        question1: ["option1", "option2"],
-        question2: ["option1", "option2"],
-      },
-    },
-    {
-      Id: 4,
-      Title: "Survey4",
-      Description: "This is a survey",
-      Status: "Completed",
-      QA: {
-        question1: ["option1", "option2"],
-        question2: ["option1", "option2"],
-      },
-    },
-  ];
-  today = new Date();
-  priority = "";
-  searchPriority = "";
+  surveysAssigned: Array<SurveyAssignee>;
+  priorityFilter: string = "";
+  statusFilter: string = "";
   sortByParam = "";
   sortDirection = "desc";
-  searchByStatus: string = "";
+  loggedInUser: string = "";
 
   constructor(private surveyService: SurveyService) {
-    // this.surveys = [];
+    this.surveysAssigned = [];
   }
 
   ngOnInit(): void {
-    // this.surveyService.getSurveys().subscribe(
-    //   (data) => {
-    //     this.surveys = data as Survey[];
-    //     console.log(data);
-    //   }, error => {
-    //     console.log("httperror:")
-    //     console.log(error);
-    //   }
-    // );
-  }
+    let item = document.getElementById("All_Statuses");
+    item?.classList.add("highlight");
+    item = document.getElementById("All_Priorities");
+    item?.classList.add("highlight");
 
-  onPriorityFilter() {
-    this.searchPriority = this.priority;
-  }
+    const userName = localStorage.getItem("userName");
+    if (userName !== null) {
+      this.loggedInUser = userName;
+    } 
+    else{
+      console.error("User is not valid");
+    }
 
-  onPriorityFilterClear() {
-    this.searchPriority = "";
-    this.priority = "";
+    this.surveyService.getSurveyAssigneesByUser(this.loggedInUser).subscribe(
+      (data) => {
+        this.surveysAssigned = data as SurveyAssignee[];
+        console.log(data)
+      }, error => {
+        console.log("httperror:");
+        console.log(error);
+      }
+    )
   }
 
   onSortDirection() {
@@ -94,18 +55,45 @@ export class UserHomeComponent implements OnInit {
     }
   }
 
-  setSurveyFilter(filter: string) {
-    console.log(this.surveys);
-    let prevItem = document.getElementById(this.searchByStatus);
+  setStatusFilter(filter: string) {
     let item = document.getElementById(filter);
-
-    prevItem?.classList.remove("highlight");
     item?.classList.add("highlight");
 
-    if (filter === "All") {
-      this.searchByStatus = "";
-    } else {
-      this.searchByStatus = filter;
+    let prevItem;
+    if (this.statusFilter === "") {
+      prevItem = document.getElementById("All_Statuses");
+    }
+    else {
+      prevItem = document.getElementById(this.statusFilter);
+    }
+    prevItem?.classList.remove("highlight");
+
+    if (filter === "All_Statuses") {
+      this.statusFilter = "";
+    }
+    else {
+      this.statusFilter = filter;
+    }
+  }
+
+  setPriorityFilter(filter: string) {
+    let item = document.getElementById(filter);
+    item?.classList.add("highlight");
+
+    let prevItem;
+    if (this.priorityFilter === "") {
+      prevItem = document.getElementById("All_Priorities");
+    }
+    else {
+      prevItem = document.getElementById(this.priorityFilter);
+    }
+    prevItem?.classList.remove("highlight");
+
+    if (filter === "All_Priorities") {
+      this.priorityFilter = "";
+    }
+    else {
+      this.priorityFilter = filter;
     }
   }
 }

@@ -1,4 +1,5 @@
 export interface UserAnswers {
     surveyID: number;
-    questionsAndAnswers: { [questionID: number]: number };
+    username: string;
+    questionAndAnswerIDs: Array<Object>;
 }
