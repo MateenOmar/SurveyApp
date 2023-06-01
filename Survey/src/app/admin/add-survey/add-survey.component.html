@@ -17,11 +17,13 @@
                 </div>
               </div>
               <h2>Questions</h2>
-              <div *ngFor="let question of currSurvey.questions; let i = index">
+              <div *ngFor="let question of currSurvey.questionsAndAnswers; let i = index">
                 <div class="card mb-3">
                   <div class="card-body p-3 d-flex justify-content-between">
-                    <h5 class="link-animate" (click)="onSelectQuestion(i)">{{question.question}}</h5>
-                    <div *ngIf="currSurvey.questions.length > 1" class="mt-auto mb-auto">
+                    <h5 class="link-animate" (click)="onSelectQuestion(i)">
+                      {{ question.question }}
+                    </h5>
+                    <div *ngIf="currSurvey.questionsAndAnswers.length > 1" class="mt-auto mb-auto">
                       <i class="link-animate fas fa-trash fa-xl" (click)="onDeleteQuestion(i)"></i>
                     </div>
                   </div>
@@ -38,20 +40,51 @@
                 <div class="row">
                   <div class="col-6">
                     <label for="title">Survey title</label>
-                    <input type="text" id="title" class="form-control mb-2" name="title" [(ngModel)]="currSurvey.title" formControlName="title">
-                    <div class="error-block"*ngIf="Title.invalid && Title.touched">Please enter a title</div>
+                    <input
+                      type="text"
+                      id="title"
+                      class="form-control mb-2"
+                      name="title"
+                      [(ngModel)]="currSurvey.title"
+                      formControlName="title" />
+                    <div class="error-block" *ngIf="Title.invalid && Title.touched">
+                      Please enter a title
+                    </div>
 
                     <label for="due">Due date</label>
-                    <input type="date" id="due" class="form-control" name="due" [(ngModel)]="currSurvey.dueDate" formControlName="due">
-                    <div class="error-block"*ngIf="addSurveyForm.hasError('lessThanToday') && Description.touched">Date has to be more than today</div>                  
+                    <input
+                      type="date"
+                      id="due"
+                      class="form-control"
+                      name="due"
+                      [(ngModel)]="currSurvey.dueDate"
+                      formControlName="due" />
+                    <div
+                      class="error-block"
+                      *ngIf="addSurveyForm.hasError('lessThanToday') && Description.touched">
+                      Date has to be more than today
+                    </div>
                   </div>
                   <div class="col-6">
                     <label for="description">Description</label>
-                    <input type="text" id="description" class="form-control mb-2" name="description" [(ngModel)]="currSurvey.description" formControlName="description">
-                    <div class="error-block"*ngIf="Description.invalid && Description.touched">Please enter description</div>
+                    <input
+                      type="text"
+                      id="description"
+                      class="form-control mb-2"
+                      name="description"
+                      [(ngModel)]="currSurvey.description"
+                      formControlName="description" />
+                    <div class="error-block" *ngIf="Description.invalid && Description.touched">
+                      Please enter description
+                    </div>
 
                     <label for="priority">Priority</label>
-                    <select class="form-control" id="priority" name="priority" [(ngModel)]="currSurvey.priority" formControlName="priority">
+                    <select
+                      class="form-control"
+                      id="priority"
+                      name="priority"
+                      [(ngModel)]="currSurvey.priority"
+                      formControlName="priority">
                       <option value="Low">Low</option>
                       <option value="Medium">Medium</option>
                       <option value="High">High</option>
@@ -61,13 +94,25 @@
               </div>
               <div *ngIf="!displayGeneralInfo">
                 <label for="qtitle">Question title</label>
-                <input type="text" id="qtitle" class="form-control mb-2" name="qtitle" [(ngModel)]="currQuestion.question" [ngModelOptions]="{standalone: true}">
-                <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2">
-                  <label>Answer option {{i+1}}</label>
+                <input
+                  type="text"
+                  id="qtitle"
+                  class="form-control mb-2"
+                  name="qtitle"
+                  [(ngModel)]="currQuestion.question"
+                  [ngModelOptions]="{ standalone: true }" />
+                <div *ngFor="let answer of currQuestion.options; let i = index" class="mb-2">
+                  <label>Answer option {{ i + 1 }}</label>
                   <div class="d-flex">
-                    <input type="text" class="form-control" [(ngModel)]="currQuestion.options[i].answer" [ngModelOptions]="{standalone: true}">
+                    <input
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="currQuestion.options[i].answer"
+                      [ngModelOptions]="{ standalone: true }" />
                     <div *ngIf="currQuestion.options.length > 1" class="mt-auto mb-auto ms-2">
-                      <i class="link-animate mt-auto mb-auto fas fa-trash fa-xl" (click)="onDeleteAnswer(i)"></i>
+                      <i
+                        class="link-animate mt-auto mb-auto fas fa-trash fa-xl"
+                        (click)="onDeleteAnswer(i)"></i>
                     </div>
                   </div>
                 </div>

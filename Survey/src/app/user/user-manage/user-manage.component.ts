@@ -32,8 +32,8 @@ export class UserManageComponent implements OnInit {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, remove",
     }).then((result) => {
-      this.auth.deleteUser(userName).subscribe((res: any) => {});
       if (result.isConfirmed) {
+        this.auth.deleteUser(userName).subscribe((res: any) => {});
         Swal.fire("Deleted!", "The user has been removed.", "success");
       }
     });

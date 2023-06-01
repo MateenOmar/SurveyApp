@@ -99,6 +99,16 @@ namespace WebAPI.Controllers
             return StatusCode(201);
         }
 
+        // GET api/survey/answers/{surveyID} -- Get all answers for a survey
+        [HttpGet("answers/{surveyID}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSurveyAnswers(int surveyID)
+        {
+            var answers = await uow.SurveyRepository.GetSurveyAnswersAsync(surveyID);
+            var answersDto = mapper.Map<IEnumerable<SurveyUserAnswerDto>>(answers);
+            return Ok(answersDto);
+        }
+
         [HttpPost("submitAnswers/{surveyID}/{questionID}/{optionID}")]
         public async Task<IActionResult> AddUserAnswer(int surveyID, int questionID, int answerID, int userID) {
             var userAnswer = new SurveyUserAnswer();
