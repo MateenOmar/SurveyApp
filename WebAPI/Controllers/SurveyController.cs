@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -194,6 +196,9 @@ namespace WebAPI.Controllers
             uow.SurveyRepository.AssignUser(surveyAssignee);
             await uow.SaveAsync();
 
+            var survey = await uow.SurveyRepository.FindSurvey(surveyID);
+            SendEmail(user.email, user.userName, survey.title, surveyID);
+
             return StatusCode(201);
         }
 
@@ -267,6 +272,25 @@ namespace WebAPI.Controllers
             
             
             return StatusCode(201);
+        }
+
+        public void SendEmail(string email, string name, string surveyName, int surveyID) {
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("eazy5notifications@gmail.com", "kwtzupsywrebmhvy"),
+                EnableSsl = true
+            };
+            var body =@$"<h1>Hello, {name}</h1>
+            <h2>Admin has assigned survey '{surveyName}' to you</h2>
+            <p>Click the link below to access it:</p>
+            <div style='background-color: #ebf0ff; border-width: 2px; border-color: #a0d2f3; border-style: dashed; width: 40%; padding: 25px; text-align: center'>
+                <a href='http://localhost:4200/fill-out/{surveyID}'><h3>Complete the survey</h3></a>
+            </div>";
+            var msg = new MailMessage("eazy5notifications@gmail.com", email, $"Survey '{surveyName}' is available for you", body);
+            msg.IsBodyHtml = true;
+            smtpClient.Send(msg);
         }
     }
 }

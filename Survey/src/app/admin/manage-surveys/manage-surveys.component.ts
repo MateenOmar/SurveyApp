@@ -33,7 +33,8 @@ export class ManageSurveysComponent implements OnInit {
       }
       return survey;
     });
-    let patchDoc = `[
+    let patchDoc =
+    `[
       {
         "op": "replace",
         "path": "/status",
@@ -51,7 +52,8 @@ export class ManageSurveysComponent implements OnInit {
       }
       return survey;
     });
-    let patchDoc = `[
+    let patchDoc =
+    `[
       {
         "op": "replace",
         "path": "/status",
