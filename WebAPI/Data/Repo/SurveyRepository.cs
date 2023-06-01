@@ -123,10 +123,11 @@ namespace WebAPI.Data.Repo
 
             return completionStatus;
         }
-        public async Task<IEnumerable<SurveyUserAnswer>> GetSurveyAnswersAsync(int surveyID)
+        public async Task<IEnumerable<SurveyUserAnswer>> GetSurveyAnswersByIDAsync(int surveyID, int userID)
         {
             var answers = await dc.SurveyUserAnswers
             .Where(p => p.surveyID == surveyID)
+            .Where(p => p.userID == userID)
             .ToListAsync();
 
             return answers;

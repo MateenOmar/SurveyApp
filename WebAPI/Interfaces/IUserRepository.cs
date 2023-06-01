@@ -12,6 +12,8 @@ namespace WebAPI.Interfaces
 
         Task<IEnumerable<User>> GetUsersAsync();
 
+        Task<User> GetUserNameAsync(int userID);
+
         Task<User> GetUserAsync(string userName);
 
         void DeleteUser(string userName);

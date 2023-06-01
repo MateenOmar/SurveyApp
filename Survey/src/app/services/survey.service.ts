@@ -21,6 +21,10 @@ export class SurveyService {
     return this.http.get<Survey>(this.baseURL + "/survey/surveys/" + surveyID);
   }
 
+  getAllCompleteSurveys() {
+    return this.http.get<Survey[]>(this.baseURL + "/survey/completeSurveys");
+  }
+
   getSurveyAnswers(surveyID: number) {
     return this.http.get(this.baseURL + "/survey/answers/" + surveyID);
   }

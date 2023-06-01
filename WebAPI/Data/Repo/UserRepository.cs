@@ -74,6 +74,14 @@ namespace WebAPI.Data.Repo
             return users;
         }
 
+        public async Task<User> GetUserNameAsync(int userID)
+        {
+            var user = await dc.Users
+            .Where(p => p.userID == userID)
+            .FirstAsync();
+            return user;
+        }
+
         public async Task<User> GetUserAsync(string userName)
         {
             var user = await dc.Users
