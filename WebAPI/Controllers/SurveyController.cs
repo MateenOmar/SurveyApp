@@ -55,7 +55,7 @@ namespace WebAPI.Controllers
             return Ok(allCompleteSurveys);
         }
 
-        // GET api/survey/surveys/{id}-- Get all surveys, WITH Q&A
+        // GET api/survey/surveys/{id}-- Get survey WITH Q&A using id
         [HttpGet("surveys/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetSurveyAsync(int id)
@@ -128,9 +128,31 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetSurveyAnswers(int surveyID)
         {
-            var answers = await uow.SurveyRepository.GetSurveyAnswersAsync(surveyID);
-            var answersDto = mapper.Map<IEnumerable<SurveyUserAnswerDto>>(answers);
-            return Ok(answersDto);
+            var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
+            var answers = new List<SurveyUserAnswerDto>();
+
+            foreach (var assignee in assignees) {
+                var questionAndAnswerIDs = new List<UserAnswerDto>();
+                var user = await uow.UserRepository.GetUserNameAsync(assignee.userID);
+
+                var assigneesAnswers = await uow.SurveyRepository.GetSurveyAnswersByIDAsync(surveyID, assignee.userID);
+                foreach (var assigneeAnswer in assigneesAnswers) {
+                    var userAnswerDto = new UserAnswerDto();
+                    userAnswerDto.questionID = assigneeAnswer.questionID;
+                    userAnswerDto.answerID = assigneeAnswer.answerID;
+                    questionAndAnswerIDs.Add(userAnswerDto);
+                }
+
+                var answer = new SurveyUserAnswerDto();
+                answer.surveyID = surveyID;
+                answer.username = user.userName;
+                answer.questionAndAnswerIDs = questionAndAnswerIDs;
+
+                answers.Add(answer);
+            }   
+
+           // var answersDto = mapper.Map<IEnumerable<SurveyUserAnswerDto>>(answers);
+            return Ok(answers);
         }
         
         [HttpPost("submitAnswers/{username}/{surveyID}/{questionID}/{answerID}")]

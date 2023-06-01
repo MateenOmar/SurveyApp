@@ -12,8 +12,8 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230601150032_fixFK")]
-    partial class fixFK
+    [Migration("20230601205551_dbFix")]
+    partial class dbFix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,6 @@ namespace WebAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("surveyID"));
 
                     b.Property<string>("description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("dueDate")
@@ -44,15 +43,12 @@ namespace WebAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("priority")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("surveyID");
@@ -68,8 +64,7 @@ namespace WebAPI.Migrations
                     b.Property<int>("userID")
                         .HasColumnType("int");
 
-                    b.Property<string>("status")
-                        .IsRequired()
+                    b.Property<string>("completionStatus")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("surveyID", "userID");

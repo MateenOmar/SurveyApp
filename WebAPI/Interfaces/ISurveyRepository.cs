@@ -19,7 +19,7 @@ namespace WebAPI.Interfaces
 
         Task<IEnumerable<SurveyOption>> GetQuestionsOptionsAsync(int surveyID, int questionID);
 
-        Task<IEnumerable<SurveyUserAnswer>> GetSurveyAnswersAsync(int surveyID);
+        Task<IEnumerable<SurveyUserAnswer>> GetSurveyAnswersByIDAsync(int surveyID, int userID);
 
         void AddUserAnswer(SurveyUserAnswer userAnswer);
 

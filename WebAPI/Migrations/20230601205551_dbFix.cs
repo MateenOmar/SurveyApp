@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class pleeeease : Migration
+    public partial class dbFix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,12 +17,12 @@ namespace WebAPI.Migrations
                 {
                     surveyID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     dueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     numberOfQuestions = table.Column<int>(type: "int", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    priority = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    priority = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -52,8 +52,8 @@ namespace WebAPI.Migrations
                 name: "SurveyQuestions",
                 columns: table => new
                 {
-                    questionID = table.Column<int>(type: "int", nullable: false),
                     surveyID = table.Column<int>(type: "int", nullable: false),
+                    questionID = table.Column<int>(type: "int", nullable: false),
                     question = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     numberOfAnswers = table.Column<int>(type: "int", nullable: false)
                 },
@@ -74,7 +74,7 @@ namespace WebAPI.Migrations
                 {
                     surveyID = table.Column<int>(type: "int", nullable: false),
                     userID = table.Column<int>(type: "int", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    completionStatus = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -97,14 +97,14 @@ namespace WebAPI.Migrations
                 name: "SurveyOptions",
                 columns: table => new
                 {
-                    answerID = table.Column<int>(type: "int", nullable: false),
                     surveyID = table.Column<int>(type: "int", nullable: false),
                     questionID = table.Column<int>(type: "int", nullable: false),
+                    answerID = table.Column<int>(type: "int", nullable: false),
                     answer = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SurveyOptions", x => new { x.answerID, x.surveyID, x.questionID });
+                    table.PrimaryKey("PK_SurveyOptions", x => new { x.surveyID, x.questionID, x.answerID });
                     table.ForeignKey(
                         name: "FK_SurveyOptions_SurveyQuestions_surveyID_questionID",
                         columns: x => new { x.surveyID, x.questionID },
@@ -117,9 +117,9 @@ namespace WebAPI.Migrations
                 name: "SurveyUserAnswers",
                 columns: table => new
                 {
-                    userID = table.Column<int>(type: "int", nullable: false),
                     surveyID = table.Column<int>(type: "int", nullable: false),
                     questionID = table.Column<int>(type: "int", nullable: false),
+                    userID = table.Column<int>(type: "int", nullable: false),
                     answerID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -129,7 +129,7 @@ namespace WebAPI.Migrations
                         name: "FK_SurveyUserAnswers_SurveyOptions_surveyID_questionID_answerID",
                         columns: x => new { x.surveyID, x.questionID, x.answerID },
                         principalTable: "SurveyOptions",
-                        principalColumns: new[] { "answerID", "surveyID", "questionID" },
+                        principalColumns: new[] { "surveyID", "questionID", "answerID" },
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SurveyUserAnswers_Users_userID",
@@ -143,11 +143,6 @@ namespace WebAPI.Migrations
                 name: "IX_SurveyAssignees_userID",
                 table: "SurveyAssignees",
                 column: "userID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SurveyOptions_surveyID_questionID",
-                table: "SurveyOptions",
-                columns: new[] { "surveyID", "questionID" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_SurveyUserAnswers_surveyID_questionID_answerID",

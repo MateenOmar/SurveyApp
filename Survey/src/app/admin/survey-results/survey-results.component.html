@@ -13,7 +13,7 @@
           </tabset>
 
           <div class="col-2 m-auto">
-            <div class="btn-group" dropdown placement="bottom right">
+            <div class="btn-group" dropdown placement="bottom right ">
               <button
                 id="button-animated"
                 dropdownToggle
@@ -28,15 +28,16 @@
                 class="dropdown-menu"
                 role="menu"
                 aria-labelledby="button-animated">
-                <div *ngFor="let surveyName of surveyNames">
+                <div *ngFor="let surveyName of surveyNames; let i = index">
                   <li role="menuitem">
-                    <a class="dropdown-item" (click)="onSurveySelect(1)">{{ surveyName }}</a>
+                    <a class="dropdown-item" (click)="onSurveySelect(i)">{{ surveyName }}</a>
                   </li>
                 </div>
               </ul>
             </div>
+            <h2 class="link-animate highlight" id="details">Details</h2>
             <div *ngFor="let question of surveyQuestions; let i = index">
-              <h2 class="link-animate" id="Draft" (click)="onQuestionSelect(i)">
+              <h2 class="link-animate" id="{{ i }}" (click)="onQuestionSelect(i)">
                 Question {{ i + 1 }}
               </h2>
             </div>
