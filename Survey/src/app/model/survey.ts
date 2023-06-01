@@ -8,5 +8,5 @@ export interface Survey {
     numberOfQuestions: number;
     status: string;
     priority: string;
-    questions: Array<Question>;
+    questionsAndAnswers: Array<Question>;
   }

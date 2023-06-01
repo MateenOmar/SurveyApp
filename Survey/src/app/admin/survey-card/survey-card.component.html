@@ -1,6 +1,6 @@
 <accordion-group [isOpen]="false" #accGroup class="p-1">
   <span class="header" accordion-heading class="float-start" style="width: 100%">
-    <h1 style="display: inline">{{ survey.Title }}</h1>
+    <h1 style="display: inline">{{ survey.title }}</h1>
     <i
       class="fa float-end fa-lg pt-3"
       [ngClass]="{
@@ -9,14 +9,14 @@
       }"></i>
   </span>
 
-  <p>{{ survey.Description }}</p>
+  <p>{{ survey.description }}</p>
 
   <div *ngIf="userType === 'admin'">
     <div class="my-auto p-3">
-      <div *ngIf="survey.Status == 'Draft'">
+      <div *ngIf="survey.status == 'Draft'">
         <ul class="list-inline m-auto float-end">
           <li class="list-inline-item">
-            <h3 class="link-animate" routerLinkActive="" routerLink="/admin/surveys/edit/{{ survey.Id }}">
+            <h3 class="link-animate" routerLinkActive="" routerLink="/admin/surveys/edit/{{ survey.surveyID }}">
               Edit
             </h3>
           </li>
@@ -28,11 +28,11 @@
           </li>
         </ul>
       </div>
-      <div *ngIf="survey.Status == 'Published'">
+      <div *ngIf="survey.status == 'Published'">
         <h3 class="link-animate float-end" (click)="onClose()">Close survey</h3>
       </div>
-      <div *ngIf="survey.Status == 'Finished'">
-        <h3 class="link-animate float-end" routerLink="/survey-results/{{ survey.Id }}">
+      <div *ngIf="survey.status == 'Finished'">
+        <h3 class="link-animate float-end" routerLink="/survey-results/{{ survey.surveyID }}">
           View results
         </h3>
       </div>
@@ -40,20 +40,20 @@
   </div>
   <div *ngIf="userType == 'user'">
     <div class="my-auto p-3">
-      <div *ngIf="survey.Status == 'Open'">
+      <div *ngIf="surveyAssignee.status == 'Open'">
         <ul class="list-inline m-auto">
           <li class="list-inline-item">
             <h3 class="link-animate" 
-            routerLinkActive="" routerLink="/fill-out/{{survey.id}}"
+            routerLinkActive="" routerLink="fill-out/{{survey.surveyID}}"
             >Fill Out</h3>
           </li>
         </ul>
       </div>
-      <div *ngIf="survey.Status == 'In-Progress'">
-        <h3 class="link-animate" routerLinkActive="" routerLink="/fill-out/{{survey.id}}">Continue</h3>
+      <div *ngIf="surveyAssignee.status == 'In-Progress'">
+        <h3 class="link-animate" routerLinkActive="" routerLink="fill-out/{{survey.surveyID}}">Continue</h3>
       </div>
-      <div *ngIf="survey.Status == 'Completed'">
-        <h3 class="link-animate" routerLink="/survey-results/{{survey.id}}">View Results</h3>
+      <div *ngIf="surveyAssignee.status == 'Completed'">
+        <h3 class="link-animate" routerLink="/survey-results/{{survey.surveyID}}">View Results</h3>
       </div>
     </div>
   </div>

@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { Survey } from "src/app/model/survey";
+import { SurveyAssignee } from "src/app/model/surveyAssignee";
 
 @Component({
   selector: "app-survey-card",
@@ -6,7 +8,8 @@ import { Component, Input, OnInit } from "@angular/core";
   styleUrls: ["./survey-card.component.css"],
 })
 export class SurveyCardComponent implements OnInit {
-  @Input() survey: any;
+  @Input() survey: Survey;
+  @Input() surveyAssignee: SurveyAssignee;
   @Input() parent: any;
   @Input() userType!: string;
   constructor() { }
@@ -14,14 +17,14 @@ export class SurveyCardComponent implements OnInit {
   ngOnInit() {}
 
   onDelete() {
-    this.parent.removeSurvey(this.survey.id);
+    this.parent.removeSurvey(this.survey.surveyID);
   }
 
   onPublish() {
-    this.parent.publishSurvey(this.survey.id);
+    this.parent.publishSurvey(this.survey.surveyID);
   }
 
   onClose() {
-    this.parent.closeSurvey(this.survey.id);
+    this.parent.closeSurvey(this.survey.surveyID);
   }
 }

@@ -13,13 +13,14 @@ import { SurveyService } from 'src/app/services/survey.service';
   templateUrl: './user-fill-out.component.html',
   styleUrls: ['./user-fill-out.component.css']
 })
+
 export class UserFillOutComponent implements OnInit {
 
   public surveyID!: number;
   userSubmissionForm!: FormGroup;
   allQuestions: Array<Question> = [];
   totalQuestions: number = 0;
-  currSubmission: UserAnswers = { surveyID: 0, questionsAndAnswers: {} };;
+  currSubmission: UserAnswers = { surveyID: 0, questionsAndAnswers: {} };
   currQuestion!: Question;
   currQuestionID: number = 0;
   survey: Survey =
@@ -31,7 +32,7 @@ export class UserFillOutComponent implements OnInit {
     "numberOfQuestions": 2,
     "priority": "low",
     "dueDate": new Date(),
-    "questions":[ 
+    "questionsAndAnswers":[ 
       {
         "questionID": 1,
         "question": "Favourite color",
@@ -62,7 +63,7 @@ export class UserFillOutComponent implements OnInit {
     this.userSubmissionForm = this.formBuilder.group({});
     this.surveyID = +this.route.snapshot.params['id'];
 
-    this.allQuestions = this.survey.questions;
+    this.allQuestions = this.survey.questionsAndAnswers;
     this.totalQuestions = this.allQuestions.length;
     this.currQuestion = this.allQuestions[this.currQuestionID];
     // console.log(this.allQuestions);

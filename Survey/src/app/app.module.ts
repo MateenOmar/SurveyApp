@@ -43,8 +43,8 @@ const appRoutes: Routes = [
   { path: "admin/users/manage", component: UserManageComponent },
   { path: "admin/users/manage/edit/:userName", component: UserEditComponent },
   { path: "edit-survey/:id", component: EditSurveyComponent },
-  { path: 'fill-out/:id', component: UserFillOutComponent},
-  { path: "user/home", component: UserHomeComponent },
+  { path: 'user/surveys/fill-out/:id', component: UserFillOutComponent},
+  { path: "user/surveys", component: UserHomeComponent },
   { path: "**", component: UserLoginComponent },
 ];
 
