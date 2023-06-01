@@ -16,11 +16,13 @@
   <div class="col-sm-8 p-0">
     <div class="card">
       <div class="card-header">
-        <h3>{{survey.title}} | {{survey.description}} | Due: {{survey.dueDate}}</h3>
+        <div *ngIf="survey">
+          <h3>{{survey.title}} | {{survey.description}} | Due: {{survey.dueDate}}</h3>
+        </div>
       </div>
       <form [formGroup]="userSubmissionForm" (ngSubmit)="onSubmit()">
         <div class="card-body">
-          <div class="col-sm-6 m-auto">
+          <div class="col-sm-6 m-auto" *ngIf="survey">
             <h3>{{ currQuestion.question }}</h3>
             <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2" btnRadioGroup>
               <div class="d-flex">

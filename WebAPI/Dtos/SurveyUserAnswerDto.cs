@@ -7,10 +7,8 @@ namespace WebAPI.Dtos
 {
     public class SurveyUserAnswerDto
     {
-        public int questionID { get; set; }
-        public int answerID { get; set; }
-        public int userID { get; set; }
-
-        
+        public int surveyID { get; set; }
+        public string username { get; set; }
+        public List<UserAnswerDto> questionAndAnswerIDs { get; set; }
     }
 }

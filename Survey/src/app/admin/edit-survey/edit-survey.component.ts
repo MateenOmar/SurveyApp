@@ -16,7 +16,7 @@ export class EditSurveyComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params =>{
-      this.surveyService.getSurveyByID(+params['id']).subscribe(data =>{
+      this.surveyService.getCompleteSurveyByID(+params['id']).subscribe(data =>{
         this.survey = data;
         this.allDataFetched = true;
         console.log(this.survey)

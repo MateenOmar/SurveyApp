@@ -10,8 +10,8 @@ namespace WebAPI.Models
         public int surveyID { get; set; }
 
         public int userID { get; set; }
-
-        public string status { get; set; } = "Assigned";
+      
+        public string completionStatus { get; set; } = "Assigned";
 
         [ForeignKey("surveyID")]
         public Survey Survey { get; set; }
