@@ -63,7 +63,7 @@ export class AddSurveyComponent implements OnInit {
         numberOfQuestions: 1,
         status: "Drafted",
         priority: "Medium",
-        questions: [
+        questionsAndAnswers: [
           {
             questionID: 1,
             question: "Question 1",
@@ -91,16 +91,18 @@ export class AddSurveyComponent implements OnInit {
     this.currSurvey.status = "Published";
     this.surveyService.addSurvey(this.currSurvey);
     console.log(this.currSurvey);
-    this.router.navigate(["/admin/surveys/add/success"], {state: {id: this.currSurvey.surveyID}});
+    this.router.navigate(["/admin/surveys/add/success"], {
+      state: { id: this.currSurvey.surveyID },
+    });
   }
 
   onSelectQuestion(id: number) {
-    this.currQuestion = this.currSurvey.questions[id];
+    this.currQuestion = this.currSurvey.questionsAndAnswers[id];
     this.displayGeneralInfo = false;
   }
 
   onDeleteQuestion(id: number) {
-    this.currSurvey.questions.splice(id, 1);
+    this.currSurvey.questionsAndAnswers.splice(id, 1);
   }
 
   onDeleteAnswer(id: number) {
@@ -108,8 +110,10 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onAddQuestion() {
-    let qid = this.currSurvey.questions[this.currSurvey.questions.length - 1].questionID + 1;
-    this.currSurvey.questions.push({
+    let qid =
+      this.currSurvey.questionsAndAnswers[this.currSurvey.questionsAndAnswers.length - 1]
+        .questionID + 1;
+    this.currSurvey.questionsAndAnswers.push({
       questionID: qid,
       question: "Question " + qid,
       numberOfAnswers: 4,
@@ -156,15 +160,15 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onSaveAsDraft() {
-  //   let storageDrafts = localStorage.getItem("drafts")!;
-  //   if (!localStorage.getItem("drafts")) {
-  //     localStorage.setItem("drafts", JSON.stringify([this.currSurvey]));
-  //   } else {
-  //     localStorage.setItem(
-  //       "drafts",
-  //       JSON.stringify(JSON.parse(storageDrafts).concat([this.currSurvey]))
-  //     );
-  //   }
+    //   let storageDrafts = localStorage.getItem("drafts")!;
+    //   if (!localStorage.getItem("drafts")) {
+    //     localStorage.setItem("drafts", JSON.stringify([this.currSurvey]));
+    //   } else {
+    //     localStorage.setItem(
+    //       "drafts",
+    //       JSON.stringify(JSON.parse(storageDrafts).concat([this.currSurvey]))
+    //     );
+    //   }
     this.surveyService.addSurvey(this.currSurvey);
     console.log(this.currSurvey);
     this.router.navigate(["/admin/manage-surveys"]);

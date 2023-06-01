@@ -106,5 +106,14 @@ namespace WebAPI.Data.Repo
 
             dc.SurveyAssignees.Remove(assignee);
         }
+
+        public async Task<IEnumerable<SurveyUserAnswer>> GetSurveyAnswersAsync(int surveyID)
+        {
+            var answers = await dc.SurveyUserAnswers
+            .Where(p => p.surveyID == surveyID)
+            .ToListAsync();
+
+            return answers;
+        }
     }
 }

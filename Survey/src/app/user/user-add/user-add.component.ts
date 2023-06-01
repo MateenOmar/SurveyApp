@@ -80,7 +80,7 @@ export class UserAddComponent implements OnInit {
       this.authService.registerUser(this.userData()).subscribe(() => {
         this.registrationForm.reset();
         this.alertify.success("User Added");
-        this.router.navigate(["/"]);
+        this.router.navigate(["/admin/users/manage"]);
       });
     }
   }
