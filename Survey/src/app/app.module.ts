@@ -26,17 +26,16 @@ import { SurveyResultsComponent } from "./admin/survey-results/survey-results.co
 import { SurveyService } from "./services/survey.service";
 import { UserManageComponent } from "./user/user-manage/user-manage.component";
 import { UserEditComponent } from "./user/user-edit/user-edit.component";
-import { UserHomeComponent } from './user/user-home/user-home.component';
-import { SortPipe } from './pipes/sort.pipe';
-import { UserFillOutComponent } from './user/user-fill-out/user-fill-out.component';
+import { UserHomeComponent } from "./user/user-home/user-home.component";
+import { SortPipe } from "./pipes/sort.pipe";
+import { UserFillOutComponent } from "./user/user-fill-out/user-fill-out.component";
 import { AssignSurveyComponent } from "./admin/assign-survey/assign-survey.component";
 import { SurveyLinkComponent } from "./admin/survey-link/survey-link.component";
 import { AuthService } from "./services/auth.service";
 
 const appRoutes: Routes = [
-
-  { path: "", component: AddSurveyComponent },
-  { path: "admin/users/register", component: UserAddComponent },
+  { path: "", component: UserLoginComponent },
+  { path: "admin/users/manage/register", component: UserAddComponent },
   { path: "admin/surveys/manage", component: ManageSurveysComponent },
   { path: "admin/surveys/add", component: AddSurveyComponent },
   { path: "admin/surveys/add/success", component: SurveyLinkComponent },
@@ -69,7 +68,7 @@ const appRoutes: Routes = [
     UserHomeComponent,
     UserFillOutComponent,
     AssignSurveyComponent,
-    SurveyLinkComponent
+    SurveyLinkComponent,
   ],
   imports: [
     BrowserModule,

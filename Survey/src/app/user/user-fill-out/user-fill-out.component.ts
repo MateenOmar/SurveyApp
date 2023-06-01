@@ -9,13 +9,12 @@ import { AlertifyService } from 'src/app/services/alertify.service';
 import { SurveyService } from 'src/app/services/survey.service';
 
 @Component({
-  selector: 'app-user-fill-out',
-  templateUrl: './user-fill-out.component.html',
-  styleUrls: ['./user-fill-out.component.css']
+  selector: "app-user-fill-out",
+  templateUrl: "./user-fill-out.component.html",
+  styleUrls: ["./user-fill-out.component.css"],
 })
 
 export class UserFillOutComponent implements OnInit {
-
   public surveyID!: number;
   userSubmissionForm!: FormGroup;
   allQuestions: Array<Question> = [];
@@ -58,9 +57,7 @@ export class UserFillOutComponent implements OnInit {
       }
     )
 
-  
-
-
+ 
     // console.log(this.allQuestions);
     // console.log(this.currQuestionID);
     // console.log(this.currQuestion);
@@ -78,9 +75,8 @@ export class UserFillOutComponent implements OnInit {
     // Index is 0-based
     const newQuestion = questionID;
     if (newQuestion < 0 || newQuestion >= this.totalQuestions) {
-      this.alertify.error("Invalid")
-    }
-    else {
+      this.alertify.error("Invalid");
+    } else {
       // Store selected answer ID in currSubmission
       this.currQuestionID = questionID;
       this.currQuestion = this.allQuestions[this.currQuestionID];
@@ -95,7 +91,7 @@ export class UserFillOutComponent implements OnInit {
 
   saveAsDraft() {
     console.log(this.currSubmission);
-    localStorage.setItem('userDraft', JSON.stringify([this.currSubmission]));
+    localStorage.setItem("userDraft", JSON.stringify([this.currSubmission]));
   }
 
   onSubmit() {

@@ -8,10 +8,10 @@ namespace WebAPI.Models
     public class SurveyQuestion
     {
         [Required]
-        public int questionID { get; set; }
+        public int surveyID { get; set; }
 
         [Required]
-        public int surveyID { get; set; }
+        public int questionID { get; set; }
 
         [Required]
         public string question { get; set; }
