@@ -24,19 +24,41 @@ namespace WebAPI.Controllers
 
         // ADMIN FUNCTIONS -----------------------------------------------------------
 
-        // GET api/survey -- Get all surveys
+        // GET api/survey -- Get all surveys, WITHOUT Q&A
         [HttpGet("surveys")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetSurveys(string type)
+        public async Task<IActionResult> GetAllSurveys()
         {
-            var surveys = await uow.SurveyRepository.GetSurveysAsync(type);
+            var surveys = await uow.SurveyRepository.GetAllSurveysAsync();
             var SurveyDto = mapper.Map<IEnumerable<SurveyDto>>(surveys);
             return Ok(SurveyDto);
         }
 
+        // GET api/survey -- Get all surveys, WITH Q&A
+        [HttpGet("completeSurveys")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllCompleteSurveys()
+        {
+            var surveyIDs = await uow.SurveyRepository.GetAllSurveyIDsAsync();
+            var allCompleteSurveys = new List<SurveyCompleteDto>();
+            foreach( var surveyID in surveyIDs) {
+                var surveyCompleteReq = await this.GetSurveyAsync(surveyID);
+                if (surveyCompleteReq is OkObjectResult okResult)
+                {
+                    var surveyCompleteDto = okResult.Value as SurveyCompleteDto;
+                    if (surveyCompleteDto != null)
+                    {
+                        allCompleteSurveys.Add(surveyCompleteDto);
+                    }
+                }
+            }
+            return Ok(allCompleteSurveys);
+        }
+
+        // GET api/survey/surveys/{id}-- Get all surveys, WITH Q&A
         [HttpGet("surveys/{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetSurvey(int id)
+        public async Task<IActionResult> GetSurveyAsync(int id)
         {
             var survey = await uow.SurveyRepository.FindSurvey(id);
             var surveyCompleteDto = mapper.Map<SurveyCompleteDto>(survey);
@@ -78,6 +100,7 @@ namespace WebAPI.Controllers
             await uow.SaveAsync();
 
             SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
+            Console.WriteLine(questions);
             foreach (JObject q in SurveyDto.questionsAndAnswers) {
                 SurveyQuestion surveyQuestion = new SurveyQuestion();
                 surveyQuestion.questionID = int.Parse(q["questionID"].ToString());
@@ -85,6 +108,7 @@ namespace WebAPI.Controllers
                 surveyQuestion.question = q["question"].ToString();
                 surveyQuestion.numberOfAnswers = int.Parse(q["numberOfAnswers"].ToString());
                 uow.SurveyRepository.AddSurveyQuestion(surveyQuestion);
+                await uow.SaveAsync();
                 JArray qOptions = (JArray) q["options"];
                 foreach (JObject o in qOptions) {
                     SurveyOption surveyOption = new SurveyOption();
@@ -93,14 +117,21 @@ namespace WebAPI.Controllers
                     surveyOption.questionID = surveyQuestion.questionID;
                     surveyOption.answer = o["answer"].ToString();
                     uow.SurveyRepository.AddSurveyOption(surveyOption);
+                    await uow.SaveAsync();
                 }
             }
-            await uow.SaveAsync();
             return StatusCode(201);
         }
 
-        [HttpPost("submitAnswers/{surveyID}/{questionID}/{optionID}")]
-        public async Task<IActionResult> AddUserAnswer(int surveyID, int questionID, int answerID, int userID) {
+        [HttpPost("submitAnswers/{username}/{surveyID}/{questionID}/{answerID}")]
+        public async Task<IActionResult> AddUserAnswer(int surveyID, int questionID, int answerID, string username) {
+            var user = await uow.UserRepository.GetUserAsync(username);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+            
             var userAnswer = new SurveyUserAnswer();
             userAnswer.surveyID = surveyID;
             userAnswer.questionID = questionID;
@@ -112,14 +143,14 @@ namespace WebAPI.Controllers
             return StatusCode(201);
         }
 
-        // POST api/survey/questions/options/{surveyID}/{questionID} -- Add user's answers to survey once submitted
-        [HttpPost("submitAnswers/{surveyID}/{userID}")]
+        // POST api/survey/submitAnswers -- Add user's answers to survey once submitted
+        [HttpPost("submitAnswers")]
         [AllowAnonymous]
-        public async Task<IActionResult> ProcessUserAnswers(int surveyID, SurveyUserAnswerDto[] UserAnswerDto)
+        public async Task<IActionResult> ProcessUserAnswers(SurveyUserAnswerDto UserAnswerDto)
         {
-            foreach (var userAnswer in UserAnswerDto)
+            foreach (var userAnswer in UserAnswerDto.questionAndAnswerIDs)
             {
-                await AddUserAnswer(surveyID, userAnswer.questionID, userAnswer.answerID, 1);
+                await AddUserAnswer(UserAnswerDto.surveyID, userAnswer.questionID, userAnswer.answerID, UserAnswerDto.username);
             }
             return StatusCode(201);
         }
@@ -226,7 +257,7 @@ namespace WebAPI.Controllers
             return Ok(assignees);
         }
 
-        // GET api/survey/assignees/{userName} -- Get all surveys assigned to user
+        // GET api/survey/assignees/user/{userName} -- Get all surveys assigned to user
         [HttpGet("assignees/user/{userName}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetSurveysAssignedToUser(string userName)
@@ -238,25 +269,15 @@ namespace WebAPI.Controllers
 
             var userID = user.userID;
 
-            var assignees = await uow.SurveyRepository.GetSurveysAssignedToUserAsync(userID);
-            return Ok(assignees);
+            var assignedSurveys = await uow.SurveyRepository.GetSurveysAssignedToUserAsync(userID);
+            var assignedSurveysDto = mapper.Map<IEnumerable<AssignedSurveysDto>>(assignedSurveys);
+            foreach (var assignedSurvey in assignedSurveysDto) {
+                var completionStatus = await uow.SurveyRepository.GetSurveyAssigneeStatusAsync(userID, assignedSurvey.surveyID);
+                assignedSurvey.completionStatus = completionStatus;
+            }
+            return Ok(assignedSurveysDto);
         }
-
-        // Save survey as draft
-        // TO BE IMPLEMENTED
 
         // ---------------------------------------------------------------------------
-
-        // USER FUNCTIONS ----------------------------------------------------------------
-
-        // POST api/survey/submit
-        [HttpPost("submit")]
-        [Authorize]
-        public async Task<IActionResult> SubmitAnswer(SurveyDto surveyDto)
-        {
-            
-            
-            return StatusCode(201);
-        }
     }
 }

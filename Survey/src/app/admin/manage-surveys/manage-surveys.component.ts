@@ -15,7 +15,7 @@ export class ManageSurveysComponent implements OnInit {
   constructor(private alertify: AlertifyService, private surveyService: SurveyService) {}
 
   ngOnInit() {
-    this.surveyService.getSurveys().subscribe(data => {
+    this.surveyService.getBasicSurveys().subscribe(data => {
       this.Surveys = data;
     });
   }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Models
 {
-    [PrimaryKey("answerID", "surveyID", "questionID")]
+    [PrimaryKey("surveyID", "questionID", "answerID")]
     public class SurveyOption
     {
         [Required]

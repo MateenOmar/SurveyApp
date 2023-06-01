@@ -11,61 +11,14 @@ import { SurveyAssignee } from "src/app/model/surveyAssignee";
   styleUrls: ["./user-home.component.css"],
 })
 export class UserHomeComponent implements OnInit {
-  surveys: Array<Survey>;
   surveysAssigned: Array<SurveyAssignee>;
-  // surveys: Array<any> = [
-  //   {
-  //     Id: 1,
-  //     Title: "Survey1",
-  //     Description: "This is a survey",
-  //     Priority: "Low",
-  //     Status: "Open",
-  //     QA: {
-  //       question1: ["option1", "option2"],
-  //       question2: ["option1", "option2"],
-  //     },
-  //   },
-  //   {
-  //     Id: 2,
-  //     Title: "Survey2",
-  //     Description: "This is a survey2",
-  //     Priority: "Low",
-  //     Status: "Open",
-  //     QA: {
-  //       question1: ["option1", "option2"],
-  //       question2: ["option1", "option2"],
-  //     },
-  //   },
-  //   {
-  //     Id: 3,
-  //     Title: "Survey3",
-  //     Description: "This is a survey3",
-  //     Status: "In-Progress",
-  //     Priority: "Medium",
-  //     QA: {
-  //       question1: ["option1", "option2"],
-  //       question2: ["option1", "option2"],
-  //     },
-  //   },
-  //   {
-  //     Id: 4,
-  //     Title: "Survey4",
-  //     Description: "This is a survey",
-  //     Priority: "High",
-  //     Status: "Completed",
-  //     QA: {
-  //       question1: ["option1", "option2"],
-  //       question2: ["option1", "option2"],
-  //     },
-  //   },
-  // ];
   priorityFilter: string = "";
   statusFilter: string = "";
   sortByParam = "";
   sortDirection = "desc";
+  loggedInUser: string = "";
 
   constructor(private surveyService: SurveyService) {
-    this.surveys = [];
     this.surveysAssigned = [];
   }
 
@@ -75,17 +28,23 @@ export class UserHomeComponent implements OnInit {
     item = document.getElementById("All_Priorities");
     item?.classList.add("highlight");
 
-    this.surveyService.getSurveys().subscribe(
+    const userName = localStorage.getItem("userName");
+    if (userName !== null) {
+      this.loggedInUser = userName;
+    } 
+    else{
+      console.error("User is not valid");
+    }
+
+    this.surveyService.getSurveyAssigneesByUser(this.loggedInUser).subscribe(
       (data) => {
-        this.surveys = data;
-        console.log(data);
+        this.surveysAssigned = data as SurveyAssignee[];
+        console.log(data)
       }, error => {
-        console.log("httperror:")
+        console.log("httperror:");
         console.log(error);
       }
-    );
-
-    
+    )
   }
 
   onSortDirection() {

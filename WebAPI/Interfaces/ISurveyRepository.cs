@@ -4,7 +4,8 @@ namespace WebAPI.Interfaces
 {
     public interface ISurveyRepository
     {
-        Task<IEnumerable<Survey>> GetSurveysAsync(string type);
+        Task<IEnumerable<Survey>> GetAllSurveysAsync();
+        Task<IEnumerable<int>> GetAllSurveyIDsAsync();
         
         Task<Survey> GetSurveyDetailAsync(int id);
         void AddSurvey(Survey survey);
@@ -24,9 +25,9 @@ namespace WebAPI.Interfaces
 
         Task<IEnumerable<SurveyAssignee>> GetSurveyAssigneesBySurveyAsync(int surveyID);
 
-        Task<IEnumerable<SurveyAssignee>> GetSurveysAssignedToUserAsync(int userID);
+        Task<IEnumerable<Survey>> GetSurveysAssignedToUserAsync(int userID);
+        Task<string> GetSurveyAssigneeStatusAsync(int userID, int surveyID);
 
         void DeleteSurveyAssignee(int surveyID, int userID);
-    
     }
 }

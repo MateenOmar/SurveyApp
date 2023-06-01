@@ -39,11 +39,16 @@ namespace WebAPI.Data.Repo
             return await dc.Surveys.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Survey>> GetSurveysAsync(string type)
+        public async Task<IEnumerable<Survey>> GetAllSurveysAsync()
         {
-            var surveys = await dc.Surveys
-            .ToListAsync();
+            var surveys = await dc.Surveys.ToListAsync();
             return surveys;
+        }
+
+        public async Task<IEnumerable<int>> GetAllSurveyIDsAsync()
+        {
+            var surveyIDs = await dc.Surveys.Select(survey => survey.surveyID).ToListAsync();
+            return surveyIDs;
         }
         public async Task<Survey> GetSurveyDetailAsync(int id)
         {
@@ -91,13 +96,16 @@ namespace WebAPI.Data.Repo
             return assignees;
         }
 
-        public async Task<IEnumerable<SurveyAssignee>> GetSurveysAssignedToUserAsync(int userID)
+        public async Task<IEnumerable<Survey>> GetSurveysAssignedToUserAsync(int userID)
         {
-            var surveys = await dc.SurveyAssignees
-            .Where(p => p.userID == userID)
+
+            var assignedSurveys = await dc.Surveys
+            .Where(survey => survey.status == "Published" && 
+                    dc.SurveyAssignees.Any(
+                        assignee => assignee.surveyID == survey.surveyID && assignee.userID == userID))
             .ToListAsync();
 
-            return surveys;
+            return assignedSurveys;
         }
 
         public void DeleteSurveyAssignee(int surveyID, int userID)
@@ -105,6 +113,15 @@ namespace WebAPI.Data.Repo
             var assignee = dc.SurveyAssignees.Find(surveyID, userID);
 
             dc.SurveyAssignees.Remove(assignee);
+        }
+
+        public async Task<string> GetSurveyAssigneeStatusAsync(int userID, int surveyID)
+        {
+            var completionStatus = await dc.SurveyAssignees
+            .Where(assignee => assignee.userID == userID && assignee.surveyID == surveyID)
+            .Select(assignee => assignee.completionStatus).FirstAsync();
+
+            return completionStatus;
         }
     }
 }

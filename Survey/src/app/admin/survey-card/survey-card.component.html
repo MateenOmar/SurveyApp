@@ -40,20 +40,20 @@
   </div>
   <div *ngIf="userType == 'user'">
     <div class="my-auto p-3">
-      <div *ngIf="surveyAssignee.status == 'Open'">
+      <div *ngIf="assignedSurvey.completionStatus == 'Assigned'">
         <ul class="list-inline m-auto">
           <li class="list-inline-item">
             <h3 class="link-animate" 
-            routerLinkActive="" routerLink="fill-out/{{survey.surveyID}}"
+            routerLinkActive="" routerLink="fill-out/{{assignedSurvey.surveyID}}"
             >Fill Out</h3>
           </li>
         </ul>
       </div>
-      <div *ngIf="surveyAssignee.status == 'In-Progress'">
-        <h3 class="link-animate" routerLinkActive="" routerLink="fill-out/{{survey.surveyID}}">Continue</h3>
+      <div *ngIf="assignedSurvey.completionStatus == 'In-Progress'">
+        <h3 class="link-animate" routerLinkActive="" routerLink="fill-out/{{assignedSurvey.surveyID}}">Continue</h3>
       </div>
-      <div *ngIf="surveyAssignee.status == 'Completed'">
-        <h3 class="link-animate" routerLink="/survey-results/{{survey.surveyID}}">View Results</h3>
+      <div *ngIf="assignedSurvey.status == 'Completed'">
+        <h3 class="link-animate" routerLink="/survey-results/{{assignedSurvey.surveyID}}">View Results</h3>
       </div>
     </div>
   </div>

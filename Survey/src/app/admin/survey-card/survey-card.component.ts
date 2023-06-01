@@ -9,12 +9,14 @@ import { SurveyAssignee } from "src/app/model/surveyAssignee";
 })
 export class SurveyCardComponent implements OnInit {
   @Input() survey: Survey;
-  @Input() surveyAssignee: SurveyAssignee;
+  @Input() assignedSurvey: SurveyAssignee;
   @Input() parent: any;
   @Input() userType!: string;
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.assignedSurvey);
+  }
 
   onDelete() {
     this.parent.removeSurvey(this.survey.surveyID);
