@@ -7,13 +7,9 @@ namespace WebAPI.Models
     [PrimaryKey("surveyID", "userID")]
     public class SurveyAssignee
     {
-        [Required]
-        public int surveyID { get; set; }
-
-        [Required]
-        public int userID { get; set; }
-
         public string status { get; set; } = "Assigned";
+        public int surveyID { get; set; }
+        public int userID { get; set; }
 
         [ForeignKey("surveyID")]
         public Survey Survey { get; set; }

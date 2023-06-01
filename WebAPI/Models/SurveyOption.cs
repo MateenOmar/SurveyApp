@@ -11,13 +11,9 @@ namespace WebAPI.Models
         public int answerID { get; set; }
 
         [Required]
-        public int questionID { get; set; }
-        
-        [Required]
-        public int surveyID { get; set; }
-
-        [Required]
         public string answer { get; set; }
+        public int surveyID { get; set; }
+        public int questionID { get; set; }
 
         [ForeignKey("surveyID, questionID")]
         public SurveyQuestion SurveyQuestion { get; set; }

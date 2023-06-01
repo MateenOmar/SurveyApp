@@ -230,12 +230,6 @@ namespace WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebAPI.Models.SurveyQuestion", "SurveyQuestion")
-                        .WithMany()
-                        .HasForeignKey("surveyID", "questionID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebAPI.Models.SurveyOption", "SurveyOption")
                         .WithMany()
                         .HasForeignKey("surveyID", "questionID", "answerID")
@@ -243,8 +237,6 @@ namespace WebAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("SurveyOption");
-
-                    b.Navigation("SurveyQuestion");
 
                     b.Navigation("User");
                 });
