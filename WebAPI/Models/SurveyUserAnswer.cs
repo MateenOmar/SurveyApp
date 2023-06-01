@@ -7,22 +7,19 @@ namespace WebAPI.Models
     [PrimaryKey("surveyID", "questionID", "userID")]
     public class SurveyUserAnswer
     {
-        [Required]
+        public int userID{ get; set; }
+
         public int surveyID { get; set; }
-        [Required]
+
         public int questionID { get; set; }
-        [Required]
-        public int userID { get; set; }
-        [Required]
+
         public int answerID { get; set; }
 
         [ForeignKey("userID")]
         public User User { get; set; }
 
-        [ForeignKey("surveyID, questionID")]
-        public SurveyQuestion SurveyQuestion { get; set; }
-
         [ForeignKey("surveyID, questionID, answerID")]
+        
         public SurveyOption SurveyOption { get; set; }
     }
 }

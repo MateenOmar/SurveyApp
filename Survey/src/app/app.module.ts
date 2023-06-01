@@ -8,7 +8,7 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { ButtonsModule } from "ngx-bootstrap/buttons";
 import { AccordionModule } from "ngx-bootstrap/accordion";
-import { ModalModule } from "ngx-bootstrap/modal";
+import { BsModalService, ModalModule } from "ngx-bootstrap/modal";
 import { TypeaheadModule } from "ngx-bootstrap/typeahead";
 
 import { AppComponent } from "./app.component";
@@ -30,19 +30,21 @@ import { UserHomeComponent } from './user/user-home/user-home.component';
 import { SortPipe } from './pipes/sort.pipe';
 import { UserFillOutComponent } from './user/user-fill-out/user-fill-out.component';
 import { AssignSurveyComponent } from "./admin/assign-survey/assign-survey.component";
+import { SurveyLinkComponent } from "./admin/survey-link/survey-link.component";
+import { AuthService } from "./services/auth.service";
 
 const appRoutes: Routes = [
 
-  { path: "", component: UserLoginComponent },
+  { path: "", component: AddSurveyComponent },
   { path: "admin/users/register", component: UserAddComponent },
   { path: "admin/surveys/manage", component: ManageSurveysComponent },
   { path: "admin/surveys/add", component: AddSurveyComponent },
+  { path: "admin/surveys/add/success", component: SurveyLinkComponent },
   { path: "admin/surveys/add/assign-survey", component: AssignSurveyComponent },
   { path: "admin/surveys/edit/:id", component: EditSurveyComponent },
   { path: "admin/surveys/results/:id", component: SurveyResultsComponent },
   { path: "admin/users/manage", component: UserManageComponent },
   { path: "admin/users/manage/edit/:userName", component: UserEditComponent },
-  { path: "edit-survey/:id", component: EditSurveyComponent },
   { path: 'user/surveys/fill-out/:id', component: UserFillOutComponent},
   { path: "user/surveys", component: UserHomeComponent },
   { path: "**", component: UserLoginComponent },
@@ -66,7 +68,8 @@ const appRoutes: Routes = [
     SortPipe,
     UserHomeComponent,
     UserFillOutComponent,
-    AssignSurveyComponent
+    AssignSurveyComponent,
+    SurveyLinkComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +85,7 @@ const appRoutes: Routes = [
     ModalModule.forRoot(),
     TypeaheadModule.forRoot(),
   ],
-  providers: [AlertifyService, SurveyService],
+  providers: [AlertifyService, SurveyService, AuthService, BsModalService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

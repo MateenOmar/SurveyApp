@@ -13,6 +13,9 @@
           </div>
 
           <div class="col-10 container-btn pb-5">
+            <div *ngIf="Surveys.length == 0">
+              <h3>There are no surveys to display</h3>
+            </div>
             <div
               *ngFor="let survey of Surveys | filter : SearchByStatus : 'Status'"
               class="shadow-sm mb-3">

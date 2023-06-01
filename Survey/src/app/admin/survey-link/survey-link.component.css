@@ -1,0 +1,20 @@
+.link-container {
+    background-color: #ebf0ff;
+    border-width: 2px;
+    border-color: #a0d2f3;
+    border-style: dashed;
+    width: 40%;
+}
+
+.card-header {
+    background-color: white!important;
+    padding-bottom: 3rem!important;
+}
+
+.card-header > h1{
+    color: black!important;
+}
+
+a {
+    color: #828181;
+}

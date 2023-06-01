@@ -1,5 +1,7 @@
 import { Component, HostBinding, OnInit } from "@angular/core";
+import { Survey } from "src/app/model/survey";
 import { AlertifyService } from "src/app/services/alertify.service";
+import { SurveyService } from "src/app/services/survey.service";
 
 @Component({
   selector: "app-manage-surveys",
@@ -8,75 +10,55 @@ import { AlertifyService } from "src/app/services/alertify.service";
 })
 export class ManageSurveysComponent implements OnInit {
   SearchByStatus: string = "Draft";
-  Surveys: Array<any> = [
-    {
-      Id: 1,
-      Title: "Survey1",
-      Description: "This is a survey",
-      Status: "Draft",
-      QA: {
-        question1: ["option1", "option2"],
-        question2: ["option1", "option2"],
-      },
-    },
-    {
-      Id: 2,
-      Title: "Survey2",
-      Description: "This is a survey2",
-      Status: "Published",
-      QA: {
-        question1: ["option1", "option2"],
-        question2: ["option1", "option2"],
-      },
-    },
-    {
-      Id: 3,
-      Title: "Survey3",
-      Description: "This is a survey3",
-      Status: "Finished",
-      QA: {
-        question1: ["option1", "option2"],
-        question2: ["option1", "option2"],
-      },
-    },
-    {
-      Id: 4,
-      Title: "Survey4",
-      Description: "This is a survey",
-      Status: "Draft",
-      QA: {
-        question1: ["option1", "option2"],
-        question2: ["option1", "option2"],
-      },
-    },
-  ];
+  Surveys: Array<Survey>;
 
-  constructor(private alertify: AlertifyService) {}
+  constructor(private alertify: AlertifyService, private surveyService: SurveyService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.surveyService.getSurveys().subscribe(data => {
+      this.Surveys = data;
+    });
+  }
 
   removeSurvey(surveyID: number) {
-    this.Surveys = this.Surveys.filter((survey) => survey.Id != surveyID);
+    this.Surveys = this.Surveys.filter((survey) => survey.surveyID != surveyID);
+    this.surveyService.deleteSurvey(surveyID);
     this.alertify.success("You have successfully removed survey with ID " + surveyID);
   }
 
   publishSurvey(surveyID: number) {
     this.Surveys = this.Surveys.map((survey) => {
-      if (survey.Id == surveyID) {
-        survey.Status = "Published";
+      if (survey.surveyID == surveyID) {
+        survey.status = "Published";
       }
       return survey;
     });
+    let patchDoc = `[
+      {
+        "op": "replace",
+        "path": "/status",
+        "value": "Published"
+      }
+    ]`;
+    this.surveyService.editSurvey(surveyID, patchDoc);
     this.alertify.success("You have successfully published survey with ID" + surveyID);
   }
 
   closeSurvey(surveyID: number) {
     this.Surveys = this.Surveys.map((survey) => {
-      if (survey.Id == surveyID) {
-        survey.Status = "Finished";
+      if (survey.surveyID == surveyID) {
+        survey.status = "Finished";
       }
       return survey;
     });
+    let patchDoc = `[
+      {
+        "op": "replace",
+        "path": "/status",
+        "value": "Finished"
+      }
+    ]`;
+    this.surveyService.editSurvey(surveyID, patchDoc);
     this.alertify.success("You have successfully closed survey with ID" + surveyID);
   }
 

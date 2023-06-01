@@ -35,7 +35,7 @@ export class AddSurveyComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private http: HttpClient,
+    private surveyService: SurveyService,
     private modalService: BsModalService,
     private survey: SurveyService,
     private auth: AuthService
@@ -88,9 +88,10 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onSubmit() {
-    this.http.post("http://localhost:5000/api/survey/post", this.currSurvey);
+    this.currSurvey.status = "Published";
+    this.surveyService.addSurvey(this.currSurvey);
     console.log(this.currSurvey);
-    console.log(this.addSurveyForm);
+    this.router.navigate(["/admin/surveys/add/success"], {state: {id: this.currSurvey.surveyID}});
   }
 
   onSelectQuestion(id: number) {
@@ -155,19 +156,22 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onSaveAsDraft() {
-    let storageDrafts = localStorage.getItem("drafts")!;
-    if (!localStorage.getItem("drafts")) {
-      localStorage.setItem("drafts", JSON.stringify([this.currSurvey]));
-    } else {
-      localStorage.setItem(
-        "drafts",
-        JSON.stringify(JSON.parse(storageDrafts).concat([this.currSurvey]))
-      );
-    }
+  //   let storageDrafts = localStorage.getItem("drafts")!;
+  //   if (!localStorage.getItem("drafts")) {
+  //     localStorage.setItem("drafts", JSON.stringify([this.currSurvey]));
+  //   } else {
+  //     localStorage.setItem(
+  //       "drafts",
+  //       JSON.stringify(JSON.parse(storageDrafts).concat([this.currSurvey]))
+  //     );
+  //   }
+    this.surveyService.addSurvey(this.currSurvey);
+    console.log(this.currSurvey);
+    this.router.navigate(["/admin/manage-surveys"]);
   }
 
   onDiscard() {
-    this.router.navigate(["admin/surveys/manage"]);
+    this.router.navigate(["/admin/surveys/manage"]);
   }
 
   get Title() {

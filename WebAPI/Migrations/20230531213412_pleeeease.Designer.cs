@@ -12,8 +12,8 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230526180324_UpdatedSurveyTable")]
-    partial class UpdatedSurveyTable
+    [Migration("20230531213412_pleeeease")]
+    partial class pleeeease
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,10 +40,6 @@ namespace WebAPI.Migrations
                     b.Property<DateTime>("dueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("numberOfQuestions")
                         .HasColumnType("int");
 
@@ -52,6 +48,10 @@ namespace WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -68,9 +68,15 @@ namespace WebAPI.Migrations
                     b.Property<int>("userID")
                         .HasColumnType("int");
 
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("surveyID", "userID");
 
-                    b.ToTable("SurveyAssiggnees");
+                    b.HasIndex("userID");
+
+                    b.ToTable("SurveyAssignees");
                 });
 
             modelBuilder.Entity("WebAPI.Models.SurveyOption", b =>
@@ -89,6 +95,8 @@ namespace WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("answerID", "surveyID", "questionID");
+
+                    b.HasIndex("surveyID", "questionID");
 
                     b.ToTable("SurveyOptions");
                 });
@@ -128,6 +136,10 @@ namespace WebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("surveyID", "questionID", "userID");
+
+                    b.HasIndex("userID");
+
+                    b.HasIndex("surveyID", "questionID", "answerID");
 
                     b.ToTable("SurveyUserAnswers");
                 });
@@ -170,6 +182,76 @@ namespace WebAPI.Migrations
                     b.HasKey("userID");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.SurveyAssignee", b =>
+                {
+                    b.HasOne("WebAPI.Models.Survey", "Survey")
+                        .WithMany()
+                        .HasForeignKey("surveyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("userID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Survey");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.SurveyOption", b =>
+                {
+                    b.HasOne("WebAPI.Models.SurveyQuestion", "SurveyQuestion")
+                        .WithMany("SurveyOptions")
+                        .HasForeignKey("surveyID", "questionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SurveyQuestion");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.SurveyQuestion", b =>
+                {
+                    b.HasOne("WebAPI.Models.Survey", "Survey")
+                        .WithMany("SurveyQuestions")
+                        .HasForeignKey("surveyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Survey");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.SurveyUserAnswer", b =>
+                {
+                    b.HasOne("WebAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("userID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAPI.Models.SurveyOption", "SurveyOption")
+                        .WithMany()
+                        .HasForeignKey("surveyID", "questionID", "answerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SurveyOption");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Survey", b =>
+                {
+                    b.Navigation("SurveyQuestions");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.SurveyQuestion", b =>
+                {
+                    b.Navigation("SurveyOptions");
                 });
 #pragma warning restore 612, 618
         }
