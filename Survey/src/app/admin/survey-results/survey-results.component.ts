@@ -10,7 +10,6 @@ import { Chart, Colors } from "chart.js/auto";
   styleUrls: ["./survey-results.component.css"],
 })
 export class SurveyResultsComponent implements OnInit {
-  //surveys: Survey[];
   surveys: Survey;
   surveyLabels: string[][] = [];
   surveyData: object[] = [];
@@ -44,7 +43,7 @@ export class SurveyResultsComponent implements OnInit {
 
   getSurveys() {
     //this.surveyService.getSurveys().subscribe((res: Survey[]) => {
-    this.surveyService.getSurveyByID(1).subscribe((res: Survey) => {
+    this.surveyService.getCompleteSurveyByID(1).subscribe((res: Survey) => {
       //this.surveys = res;
       this.surveys = res;
       this.populateData();

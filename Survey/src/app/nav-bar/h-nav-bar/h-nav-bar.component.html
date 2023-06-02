@@ -1,7 +1,7 @@
 <nav *ngIf="auth.getIsLoggedIn | async" class="navbar navbar-expand-lg fixed-top">
   <div class="container-fluid">
     <a *ngIf="admin" class="navbar-brand" routerLink="/admin/surveys/manage">SurveyApp</a>
-    <a *ngIf="!admin" class="navbar-brand" routerLink="/user/home">SurveyApp</a>
+    <a *ngIf="!admin" class="navbar-brand" routerLink="/user/surveys">SurveyApp</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -20,7 +20,7 @@
             aria-current="page"
             [routerLinkActiveOptions]="{ exact: true }"
             routerLinkActive="active"
-            routerLink="/user/home"
+            routerLink="/user/surveys"
             >Surveys</a
           >
         </li>

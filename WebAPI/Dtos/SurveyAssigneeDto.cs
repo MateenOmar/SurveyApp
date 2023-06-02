@@ -9,6 +9,6 @@ namespace WebAPI.Dtos
     {
         public int surveyID { get; set; }
         public int userID { get; set; }
-        public string status { get; set; }
+        public string completionStatus { get; set; }
     }
 }

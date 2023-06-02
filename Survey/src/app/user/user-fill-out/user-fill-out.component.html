@@ -27,7 +27,6 @@
             <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2" btnRadioGroup>
               <div class="d-flex">
                 <input type="radio" [id]="answer.answerID" [value]="answer.answerID"
-                [checked]="checkIfAnswered(answer.answerID)"
                 (click)="updateSelectedAnswer(answer.answerID)"
                 formControlName="question{{currQuestion.questionID}}">
                 <label class="me-2" for="{{answer.answerID}}"> {{ answer.answer }} </label>
