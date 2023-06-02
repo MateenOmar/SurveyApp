@@ -16,7 +16,6 @@ import { UserLoginComponent } from "./user/user-login/user-login.component";
 import { UserAddComponent } from "./user/user-add/user-add.component";
 import { AlertifyService } from "./services/alertify.service";
 import { HNavBarComponent } from "./nav-bar/h-nav-bar/h-nav-bar.component";
-import { VNavBarComponent } from "./nav-bar/v-nav-bar/v-nav-bar.component";
 import { AddSurveyComponent } from "./admin/add-survey/add-survey.component";
 import { ManageSurveysComponent } from "./admin/manage-surveys/manage-surveys.component";
 import { SurveyCardComponent } from "./admin/survey-card/survey-card.component";
@@ -44,7 +43,7 @@ const appRoutes: Routes = [
   { path: "admin/surveys/results/:id", component: SurveyResultsComponent },
   { path: "admin/users/manage", component: UserManageComponent },
   { path: "admin/users/manage/edit/:userName", component: UserEditComponent },
-  { path: 'user/surveys/fill-out/:id', component: UserFillOutComponent},
+  { path: "user/surveys/fill-out/:id", component: UserFillOutComponent },
   { path: "user/surveys", component: UserHomeComponent },
   { path: "**", component: UserLoginComponent },
 ];
@@ -55,7 +54,6 @@ const appRoutes: Routes = [
     UserLoginComponent,
     UserAddComponent,
     HNavBarComponent,
-    VNavBarComponent,
     AddSurveyComponent,
     ManageSurveysComponent,
     EditSurveyComponent,

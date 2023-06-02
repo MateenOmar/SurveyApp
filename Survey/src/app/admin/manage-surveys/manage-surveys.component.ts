@@ -1,4 +1,5 @@
 import { Component, HostBinding, OnInit } from "@angular/core";
+import { BasicSurvey } from "src/app/model/basicSurvey";
 import { Survey } from "src/app/model/survey";
 import { AlertifyService } from "src/app/services/alertify.service";
 import { SurveyService } from "src/app/services/survey.service";
@@ -10,7 +11,7 @@ import { SurveyService } from "src/app/services/survey.service";
 })
 export class ManageSurveysComponent implements OnInit {
   SearchByStatus: string = "Draft";
-  Surveys: Array<Survey>;
+  Surveys: Array<BasicSurvey>;
 
   constructor(private alertify: AlertifyService, private surveyService: SurveyService) {}
 
@@ -33,7 +34,8 @@ export class ManageSurveysComponent implements OnInit {
       }
       return survey;
     });
-    let patchDoc = `[
+    let patchDoc =
+    `[
       {
         "op": "replace",
         "path": "/status",
@@ -51,7 +53,8 @@ export class ManageSurveysComponent implements OnInit {
       }
       return survey;
     });
-    let patchDoc = `[
+    let patchDoc =
+    `[
       {
         "op": "replace",
         "path": "/status",

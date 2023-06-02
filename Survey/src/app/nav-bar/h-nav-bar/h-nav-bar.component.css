@@ -4,3 +4,20 @@
   border-bottom: 3px solid #d3d8ff;
   border-radius: 5px;
 }
+
+.iconClass {
+  position: relative;
+  color: rgba(0, 0, 0, 0.473);
+}
+
+.iconClass:hover {
+  color: rgb(0, 0, 0);
+}
+
+.iconClass span {
+  position: absolute;
+  top: 0px;
+  right: 3px;
+  display: block;
+  color: rgba(255, 0, 0, 0.685);
+}

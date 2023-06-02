@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -55,7 +57,7 @@ namespace WebAPI.Controllers
             return Ok(allCompleteSurveys);
         }
 
-        // GET api/survey/surveys/{id}-- Get a survey, WITH Q&A
+        // GET api/survey/surveys/{id}-- Get survey WITH Q&A using id
         [HttpGet("surveys/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetSurveyAsync(int id)
@@ -128,9 +130,31 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetSurveyAnswers(int surveyID)
         {
-            var answers = await uow.SurveyRepository.GetSurveyAnswersAsync(surveyID);
-            var answersDto = mapper.Map<IEnumerable<SurveyUserAnswerDto>>(answers);
-            return Ok(answersDto);
+            var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
+            var answers = new List<SurveyUserAnswerDto>();
+
+            foreach (var assignee in assignees) {
+                var questionAndAnswerIDs = new List<UserAnswerDto>();
+                var user = await uow.UserRepository.GetUserNameAsync(assignee.userID);
+
+                var assigneesAnswers = await uow.SurveyRepository.GetSurveyAnswersByIDAsync(surveyID, assignee.userID);
+                foreach (var assigneeAnswer in assigneesAnswers) {
+                    var userAnswerDto = new UserAnswerDto();
+                    userAnswerDto.questionID = assigneeAnswer.questionID;
+                    userAnswerDto.answerID = assigneeAnswer.answerID;
+                    questionAndAnswerIDs.Add(userAnswerDto);
+                }
+
+                var answer = new SurveyUserAnswerDto();
+                answer.surveyID = surveyID;
+                answer.username = user.userName;
+                answer.questionAndAnswerIDs = questionAndAnswerIDs;
+
+                answers.Add(answer);
+            }   
+
+           // var answersDto = mapper.Map<IEnumerable<SurveyUserAnswerDto>>(answers);
+            return Ok(answers);
         }
         
         [HttpPost("submitAnswers/{username}/{surveyID}/{questionID}/{answerID}")]
@@ -240,6 +264,9 @@ namespace WebAPI.Controllers
             uow.SurveyRepository.AssignUser(surveyAssignee);
             await uow.SaveAsync();
 
+            var survey = await uow.SurveyRepository.FindSurvey(surveyID);
+            SendEmail(user.email, user.userName, survey.title, surveyID);
+
             return StatusCode(201);
         }
 
@@ -321,5 +348,36 @@ namespace WebAPI.Controllers
         }
 
         // ---------------------------------------------------------------------------
+
+        // USER FUNCTIONS ----------------------------------------------------------------
+
+        // POST api/survey/submit
+        [HttpPost("submit")]
+        [Authorize]
+        public async Task<IActionResult> SubmitAnswer(SurveyDto surveyDto)
+        {
+            
+            
+            return StatusCode(201);
+        }
+
+        public void SendEmail(string email, string name, string surveyName, int surveyID) {
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("eazy5notifications@gmail.com", "kwtzupsywrebmhvy"),
+                EnableSsl = true
+            };
+            var body =@$"<h1>Hello, {name}</h1>
+            <h2>Admin has assigned survey '{surveyName}' to you</h2>
+            <p>Click the link below to access it:</p>
+            <div style='background-color: #ebf0ff; border-width: 2px; border-color: #a0d2f3; border-style: dashed; width: 40%; padding: 25px; text-align: center'>
+                <a href='http://localhost:4200/fill-out/{surveyID}'><h3>Complete the survey</h3></a>
+            </div>";
+            var msg = new MailMessage("eazy5notifications@gmail.com", email, $"Survey '{surveyName}' is available for you", body);
+            msg.IsBodyHtml = true;
+            smtpClient.Send(msg);
+        }
     }
 }
