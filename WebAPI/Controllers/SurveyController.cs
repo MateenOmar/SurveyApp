@@ -191,13 +191,13 @@ namespace WebAPI.Controllers
 
         // PUT api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateSurvey(int surveyID, SurveyDto SurveyDto)
+        public async Task<IActionResult> UpdateSurvey(int id, SurveyDto SurveyDto)
         {
             try {
-                if (surveyID != SurveyDto.surveyID) {
+                if (id != SurveyDto.surveyID) {
                     return BadRequest("Update not allowed");
                 }
-                var surveyFromDB = await uow.SurveyRepository.FindSurvey(surveyID);
+                var surveyFromDB = await uow.SurveyRepository.FindSurvey(id);
                 if (surveyFromDB == null) {
                     return BadRequest("Update not allowed");
                 }

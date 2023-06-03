@@ -76,7 +76,7 @@ export class SurveyResultsComponent implements OnInit {
 
   populateData() {
     this.surveyService
-      .getSurveyAnswers(this.surveys[this.currentSurvey].surveyID)
+      .getSurveyAnswers(this.surveys[this.currentSurvey].surveyID!)
       .subscribe((res: any) => {
         var numberOfAnswers = this.surveys[this.currentSurvey].questionsAndAnswers;
 

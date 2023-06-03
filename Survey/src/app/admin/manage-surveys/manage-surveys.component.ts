@@ -1,4 +1,5 @@
 import { Component, HostBinding, OnInit } from "@angular/core";
+import { Route, Router } from "@angular/router";
 import { BasicSurvey } from "src/app/model/basicSurvey";
 import { Survey } from "src/app/model/survey";
 import { AlertifyService } from "src/app/services/alertify.service";
@@ -10,21 +11,22 @@ import { SurveyService } from "src/app/services/survey.service";
   styleUrls: ["./manage-surveys.component.css"],
 })
 export class ManageSurveysComponent implements OnInit {
-  SearchByStatus: string = "Draft";
-  Surveys: Array<BasicSurvey>;
+  SearchByStatus: string = "All";
+  Surveys: Array<BasicSurvey> = [];
 
-  constructor(private alertify: AlertifyService, private surveyService: SurveyService) {}
+  constructor(private alertify: AlertifyService, private surveyService: SurveyService, private router: Router) {}
 
   ngOnInit() {
     this.surveyService.getBasicSurveys().subscribe(data => {
       this.Surveys = data;
+      console.log(this.Surveys)
     });
   }
 
-  removeSurvey(surveyID: number) {
-    this.Surveys = this.Surveys.filter((survey) => survey.surveyID != surveyID);
-    this.surveyService.deleteSurvey(surveyID);
-    this.alertify.success("You have successfully removed survey with ID " + surveyID);
+  removeSurvey(surveyID: number, surveyTitle: string) {
+    this.Surveys = this.Surveys.filter((survey) => survey.title != surveyTitle);
+    this.surveyService.deleteSurvey(surveyID).subscribe();
+    this.alertify.success("You have successfully removed survey \"" + surveyTitle + "\"");
   }
 
   publishSurvey(surveyID: number) {
@@ -35,14 +37,15 @@ export class ManageSurveysComponent implements OnInit {
       return survey;
     });
     let patchDoc =
-    `[
+    [
       {
         "op": "replace",
         "path": "/status",
         "value": "Published"
       }
-    ]`;
-    this.surveyService.editSurvey(surveyID, patchDoc);
+    ];
+    console.log(patchDoc);
+    this.surveyService.patchSurvey(surveyID, patchDoc).subscribe();
     this.alertify.success("You have successfully published survey with ID" + surveyID);
   }
 
@@ -54,14 +57,14 @@ export class ManageSurveysComponent implements OnInit {
       return survey;
     });
     let patchDoc =
-    `[
+    [
       {
         "op": "replace",
         "path": "/status",
         "value": "Finished"
       }
-    ]`;
-    this.surveyService.editSurvey(surveyID, patchDoc);
+    ];
+    this.surveyService.patchSurvey(surveyID, patchDoc).subscribe();
     this.alertify.success("You have successfully closed survey with ID" + surveyID);
   }
 

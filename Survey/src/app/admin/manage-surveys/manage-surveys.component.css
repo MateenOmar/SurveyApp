@@ -6,3 +6,7 @@
     position: absolute;
     bottom: 0;
 }
+
+.card-header {
+    background-color: #212529;
+  }

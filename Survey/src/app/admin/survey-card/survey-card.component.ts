@@ -19,7 +19,7 @@ export class SurveyCardComponent implements OnInit {
   }
 
   onDelete() {
-    this.parent.removeSurvey(this.survey.surveyID);
+    this.parent.removeSurvey(this.survey.surveyID, this.survey.title);
   }
 
   onPublish() {
