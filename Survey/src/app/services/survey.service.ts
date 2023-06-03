@@ -10,6 +10,7 @@ import { BasicSurvey } from "../model/basicSurvey";
 @Injectable({
   providedIn: "root",
 })
+
 export class SurveyService {
   baseURL = environment.baseUrl;
   constructor(private http: HttpClient) {}
@@ -32,6 +33,10 @@ export class SurveyService {
 
   getSurveyAnswers(surveyID: number) {
     return this.http.get(this.baseURL + "/survey/answers/" + surveyID);
+  }
+
+  getAssignedSurvey(surveyID: number, userName: string) {
+    return this.http.get(this.baseURL + "/survey/assignees/" + userName + "/" + surveyID);
   }
 
   getSurveyAssigneesBySurveyID(surveyID: number) {
@@ -67,6 +72,10 @@ export class SurveyService {
 
   editSurvey(surveyID: number, patchDoc: string) {
     return this.http.patch(this.baseURL + "/survey/update/" + surveyID, patchDoc);
+  }
+
+  changeCompletionStatus(surveyID: number, username: string, patchDoc: Object) {
+    return this.http.patch(this.baseURL + "/survey/assignee/update/" + username + "/" + surveyID, patchDoc);
   }
 
   deleteSurvey(surveyID: number) {

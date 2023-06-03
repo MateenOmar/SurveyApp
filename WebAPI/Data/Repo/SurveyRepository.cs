@@ -98,7 +98,6 @@ namespace WebAPI.Data.Repo
 
         public async Task<IEnumerable<Survey>> GetSurveysAssignedToUserAsync(int userID)
         {
-
             var assignedSurveys = await dc.Surveys
             .Where(survey => survey.status == "Published" && 
                     dc.SurveyAssignees.Any(
@@ -106,6 +105,15 @@ namespace WebAPI.Data.Repo
             .ToListAsync();
 
             return assignedSurveys;
+        }
+
+        public async Task<SurveyAssignee> FindAssignedSurvey(int surveyID, int userID) {
+            var assignedSurvey = await dc.SurveyAssignees
+            .Where(assignee => assignee.surveyID == surveyID && assignee.userID == userID)
+            .FirstAsync();
+
+            return assignedSurvey;
+
         }
 
         public void DeleteSurveyAssignee(int surveyID, int userID)

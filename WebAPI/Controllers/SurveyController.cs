@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
 
         // ADMIN FUNCTIONS -----------------------------------------------------------
 
-        // GET api/survey -- Get all surveys, WITHOUT Q&A
+        // GET api/survey/surveys -- Get all surveys, WITHOUT Q&A
         [HttpGet("surveys")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllSurveys()
@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
             return Ok(SurveyDto);
         }
 
-        // GET api/survey -- Get all surveys, WITH Q&A
+        // GET api/survey/completeSurveys -- Get all surveys, WITH Q&A
         [HttpGet("completeSurveys")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllCompleteSurveys()
@@ -220,6 +220,22 @@ namespace WebAPI.Controllers
             return StatusCode(200);
         }
 
+        // PATCH api/survey/update/{id} -- Update SurveyAssignee information (i.e. title, description, question, answers)
+        [HttpPatch("assignee/update/{username}/{surveyID}")]
+        public async Task<IActionResult> UpdateSurveyAssigneePatch(int surveyID, string username, JsonPatchDocument<SurveyAssignee> surveyToPatch)
+        {
+            var user = await uow.UserRepository.GetUserAsync(username);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+            var surveyFromDB = await uow.SurveyRepository.FindAssignedSurvey(surveyID, userID);
+            surveyToPatch.ApplyTo(surveyFromDB, ModelState);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+
         // DELETE api/survey/delete/{id} -- Delete Survey
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteSurvey(int id)
@@ -312,6 +328,23 @@ namespace WebAPI.Controllers
                 assignedSurvey.completionStatus = completionStatus;
             }
             return Ok(assignedSurveysDto);
+        }
+
+        // GET api/survey/assignees/{username}/{surveyID} -- Get single survey assigned to user
+        [HttpGet("assignees/{username}/{surveyID}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAssignedSurvey(string userName, int surveyID)
+        {
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+
+            var assignedSurvey = await uow.SurveyRepository.FindAssignedSurvey(surveyID, userID);
+            var assignedSurveyDto = mapper.Map<SurveyAssigneeDto>(assignedSurvey);
+            return Ok(assignedSurveyDto);
         }
 
         // ---------------------------------------------------------------------------
