@@ -107,7 +107,9 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onSelectQuestion(id: number) {
-    this.currQuestion = this.currSurvey.questionsAndAnswers[id];
+    this.currQuestion = this.currSurvey.questionsAndAnswers.find(q => {
+      return q.questionID == id
+    })!;
     this.displayGeneralInfo = false;
   }
 
@@ -134,6 +136,7 @@ export class AddSurveyComponent implements OnInit {
         { answerID: 3, answer: "" },
       ],
     });
+    this.onSelectQuestion(qid);
   }
 
   onAddAnswer() {
@@ -189,6 +192,9 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onDiscard() {
+    if (this.surveyForEdit) {
+      this.surveyService.deleteSurvey(this.currSurvey.surveyID!).subscribe();
+    }
     this.router.navigate(["/admin/surveys/manage"]);
   }
 

@@ -8,9 +8,29 @@
         'fas fa-angle-double-down': !accGroup?.isOpen
       }"></i>
   </span>
-
-  <p>{{ survey.description }}</p>
-
+  <div class="row">
+    <div class="col-6">
+      <div class="mb-1">
+        <h5 class="d-inline">Description: </h5>
+        <div class="d-inline">{{ survey.description }}</div>
+      </div>
+      <div>
+        <h5 class="d-inline">Due date: </h5>
+        <div class="d-inline">{{ survey.dueDate.toString().slice(0, 10) }}</div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="mb-1">
+        <h5 class="d-inline">Priority: </h5>
+        <div class="d-inline">{{ survey.priority }}</div>
+      </div>
+      <div>
+        <h5 class="d-inline">Number of questions: </h5>
+        <div class="d-inline">{{ survey.numberOfQuestions }}</div>
+      </div>
+    </div>
+  </div>
+  
   <div *ngIf="userType === 'admin'">
     <div class="my-auto p-3">
       <div *ngIf="survey.status == 'Draft'">

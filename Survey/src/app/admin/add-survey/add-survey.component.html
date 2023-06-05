@@ -21,7 +21,7 @@
                 <div *ngFor="let question of currSurvey.questionsAndAnswers; let i = index">
                   <div class="card mb-3">
                     <div class="card-body p-3 d-flex justify-content-between">
-                      <h5 class="link-animate" (click)="onSelectQuestion(i)">
+                      <h5 class="link-animate" (click)="onSelectQuestion(question.questionID)">
                         {{ question.question }}
                       </h5>
                       <div *ngIf="currSurvey.questionsAndAnswers.length > 1" class="mt-auto mb-auto">
