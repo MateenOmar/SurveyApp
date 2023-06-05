@@ -1,47 +1,72 @@
-<div class="row shadow">
-  <div class="col-sm-4 p-0">
-    <div class="card">
+<div class="row">
+  <div class="col-sm-2 p-0 me-2">
+    <div class="card mb-2">
       <div class="card-body">
-          <div class="col-12">
-            <!-- Vertical Navbar -->
-            <div *ngFor="let question of allQuestions">
-              <h4 class="link-animate" (click)="changeQuestion(question.questionID - 1)">
+        <!-- Vertical Navbar -->
+        <div *ngFor="let question of allQuestions">
+          <div class="card mb-3">
+            <div class="card-body p-1 shadow-sm">
+              <h4 class="link-animate text-center" (click)="changeQuestion(question.questionID - 1)">
                 Question {{question.questionID}}
               </h4>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div *ngIf="survey">
+        <div class="card-body">
+          <div class="mb-1">
+            <h5 class="d-inline">Description: </h5>
+            <div class="d-inline">{{ survey.description }}</div>
+          </div>
+          <div class="mb-1">
+            <h5 class="d-inline">Due date: </h5>
+            <div class="d-inline">{{ survey.dueDate.toString().slice(0, 10) }}</div>
+          </div>
+          <div class="mb-1">
+            <h5 class="d-inline">Priority: </h5>
+            <div class="d-inline">{{ survey.priority }}</div>
+          </div>
+          <div>
+            <h5 class="d-inline">Number of questions: </h5>
+            <div class="d-inline">{{ survey.numberOfQuestions }}</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-sm-8 p-0">
+  <div class="col-sm-9 p-0">
     <div class="card">
       <div class="card-header">
         <div *ngIf="survey">
-          <h3>{{survey.title}} | {{survey.description}} | Due: {{survey.dueDate}}</h3>
+          <h3>{{ currQuestion.question }}</h3>
         </div>
       </div>
       <form [formGroup]="userSubmissionForm" (ngSubmit)="onSubmit()">
         <div class="card-body">
           <div class="col-sm-6 m-auto" *ngIf="survey">
-            <h3>{{ currQuestion.question }}</h3>
-            <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2" btnRadioGroup>
-              <div class="d-flex">
-                <input type="radio" [id]="answer.answerID" [value]="answer.answerID"
+            <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2 form-check" btnRadioGroup>
+              <div class="d-flex justify-content-center">
+                <input class="form-check-input me-1" type="radio" [id]="answer.answerID" [value]="answer.answerID"
                 (click)="updateSelectedAnswer(answer.answerID)"
                 formControlName="question{{currQuestion.questionID}}">
-                <label class="me-2" for="{{answer.answerID}}"> {{ answer.answer }} </label>
+                <label class="form-check-label me-2" for="{{answer.answerID}}"> {{ answer.answer }} </label>
               </div>         
             </div>
           </div>
           <div class="form-group col-12 mt-3">
-            <button type="button" class="btn btn-primary col-12 mt-3"
-            (click)="changeQuestion(currQuestionID - 1)">
-              Back
-            </button>
-            <button type="button" class="btn btn-primary col-12 mt-3"
-            (click)="changeQuestion(currQuestionID + 1)">
-              Next
-            </button>
+            <div class="btn-group w-100">
+              <button type="button" class="btn btn-primary col-12 mt-3 me-2 disabled" id="back"
+              (click)="changeQuestion(currQuestionID - 1)">
+                Back
+              </button>
+              <button type="button" class="btn btn-primary col-12 mt-3" id="forward"
+              (click)="changeQuestion(currQuestionID + 1)">
+                Next
+              </button>
+            </div>
             <button type="button" class="btn btn-light col-12 mt-3"
             (click)="saveAsDraft()">
               Save

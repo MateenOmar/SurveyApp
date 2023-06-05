@@ -49,7 +49,16 @@
         </ul>
       </div>
       <div *ngIf="survey.status == 'Published'">
-        <h3 class="link-animate float-end" (click)="onClose()">Close survey</h3>
+        <ul class="list-inline m-auto float-end">
+          <li class="list-inline-item">
+            <h3 class="link-animate float-end" routerLink="/admin/surveys/results/{{ survey.surveyID }}">
+              View results
+            </h3>
+          </li>
+          <li class="list-inline-item">
+            <h3 class="link-animate float-end" (click)="onClose()">Close survey</h3>
+          </li>
+        </ul>
       </div>
       <div *ngIf="survey.status == 'Finished'">
         <h3 class="link-animate float-end" routerLink="/admin/surveys/results/{{ survey.surveyID }}">
