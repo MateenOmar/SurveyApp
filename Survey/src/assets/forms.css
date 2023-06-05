@@ -26,7 +26,7 @@
 
 .link-animate:hover {
   cursor: pointer;
-  color: skyblue;
+  color: #d3d8ff;
 }
 
 .link-animate {
@@ -34,9 +34,25 @@
 }
 
 .highlight {
-  color: skyblue;
+  color: #d3d8ff;
 }
 
 input[readOnly] {
   opacity: 0.5;
+}
+
+.btn {
+  transition: 0.2s all ease;
+}
+
+.btn-primary, .disabled.btn-primary {
+  transition: 0.2s all ease;
+  background-color: #ebf0ff;
+  border-color: #ebf0ff;
+  color: black;
+}
+
+.btn-primary:hover {
+  background-color: #d3d8ff;
+  border-color: #d3d8ff;
 }

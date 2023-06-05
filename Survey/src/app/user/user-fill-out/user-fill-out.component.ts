@@ -75,6 +75,11 @@ export class UserFillOutComponent implements OnInit {
               });
             }
           });
+
+          if (this.survey.questionsAndAnswers.length == 1) {
+            let forwardButton = document.getElementById("forward") as HTMLInputElement
+            forwardButton.classList.add("disabled")
+          }
         });
 
       }, error => {
@@ -108,11 +113,19 @@ export class UserFillOutComponent implements OnInit {
   changeQuestion(questionID: number) {
     // Index is 0-based
     const newQuestion = questionID;
-    if (newQuestion < 0 || newQuestion >= this.totalQuestions) {
-      this.alertify.error("Invalid");
+    let backButton = document.getElementById("back") as HTMLInputElement;
+    let forwardButton = document.getElementById("forward") as HTMLInputElement;
+
+    this.currQuestionID = questionID;
+    this.currQuestion = this.allQuestions[this.currQuestionID];
+    if (newQuestion == 0) {
+      //this.alertify.error("Invalid");
+      backButton.classList.add("disabled");
+    } else if (newQuestion == this.totalQuestions - 1) {
+      forwardButton.classList.add("disabled");
     } else {
-      this.currQuestionID = questionID;
-      this.currQuestion = this.allQuestions[this.currQuestionID];
+      backButton.classList.remove("disabled");
+      forwardButton.classList.remove("disabled");
     }
   }
 
