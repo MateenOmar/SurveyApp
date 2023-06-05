@@ -52,10 +52,29 @@ namespace WebAPI.Data.Repo
         }
         public async Task<Survey> GetSurveyDetailAsync(int id)
         {
-            var surveys = await dc.Surveys
+            var survey = await dc.Surveys
             .Where(p => p.surveyID == id)
             .FirstAsync();
-            return surveys;
+            return survey;
+        }
+
+        public async Task<SurveyQuestion> GetQuestionDetails(int surveyID, int questionID)
+        {
+            var question = await dc.SurveyQuestions
+             .FirstOrDefaultAsync(q => q.surveyID == surveyID &&
+                                        q.questionID == questionID);
+            
+            return question;
+        }
+
+        public async Task<SurveyOption> GetAnswerDetails(int surveyID, int questionID, int answerID)
+        {
+            var answer = await dc.SurveyOptions
+                .FirstOrDefaultAsync(q => q.surveyID == surveyID &&
+                                            q.questionID == questionID &&
+                                            q.answerID == answerID);
+
+            return answer;
         }
 
         public async Task<IEnumerable<SurveyQuestion>> GetSurveyQuestionsAsync(int surveyID)

@@ -4,9 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Answer } from 'src/app/model/answer';
 import { Question } from 'src/app/model/question';
 import { Survey } from 'src/app/model/survey';
+import { AssignedSurvey } from 'src/app/model/assignedSurvey';
 import { UserAnswers } from 'src/app/model/userAnswers';
 import { AlertifyService } from 'src/app/services/alertify.service';
 import { SurveyService } from 'src/app/services/survey.service';
+import { SurveyAssignee } from 'src/app/model/surveyAssignee';
 
 @Component({
   selector: "app-user-fill-out",
@@ -33,7 +35,6 @@ export class UserFillOutComponent implements OnInit {
               private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.userSubmissionForm = this.formBuilder.group({});
     this.surveyID = +this.route.snapshot.params['id'];
     const username = localStorage.getItem("userName");
     if (username !== null) {
@@ -42,6 +43,15 @@ export class UserFillOutComponent implements OnInit {
     else {
       console.error("Invalid");
     }
+    this.surveyService.getAssignedSurvey(this.surveyID, this.loggedInUser).subscribe(
+      (data) => {
+        const surveyAssigned = data as SurveyAssignee;
+        if (surveyAssigned.completionStatus === "Completed") {
+          this.alertify.error("You already completed this survey!");
+          this.router.navigate(["/user/surveys"]);
+        }
+      });
+    this.userSubmissionForm = this.formBuilder.group({});
     // Initialize currSubmission form
     const currDraft = this.findCurrentDraft();
     if (currDraft !== null) {

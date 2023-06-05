@@ -8,6 +8,11 @@ namespace WebAPI.Interfaces
         Task<IEnumerable<int>> GetAllSurveyIDsAsync();
         
         Task<Survey> GetSurveyDetailAsync(int id);
+
+        Task<SurveyQuestion> GetQuestionDetails(int surveyID, int questionID);
+
+        Task<SurveyOption> GetAnswerDetails(int surveyID, int questionID, int answerID);
+
         void AddSurvey(Survey survey);
         void AddSurveyQuestion(SurveyQuestion surveyQ);
 

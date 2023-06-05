@@ -36,8 +36,13 @@
           </div>
           <div class="col-10">
             <div *ngFor="let survey of (surveysAssigned | filter:statusFilter:'completionStatus' | filter:priorityFilter:'priority' )" class="shadow-sm mb-3">
+              <div *ngIf="!survey">
+                <h3> No surveys to display!</h3>
+              </div>
               <accordion [isAnimated]="true">
-                <app-survey-card [survey]="survey" [assignedSurvey]="survey" [parent]="this" [userType]="'user'"></app-survey-card>
+                <div *ngIf="survey">
+                  <app-survey-card [survey]="survey" [assignedSurvey]="survey" [parent]="this" [userType]="'user'"></app-survey-card>
+                </div>
               </accordion>
             </div>
           </div>
