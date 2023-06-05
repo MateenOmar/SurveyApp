@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -24,7 +26,7 @@ namespace WebAPI.Controllers
 
         // ADMIN FUNCTIONS -----------------------------------------------------------
 
-        // GET api/survey -- Get all surveys, WITHOUT Q&A
+        // GET api/survey/surveys -- Get all surveys, WITHOUT Q&A
         [HttpGet("surveys")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllSurveys()
@@ -34,7 +36,7 @@ namespace WebAPI.Controllers
             return Ok(SurveyDto);
         }
 
-        // GET api/survey -- Get all surveys, WITH Q&A
+        // GET api/survey/completeSurveys -- Get all surveys, WITH Q&A
         [HttpGet("completeSurveys")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllCompleteSurveys()
@@ -189,13 +191,13 @@ namespace WebAPI.Controllers
 
         // PUT api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateSurvey(int surveyID, SurveyDto SurveyDto)
+        public async Task<IActionResult> UpdateSurvey(int id, SurveyDto SurveyDto)
         {
             try {
-                if (surveyID != SurveyDto.surveyID) {
+                if (id != SurveyDto.surveyID) {
                     return BadRequest("Update not allowed");
                 }
-                var surveyFromDB = await uow.SurveyRepository.FindSurvey(surveyID);
+                var surveyFromDB = await uow.SurveyRepository.FindSurvey(id);
                 if (surveyFromDB == null) {
                     return BadRequest("Update not allowed");
                 }
@@ -213,6 +215,22 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> UpdateSurveyPatch(int id, JsonPatchDocument<Survey> surveyToPatch)
         {
             var surveyFromDB = await uow.SurveyRepository.FindSurvey(id);
+            surveyToPatch.ApplyTo(surveyFromDB, ModelState);
+            await uow.SaveAsync();
+            return StatusCode(200);
+        }
+
+        // PATCH api/survey/update/{id} -- Update SurveyAssignee information (i.e. title, description, question, answers)
+        [HttpPatch("assignee/update/{username}/{surveyID}")]
+        public async Task<IActionResult> UpdateSurveyAssigneePatch(int surveyID, string username, JsonPatchDocument<SurveyAssignee> surveyToPatch)
+        {
+            var user = await uow.UserRepository.GetUserAsync(username);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+            var surveyFromDB = await uow.SurveyRepository.FindAssignedSurvey(surveyID, userID);
             surveyToPatch.ApplyTo(surveyFromDB, ModelState);
             await uow.SaveAsync();
             return StatusCode(200);
@@ -245,6 +263,9 @@ namespace WebAPI.Controllers
             surveyAssignee.userID = userID;
             uow.SurveyRepository.AssignUser(surveyAssignee);
             await uow.SaveAsync();
+
+            var survey = await uow.SurveyRepository.FindSurvey(surveyID);
+            SendEmail(user.email, user.userName, survey.title, surveyID);
 
             return StatusCode(201);
         }
@@ -323,6 +344,54 @@ namespace WebAPI.Controllers
             return Ok(assignedSurveysDto);
         }
 
+        // GET api/survey/assignees/{username}/{surveyID} -- Get single survey assigned to user
+        [HttpGet("assignees/{username}/{surveyID}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAssignedSurvey(string userName, int surveyID)
+        {
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+
+            var userID = user.userID;
+
+            var assignedSurvey = await uow.SurveyRepository.FindAssignedSurvey(surveyID, userID);
+            var assignedSurveyDto = mapper.Map<SurveyAssigneeDto>(assignedSurvey);
+            return Ok(assignedSurveyDto);
+        }
+
         // ---------------------------------------------------------------------------
+
+        // USER FUNCTIONS ----------------------------------------------------------------
+
+        // POST api/survey/submit
+        [HttpPost("submit")]
+        [Authorize]
+        public async Task<IActionResult> SubmitAnswer(SurveyDto surveyDto)
+        {
+            
+            
+            return StatusCode(201);
+        }
+
+        public void SendEmail(string email, string name, string surveyName, int surveyID) {
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("eazy5notifications@gmail.com", "kwtzupsywrebmhvy"),
+                EnableSsl = true
+            };
+            var body =@$"<h1>Hello, {name}</h1>
+            <h2>Admin has assigned survey '{surveyName}' to you</h2>
+            <p>Click the link below to access it:</p>
+            <div style='background-color: #ebf0ff; border-width: 2px; border-color: #a0d2f3; border-style: dashed; width: 40%; padding: 25px; text-align: center'>
+                <a href='http://localhost:4200/fill-out/{surveyID}'><h3>Complete the survey</h3></a>
+            </div>";
+            var msg = new MailMessage("eazy5notifications@gmail.com", email, $"Survey '{surveyName}' is available for you", body);
+            msg.IsBodyHtml = true;
+            smtpClient.Send(msg);
+        }
     }
 }

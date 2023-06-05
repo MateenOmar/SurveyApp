@@ -17,6 +17,7 @@ import { SurveyService } from "src/app/services/survey.service";
 import Swal from "sweetalert2";
 import { HttpClient } from "@angular/common/http";
 import { Question } from "src/app/model/question";
+import { BasicSurvey } from "src/app/model/basicSurvey";
 
 @Component({
   selector: "app-add-survey",
@@ -29,6 +30,7 @@ export class AddSurveyComponent implements OnInit {
   displayGeneralInfo: boolean = true;
   addSurveyForm: FormGroup;
   currentDate: Date = new Date();
+  dataFetched: boolean = false;
 
   currQuestion: Question;
   currSurvey: Survey;
@@ -61,7 +63,7 @@ export class AddSurveyComponent implements OnInit {
         dueDate: this.addWeeks(this.currentDate, 1),
         description: "",
         numberOfQuestions: 1,
-        status: "Drafted",
+        status: "Draft",
         priority: "Medium",
         questionsAndAnswers: [
           {
@@ -76,13 +78,17 @@ export class AddSurveyComponent implements OnInit {
             ],
           },
         ],
-      };
+      }
+      this.surveyService.getBasicSurveys().subscribe(data => {
+        this.currSurvey.surveyID = data[data.length - 1].surveyID + 1
+      });
     }
     this.getAddedUsers();
     this.auth.getUsers().subscribe((res: any) => {
       this.users = res as UserData[];
       this.users = this.users.filter((x) => !this.addedUsers.includes(x.userName));
     });
+    this.dataFetched = true;
   }
 
   ngAfterViewInit() {
@@ -91,8 +97,12 @@ export class AddSurveyComponent implements OnInit {
 
   onSubmit() {
     this.currSurvey.status = "Published";
-    this.surveyService.addSurvey(this.currSurvey);
     console.log(this.currSurvey);
+    if (this.surveyForEdit) {
+      this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe();
+    } else {
+      this.surveyService.addSurvey(this.currSurvey).subscribe();
+    }
     this.router.navigate(["/admin/surveys/add/success"], {
       state: { id: this.currSurvey.surveyID },
     });
@@ -171,13 +181,25 @@ export class AddSurveyComponent implements OnInit {
     //       JSON.stringify(JSON.parse(storageDrafts).concat([this.currSurvey]))
     //     );
     //   }
-    this.surveyService.addSurvey(this.currSurvey);
+    if (this.surveyForEdit) {
+      this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe();
+    } else {
+      this.surveyService.addSurvey(this.currSurvey).subscribe();
+    }
     console.log(this.currSurvey);
-    this.router.navigate(["/admin/manage-surveys"]);
+    this.router.navigate(["/admin/surveys/manage"]);
   }
 
   onDiscard() {
     this.router.navigate(["/admin/surveys/manage"]);
+  }
+
+  generateSurveyID(): number {
+    let surveys: BasicSurvey[] = [];
+    this.surveyService.getBasicSurveys().subscribe(data => {
+      surveys = data;
+    });
+    return surveys[surveys.length - 1].surveyID;
   }
 
   get Title() {

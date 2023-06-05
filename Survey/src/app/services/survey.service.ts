@@ -5,16 +5,22 @@ import { environment } from "src/environments/environment";
 import { Observable } from "rxjs";
 import { Survey } from "../model/survey";
 import { UserAnswers } from "../model/userAnswers";
+import { BasicSurvey } from "../model/basicSurvey";
 
 @Injectable({
   providedIn: "root",
 })
+
 export class SurveyService {
   baseURL = environment.baseUrl;
   constructor(private http: HttpClient) {}
 
   getBasicSurveys() {
-    return this.http.get<Survey[]>(this.baseURL + "/survey/surveys");
+    return this.http.get<BasicSurvey[]>(this.baseURL + "/survey/surveys");
+  }
+
+  getCompleteSurveys() {
+    return this.http.get<Survey[]>(this.baseURL + "/survey/completeSurveys");
   }
 
   getCompleteSurveyByID(surveyID: number) {
@@ -27,6 +33,10 @@ export class SurveyService {
 
   getSurveyAnswers(surveyID: number) {
     return this.http.get(this.baseURL + "/survey/answers/" + surveyID);
+  }
+
+  getAssignedSurvey(surveyID: number, userName: string) {
+    return this.http.get(this.baseURL + "/survey/assignees/" + userName + "/" + surveyID);
   }
 
   getSurveyAssigneesBySurveyID(surveyID: number) {
@@ -61,14 +71,48 @@ export class SurveyService {
   }
 
   addSurvey(survey: Survey) {
-    return this.http.post(this.baseURL + "/survey/post", survey);
+    return this.http.post(this.baseURL + "/survey/post", this.surveyCleanup(survey));
   }
 
-  editSurvey(surveyID: number, patchDoc: string) {
+  updateSurvey(surveyID: number, survey: Survey) {
+    return this.http.put(this.baseURL + "/survey/update/" + surveyID, this.surveyCleanup(survey));
+  }
+
+  patchSurvey(surveyID: number, patchDoc: Array<any>) {
     return this.http.patch(this.baseURL + "/survey/update/" + surveyID, patchDoc);
+  }
+
+  changeCompletionStatus(surveyID: number, username: string, patchDoc: Object) {
+    return this.http.patch(this.baseURL + "/survey/assignee/update/" + username + "/" + surveyID, patchDoc);
   }
 
   deleteSurvey(surveyID: number) {
     return this.http.delete(this.baseURL + "/survey/delete/" + surveyID);
+  }
+
+  surveyCleanup(survey: Survey) {
+    //Remove empty options
+    survey.questionsAndAnswers.forEach(qa => {
+      qa.options = qa.options.filter(option => {
+        return option.answer != ""
+      })
+      if (qa.options.length == 0) {
+        qa.options.push({
+          answer: "",
+          answerID: 0
+        })
+      }
+      qa.numberOfAnswers = qa.options.length
+    });
+
+    //Remove empty questions or questions with no options
+    if (survey.questionsAndAnswers.length > 1) {
+      survey.questionsAndAnswers = survey.questionsAndAnswers.filter(qa => {
+        return qa.question != ""
+      });
+    }
+    survey.numberOfQuestions = survey.questionsAndAnswers.length;
+    delete survey.surveyID
+    return survey;
   }
 }

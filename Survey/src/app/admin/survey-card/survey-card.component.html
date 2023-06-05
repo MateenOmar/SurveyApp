@@ -1,6 +1,6 @@
 <accordion-group [isOpen]="false" #accGroup class="p-1">
   <span class="header" accordion-heading class="float-start" style="width: 100%">
-    <h1 style="display: inline">{{ survey.title }}</h1>
+    <h1 style="display: inline; position: relative; bottom: 7px; font-size: 33px;">{{ survey.title }}</h1>
     <i
       class="fa float-end fa-lg pt-3"
       [ngClass]="{
@@ -32,7 +32,7 @@
         <h3 class="link-animate float-end" (click)="onClose()">Close survey</h3>
       </div>
       <div *ngIf="survey.status == 'Finished'">
-        <h3 class="link-animate float-end" routerLink="/survey-results/{{ survey.surveyID }}">
+        <h3 class="link-animate float-end" routerLink="/admin/surveys/results/{{ survey.surveyID }}">
           View results
         </h3>
       </div>

@@ -8,11 +8,6 @@
         <div class="row">
           <div class="col-2 m-auto">
             <!--<div>
-              <label>Filter By Priority:</label>
-              <input [(ngModel)]="priority">
-              <button type="button" (click)="onPriorityFilter()">Search</button>
-              <button type="button" (click)="onPriorityFilterClear()">Clear</button> &nbsp;
-  
               <label>Sort by &nbsp;</label>
               <select [(ngModel)]="sortByParam">
                 <option value="Priorty">Priority</option>
@@ -22,13 +17,11 @@
                 <i *ngIf="sortDirection==='asc'" class="fa-solid fa-sort-up"></i>
                 <i *ngIf="sortDirection==='desc'" class="fa-solid fa-sort-down"></i>
               </button>
-              <div *ngFor="let survey of surveys.sort()|filter:searchPriority:'Priority'|sort:[sortByParam, sortDirection]" class="col-sm-4">
-              </div>
             </div> -->
             <div>
               <h1> Status:</h1>
               <h2 class="link-animate" id="All_Statuses" (click)="setStatusFilter('All_Statuses')">All</h2>
-              <h2 class="link-animate" id="Open" (click)="setStatusFilter('Open')">Open</h2>
+              <h2 class="link-animate" id="Assigned" (click)="setStatusFilter('Assigned')">Open</h2>
               <h2 class="link-animate" id="In-Progress" (click)="setStatusFilter('In-Progress')">In-Progress</h2>
               <h2 class="link-animate" id="Completed" (click)="setStatusFilter('Completed')">Completed</h2>
             </div>
@@ -42,7 +35,7 @@
             </div>
           </div>
           <div class="col-10">
-            <div *ngFor="let survey of (surveysAssigned | filter:statusFilter:'status' | filter:priorityFilter:'priority' )" class="shadow-sm mb-3">
+            <div *ngFor="let survey of (surveysAssigned | filter:statusFilter:'completionStatus' | filter:priorityFilter:'priority' )" class="shadow-sm mb-3">
               <accordion [isAnimated]="true">
                 <app-survey-card [survey]="survey" [assignedSurvey]="survey" [parent]="this" [userType]="'user'"></app-survey-card>
               </accordion>
