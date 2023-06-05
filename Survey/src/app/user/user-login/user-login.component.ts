@@ -9,9 +9,15 @@ import { AuthService } from "src/app/services/auth.service";
   styleUrls: ["./user-login.component.css"],
 })
 export class UserLoginComponent implements OnInit {
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (localStorage.getItem("token") != null && localStorage.getItem("admin") === "false") {
+      this.router.navigate(["/user/surveys"]);
+    } else if (localStorage.getItem("token") != null && localStorage.getItem("admin") === "true") {
+      this.router.navigate(["/admin/surveys/manage"]);
+    }
+  }
 
   onLogin(loginForm: NgForm) {
     this.auth.login(loginForm);
