@@ -1,12 +1,14 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Answer } from "src/app/model/answer";
-import { Question } from "src/app/model/question";
-import { Survey } from "src/app/model/survey";
-import { UserAnswers } from "src/app/model/userAnswers";
-import { AlertifyService } from "src/app/services/alertify.service";
-import { SurveyService } from "src/app/services/survey.service";
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Answer } from 'src/app/model/answer';
+import { Question } from 'src/app/model/question';
+import { Survey } from 'src/app/model/survey';
+import { AssignedSurvey } from 'src/app/model/assignedSurvey';
+import { UserAnswers } from 'src/app/model/userAnswers';
+import { AlertifyService } from 'src/app/services/alertify.service';
+import { SurveyService } from 'src/app/services/survey.service';
+import { SurveyAssignee } from 'src/app/model/surveyAssignee';
 
 @Component({
   selector: "app-user-fill-out",
@@ -45,6 +47,15 @@ export class UserFillOutComponent implements OnInit {
     } else {
       console.error("Invalid");
     }
+    this.surveyService.getAssignedSurvey(this.surveyID, this.loggedInUser).subscribe(
+      (data) => {
+        const surveyAssigned = data as SurveyAssignee;
+        if (surveyAssigned.completionStatus === "Completed") {
+          this.alertify.error("You already completed this survey!");
+          this.router.navigate(["/user/surveys"]);
+        }
+      });
+    this.userSubmissionForm = this.formBuilder.group({});
     // Initialize currSubmission form
     const currDraft = this.findCurrentDraft();
     if (currDraft !== null) {
@@ -84,6 +95,11 @@ export class UserFillOutComponent implements OnInit {
               });
             }
           });
+
+          if (this.survey.questionsAndAnswers.length == 1) {
+            let forwardButton = document.getElementById("forward") as HTMLInputElement
+            forwardButton.classList.add("disabled")
+          }
         });
       },
       (error) => {
@@ -117,11 +133,19 @@ export class UserFillOutComponent implements OnInit {
   changeQuestion(questionID: number) {
     // Index is 0-based
     const newQuestion = questionID;
-    if (newQuestion < 0 || newQuestion >= this.totalQuestions) {
-      this.alertify.error("Invalid");
+    let backButton = document.getElementById("back") as HTMLInputElement;
+    let forwardButton = document.getElementById("forward") as HTMLInputElement;
+
+    this.currQuestionID = questionID;
+    this.currQuestion = this.allQuestions[this.currQuestionID];
+    if (newQuestion == 0) {
+      //this.alertify.error("Invalid");
+      backButton.classList.add("disabled");
+    } else if (newQuestion == this.totalQuestions - 1) {
+      forwardButton.classList.add("disabled");
     } else {
-      this.currQuestionID = questionID;
-      this.currQuestion = this.allQuestions[this.currQuestionID];
+      backButton.classList.remove("disabled");
+      forwardButton.classList.remove("disabled");
     }
   }
 

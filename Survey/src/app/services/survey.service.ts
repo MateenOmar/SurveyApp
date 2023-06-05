@@ -54,6 +54,10 @@ export class SurveyService {
     return this.http.get<Survey[]>(this.baseURL + "/survey/completeSurveys", httpOptions);
   }
 
+  getSurveyAnswersFromUser(surveyID: number, userName: string) {
+    return this.http.get(this.baseURL + "/survey/user/answers/" + userName + "/" + surveyID);
+  }
+
   getSurveyAnswers(surveyID: number) {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -234,14 +238,27 @@ export class SurveyService {
       qa.numberOfAnswers = qa.options.length;
     });
 
-    //Remove empty questions or questions with no options
+    //Remove questions with empty question values
     if (survey.questionsAndAnswers.length > 1) {
-      survey.questionsAndAnswers = survey.questionsAndAnswers.filter((qa) => {
+      survey.questionsAndAnswers = survey.questionsAndAnswers.filter(qa => {
         return qa.question != "";
       });
     }
+
+    for (let i = 0; i < survey.questionsAndAnswers.length; i++) {
+      if (survey.questionsAndAnswers[i].questionID != i + 1) {
+        survey.questionsAndAnswers[i].questionID = i + 1;
+      }
+      for (let j = 0; j < survey.questionsAndAnswers[i].options.length; j++) {
+        if (survey.questionsAndAnswers[i].options[j].answerID != j + 1) {
+          survey.questionsAndAnswers[i].options[j].answerID = j + 1;
+        }
+      }
+    }
+
     survey.numberOfQuestions = survey.questionsAndAnswers.length;
-    delete survey.surveyID;
-    return survey;
+    let cloneSurvey = Object.assign({}, survey);
+    delete cloneSurvey.surveyID;
+    return cloneSurvey;
   }
 }

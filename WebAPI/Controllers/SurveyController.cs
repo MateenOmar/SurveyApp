@@ -153,11 +153,46 @@ namespace WebAPI.Controllers
 
                 answers.Add(answer);
             }   
-
-           // var answersDto = mapper.Map<IEnumerable<SurveyUserAnswerDto>>(answers);
             return Ok(answers);
         }
         
+        // GET api/survey/user/answers/{username}/{surveyID} -- Get the user's answers for a filled out survey
+        [HttpGet("user/answers/{username}/{surveyID}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUserAnswersForSurvey(string userName, int surveyID)
+        {
+            var questionAndAnswerIDs = new List<UserAnswerDto>();
+            var user = await uow.UserRepository.GetUserAsync(userName);
+            if (user == null) {
+                return BadRequest("User not found");
+            }
+            var userID = user.userID;
+
+            var usersAnswers = new CompleteSurveyUserAnswerDto();
+            var questionsAndAnswers = new List<CompleteUserAnswerDto>();
+
+            var assigneesAnswers = await uow.SurveyRepository.GetSurveyAnswersByIDAsync(surveyID, userID);
+            foreach (var assigneeAnswer in assigneesAnswers) {
+                var userAnswerDto = new CompleteUserAnswerDto();
+                userAnswerDto.questionID = assigneeAnswer.questionID;
+                userAnswerDto.answerID = assigneeAnswer.answerID;
+
+                var questionDetails = await uow.SurveyRepository.GetQuestionDetails(surveyID, assigneeAnswer.questionID);
+                var questionDetailsDto = mapper.Map<SurveyQuestionDto>(questionDetails);
+                var answerDetails = await uow.SurveyRepository.GetAnswerDetails(surveyID, assigneeAnswer.questionID, assigneeAnswer.answerID);
+                var answerDetailsDto = mapper.Map<SurveyOptionDto>(answerDetails);
+
+                userAnswerDto.question = questionDetailsDto.question;
+                userAnswerDto.answer = answerDetailsDto.answer;
+                questionsAndAnswers.Add(userAnswerDto);
+            }
+
+            usersAnswers.surveyID = surveyID;
+            usersAnswers.username = user.userName;
+            usersAnswers.questionsAndAnswers = questionsAndAnswers;
+            return Ok(usersAnswers);
+
+        }
         [HttpPost("submitAnswers/{username}/{surveyID}/{questionID}/{answerID}")]
         [Authorize]
         public async Task<IActionResult> AddUserAnswer(int surveyID, int questionID, int answerID, string username) {
@@ -315,6 +350,7 @@ namespace WebAPI.Controllers
             return Ok(assignees);
         }
 
+        // GET api/survey/assignees/{surveyID} -- Get all users assigned to survey, with their name
         [HttpGet("assignees/name/{surveyID}")]
         [Authorize]
         public async Task<IActionResult> GetSurveyAssigneesBySurveyWithName(int surveyID)

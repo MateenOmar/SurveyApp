@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Survey } from "src/app/model/survey";
 import { SurveyService } from "src/app/services/survey.service";
 import { SurveyCardComponent } from "../../admin/survey-card/survey-card.component";
-import { SurveyAssignee } from "src/app/model/surveyAssignee";
+import { AssignedSurvey } from "src/app/model/assignedSurvey";
 
 @Component({
   selector: "app-user-home",
@@ -11,7 +11,7 @@ import { SurveyAssignee } from "src/app/model/surveyAssignee";
   styleUrls: ["./user-home.component.css"],
 })
 export class UserHomeComponent implements OnInit {
-  surveysAssigned: Array<SurveyAssignee>;
+  surveysAssigned: Array<AssignedSurvey>;
   priorityFilter: string = "";
   statusFilter: string = "";
   sortByParam = "";
@@ -41,22 +41,13 @@ export class UserHomeComponent implements OnInit {
 
     this.surveyService.getSurveyAssigneesByUser(this.loggedInUser).subscribe(
       (data) => {
-        this.surveysAssigned = data as SurveyAssignee[];
-        console.log(data);
-      },
-      (error) => {
+        this.surveysAssigned = data as AssignedSurvey[];
+        console.log(data)
+      }, error => {
         console.log("httperror:");
         console.log(error);
       }
     );
-  }
-
-  onSortDirection() {
-    if (this.sortDirection === "desc") {
-      this.sortDirection = "asc";
-    } else {
-      this.sortDirection = "desc";
-    }
   }
 
   setStatusFilter(filter: string) {

@@ -1,5 +1,5 @@
-import { Survey } from "./survey";
-
-export interface SurveyAssignee extends Survey {
+export interface SurveyAssignee {
+    surveyID: number;
+    username: string;
     completionStatus: string;
   }
