@@ -48,11 +48,11 @@
         <div class="card-body">
           <div class="col-sm-6 m-auto" *ngIf="survey">
             <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2 form-check" btnRadioGroup>
-              <div class="d-flex justify-content-center">
+              <div class="d-flex justify-content-center align-items-baseline">
                 <input class="form-check-input me-1" type="radio" [id]="answer.answerID" [value]="answer.answerID"
                 (click)="updateSelectedAnswer(answer.answerID)"
                 formControlName="question{{currQuestion.questionID}}">
-                <label class="form-check-label me-2" for="{{answer.answerID}}"> {{ answer.answer }} </label>
+                <label class="form-check-label me-2" for="{{answer.answerID}}" style="font-size: 24px;"> {{ answer.answer }} </label>
               </div>         
             </div>
           </div>
