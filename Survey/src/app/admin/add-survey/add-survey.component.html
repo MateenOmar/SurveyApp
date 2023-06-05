@@ -150,7 +150,7 @@
 
 <ng-template #template class="modal">
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Invite</h4>
+    <h4 class="modal-title pull-left">Survey Participants</h4>
     <button
       type="button"
       class="btn-close close pull-right"
@@ -160,20 +160,39 @@
     </button>
   </div>
   <div class="modal-body">
-    <div *ngFor="let user of users" class="row custom-checkbox">
-      <div class="form-group">
-        <p class="user-info">
-          <i class="bi bi-person-fill"></i>
-          {{ user.userName }}
-        </p>
-        <input
-          type="checkbox"
-          name="week"
-          id="{{ user.userName }}"
-          (change)="onChange(user.userName, $any($event.target).checked)" />
-        <label for="{{ user.userName }}" class="float-end"><i class="bi bi-check-lg"></i></label>
-      </div>
-    </div>
-    <button type="button" class="btn btn-primary float-end m-1" (click)="invite()">Invite!</button>
+    <tabset>
+      <tab heading="Invite" id="tab1">
+        <div *ngFor="let user of users" class="row custom-checkbox">
+          <div class="form-group">
+            <p class="user-info">
+              <i class="bi bi-person-fill"></i>
+              {{ user.userName }}
+            </p>
+            <input
+              type="checkbox"
+              name="week"
+              id="{{ user.userName }}"
+              (change)="onChange(user.userName, $any($event.target).checked)" />
+            <label for="{{ user.userName }}" class="float-end"
+              ><i class="bi bi-check-lg"></i
+            ></label>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary float-end m-1" (click)="invite()">
+          Invite!
+        </button>
+      </tab>
+      <tab heading="Invited">
+        <div *ngFor="let user of addedUsers" class="row custom-checkbox">
+          <div class="form-group">
+            <p class="user-info">
+              <i class="bi bi-person-fill"></i>
+              {{ user }}
+            </p>
+            <label for="{{ user }}" class="float-end"><i class="bi bi-check-lg"></i></label>
+          </div>
+        </div>
+      </tab>
+    </tabset>
   </div>
 </ng-template>

@@ -78,8 +78,10 @@ export class AddSurveyComponent implements OnInit {
         ],
       };
     }
+    this.getAddedUsers();
     this.auth.getUsers().subscribe((res: any) => {
       this.users = res as UserData[];
+      this.users = this.users.filter((x) => !this.addedUsers.includes(x.userName));
     });
   }
 
@@ -190,6 +192,7 @@ export class AddSurveyComponent implements OnInit {
     return this.addSurveyForm.controls["date"] as FormControl;
   }
 
+  addedUsers: string[] = [];
   addUsers: string[] = [];
   modalRef?: BsModalRef;
   config = {
@@ -213,13 +216,13 @@ export class AddSurveyComponent implements OnInit {
       let index = this.addUsers.findIndex((x) => x == userName);
       this.addUsers.splice(index, 1);
     }
-    console.log(this.addUsers);
   }
 
   invite() {
     this.modalRef?.hide();
-    this.survey.assignSurveyToUsers(2, this.addUsers).subscribe((res) => {
-      console.log(res);
+    this.survey.assignSurveyToUsers(this.currSurvey.surveyID, this.addUsers).subscribe((res) => {
+      this.addedUsers.push(...this.addUsers);
+      this.users = this.users.filter((x) => !this.addedUsers.includes(x.userName));
     });
     Swal.fire({
       title: "Users invited!",
@@ -232,5 +235,13 @@ export class AddSurveyComponent implements OnInit {
     });
   }
 
-  onAssignUsers() {}
+  getAddedUsers() {
+    this.survey
+      .getSurveyAssigneesBySurveyIDWithName(this.currSurvey.surveyID)
+      .subscribe((res: any) => {
+        for (let i = 0; i < res.length; i++) {
+          this.addedUsers.push(res[i].userName);
+        }
+      });
+  }
 }

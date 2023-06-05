@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { ChartData, ChartEvent, ChartType } from "chart.js";
+import { ChartEvent, ChartType } from "chart.js";
 import { SurveyService } from "src/app/services/survey.service";
 import { Survey } from "src/app/model/survey";
 import { Chart } from "chart.js/auto";
 import { TabsetComponent } from "ngx-bootstrap/tabs";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Location } from "@angular/common";
+import { ReportsService } from "src/app/services/reports.service";
 
 @Component({
   selector: "app-survey-results",
@@ -18,10 +21,12 @@ export class SurveyResultsComponent implements OnInit {
   surveyQuestions: string[] = [];
   chart: Chart;
   surveyNames: string[] = [];
-  currentSurvey: number = 0;
+  surveyIDs: number[] = [];
+  currentSurvey: Survey;
+  currentSurveyID: number = this.route.snapshot.params["id"];
+  currentSurveyName: string = "Select Survey";
   currentQuestion: number = 0;
   currentQuestionText: string = "";
-  //currentQuestionNumberOfAnswers: number = 0;
   defaultColors = [
     "#3366CC",
     "#DC3912",
@@ -44,7 +49,13 @@ export class SurveyResultsComponent implements OnInit {
     "#5574A6",
     "#651067",
   ];
-  constructor(private surveyService: SurveyService) {}
+  constructor(
+    private surveyService: SurveyService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private location: Location,
+    private reportsService: ReportsService
+  ) {}
 
   ngOnInit() {
     this.getSurveys();
@@ -68,41 +79,43 @@ export class SurveyResultsComponent implements OnInit {
     this.surveyService.getAllCompleteSurveys().subscribe((res: Survey[]) => {
       this.surveys = res;
       for (let i = 0; i < this.surveys.length; i++) {
-        this.surveyNames.push(this.surveys[i].title);
+        if (this.surveys[i].status != "Drafted") {
+          this.surveyNames.push(this.surveys[i].title);
+          this.surveyIDs.push(this.surveys[i].surveyID);
+        }
       }
-      this.populateData();
+      if (this.currentSurvey != null) {
+        this.onSurveySelect(this.currentSurveyID);
+      }
     });
   }
 
   populateData() {
-    this.surveyService
-      .getSurveyAnswers(this.surveys[this.currentSurvey].surveyID)
-      .subscribe((res: any) => {
-        var numberOfAnswers = this.surveys[this.currentSurvey].questionsAndAnswers;
+    this.surveyService.getSurveyAnswers(this.currentSurveyID).subscribe((res: any) => {
+      var numberOfAnswers = this.currentSurvey.questionsAndAnswers;
 
-        for (let i = 0; i < this.surveys[this.currentSurvey].numberOfQuestions; i++) {
-          var temp = [];
-          for (let j = 0; j < numberOfAnswers[i].numberOfAnswers; j++)
-            temp.push(numberOfAnswers[i].options[j].answer);
+      for (let i = 0; i < this.currentSurvey.numberOfQuestions; i++) {
+        var temp = [];
+        for (let j = 0; j < numberOfAnswers[i].numberOfAnswers; j++)
+          temp.push(numberOfAnswers[i].options[j].answer);
 
-          this.surveyQuestions.push(numberOfAnswers[i].question);
-          this.surveyLabels.push(temp);
-          this.surveyData.push({
-            label: numberOfAnswers[i].question,
-            data: new Array<number>(numberOfAnswers[i].numberOfAnswers).fill(0),
-          });
-        }
+        this.surveyQuestions.push(numberOfAnswers[i].question);
+        this.surveyLabels.push(temp);
+        this.surveyData.push({
+          label: numberOfAnswers[i].question,
+          data: new Array<number>(numberOfAnswers[i].numberOfAnswers).fill(0),
+        });
+      }
 
-        for (let i = 0; i < res.length; i++) {
-          for (let j = 0; j < res[0].questionAndAnswerIDs.length; j++)
-            // @ts-ignore: Argument of type 'string' is not assignable to parameter of type 'number'
-            this.surveyData[res[i].questionAndAnswerIDs[j].questionID - 1].data[
-              res[i].questionAndAnswerIDs[j].answerID - 1
-            ] += 1;
-        }
-
-        this.onQuestionSelect(this.currentQuestion);
-      });
+      for (let i = 0; i < res.length; i++) {
+        for (let j = 0; j < res[0].questionAndAnswerIDs.length; j++)
+          // @ts-ignore: Argument of type 'string' is not assignable to parameter of type 'number'
+          this.surveyData[res[i].questionAndAnswerIDs[j].questionID - 1].data[
+            res[i].questionAndAnswerIDs[j].answerID - 1
+          ] += 1;
+      }
+      this.onQuestionSelect(this.currentQuestion);
+    });
   }
 
   createChart(type: string) {
@@ -116,8 +129,7 @@ export class SurveyResultsComponent implements OnInit {
         labels: this.surveyLabels[this.currentQuestion],
         datasets: [
           {
-            label:
-              this.surveys[this.currentSurvey].questionsAndAnswers[this.currentQuestion].question,
+            label: this.currentSurvey.questionsAndAnswers[this.currentQuestion].question,
             data: this.surveyData[this.currentQuestion]["data" as keyof object],
             backgroundColor: this.defaultColors,
           },
@@ -125,10 +137,17 @@ export class SurveyResultsComponent implements OnInit {
       },
       options: this.chartOptions,
     });
+
+    // this.reportsService.generatePDFContent(
+    //   this.surveys[this.currentSurvey],
+    //   this.surveyData,
+    //   this.surveyLabels,
+    //   this.chart,
+    //   document.getElementById("canvas") as HTMLCanvasElement
+    // );
   }
 
   onTabSelect(event: any) {
-    this.chart.destroy();
     this.createChart(event.id);
   }
 
@@ -142,12 +161,39 @@ export class SurveyResultsComponent implements OnInit {
   }
 
   onSurveySelect(surveyID: number) {
-    this.currentSurvey = surveyID;
+    for (let i = 0; i < this.surveys.length; i++) {
+      if (this.surveys[i].surveyID == surveyID) {
+        this.currentSurvey = this.surveys[i];
+        this.currentSurveyID = surveyID;
+      }
+    }
+    this.currentSurveyName = this.currentSurvey.title;
     this.currentQuestion = 0;
     this.currentQuestionText = "";
     this.surveyQuestions = [];
     this.surveyLabels = [];
     this.surveyData = [];
+    //this.router.navigate(["/admin/surveys/results/" + surveyID]);
+    this.location.go("/admin/surveys/results/" + this.currentSurveyID);
     this.populateData();
+
+    // this.reportsService.generateCSVContent(
+    //   this.surveys[this.currentSurvey],
+    //   this.surveyData,
+    //   this.surveyLabels
+    // );
+  }
+
+  downloadCSV() {
+    this.reportsService.generateCSVContent(this.currentSurvey, this.surveyData, this.surveyLabels);
+  }
+
+  downloadPDF() {
+    this.reportsService.generatePDFContent(
+      this.currentSurvey,
+      this.surveyData,
+      this.surveyLabels,
+      this.currentQuestion
+    );
   }
 }
