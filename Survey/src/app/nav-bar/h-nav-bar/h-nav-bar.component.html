@@ -30,7 +30,7 @@
           >
         </li>
         <li *ngIf="admin" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" routerLink="/admin/surveys/results/1"
+          <a class="nav-link" routerLinkActive="active" routerLink="/admin/surveys/results"
             >Results</a
           >
         </li>
@@ -41,10 +41,38 @@
 
       <div>
         <ul class="nav navbar-nav">
-          <a href="" class="nav-link nav-icon iconClass">
-            <i class="fa fa-bell-o pt-2 fa-lg"></i>
-            <span class="bi bi-badge bs-danger">3</span>
-          </a>
+          <span dropdown>
+            <a dropdownToggle aria-controls="dropdown-basic" class="nav-link nav-icon iconClass"
+              ><i class="fa fa-bell-o pt-2 fa-lg"></i>
+              <span *ngIf="notifications && !admin" class="bi bi-badge bs-danger">{{
+                notifications
+              }}</span></a
+            >
+
+            <ul
+              *dropdownMenu
+              class="dropdown-menu dropDown"
+              role="menu"
+              aria-labelledby="basic-link">
+              <ng-container *ngFor="let title of urgentNotificationsList"
+                ><li class="urgent" id="{{ title }}">
+                  <i class="bi bi-stars"></i>
+                  <a role="menuitem" class="dropdown-item" (click)="clickNotification(title)">{{
+                    title
+                  }}</a>
+                </li></ng-container
+              >
+              <ng-container *ngFor="let title of notificationsList"
+                ><li id="{{ title }}">
+                  <i class="bi bi-stars"></i>
+                  <a role="menuitem" class="dropdown-item" (click)="clickNotification(title)">{{
+                    title
+                  }}</a>
+                </li></ng-container
+              >
+            </ul>
+          </span>
+
           <div class="dropdown me-5" dropdown>
             <a href="#" class="dropdown-toggle text-dark nav-link" dropdownToggle (click)="(false)"
               >Welcome {{ loggedInUser }}</a

@@ -3,10 +3,33 @@
     <div class="card">
       <div class="card-header">
         <h3>{{ currentQuestionText }}</h3>
+        <div *ngIf="currentSurvey" class="btn-group float-end" dropdown>
+          <button
+            id="button-basic"
+            dropdownToggle
+            type="button"
+            class="btn btn-primary dropdown-toggle"
+            aria-controls="dropdown-basic">
+            Download<span class="caret"></span>
+          </button>
+          <ul
+            id="dropdown-basic"
+            *dropdownMenu
+            class="dropdown-menu"
+            role="menu"
+            aria-labelledby="button-basic">
+            <li role="menuitem">
+              <a class="dropdown-item" (click)="downloadCSV()">Download CSV</a>
+            </li>
+            <li role="menuitem">
+              <a class="dropdown-item" (click)="downloadPDF()">Download PDF</a>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="card-body">
         <div class="row">
-          <tabset #tabset>
+          <tabset [hidden]="currentSurvey === undefined" #tabset>
             <tab heading="Doughnut Graph" id="doughnut" (selectTab)="onTabSelect($event)"></tab>
             <tab heading="Bar Graph" id="bar" (selectTab)="onTabSelect($event)"></tab>
             <tab heading="Pie Graph" id="pie" (selectTab)="onTabSelect($event)"></tab>
@@ -19,8 +42,9 @@
                 dropdownToggle
                 type="button"
                 class="btn btn-primary dropdown-toggle"
-                aria-controls="dropdown-animated">
-                Surveys <span class="caret"></span>
+                aria-controls="dropdown-animated"
+                [textContent]="currentSurveyName">
+                <span class="caret"></span>
               </button>
               <ul
                 id="dropdown-animated"
@@ -30,20 +54,25 @@
                 aria-labelledby="button-animated">
                 <div *ngFor="let surveyName of surveyNames; let i = index">
                   <li role="menuitem">
-                    <a class="dropdown-item" (click)="onSurveySelect(i)">{{ surveyName }}</a>
+                    <a class="dropdown-item" (click)="onSurveySelect(surveyIDs[i])">{{
+                      surveyName
+                    }}</a>
                   </li>
                 </div>
               </ul>
             </div>
-            <h2 class="link-animate highlight" id="details">Details</h2>
+            <h2 *ngIf="currentSurvey != undefined" class="link-animate highlight" id="details">
+              Details
+            </h2>
             <div *ngFor="let question of surveyQuestions; let i = index">
               <h2 class="link-animate" id="{{ i }}" (click)="onQuestionSelect(i)">
                 Question {{ i + 1 }}
               </h2>
             </div>
           </div>
-          <div class="col-10 pb-5">
-            <canvas id="canvas">{{ chart }}</canvas>
+          <div id="graphs" class="col-10 pb-5">
+            <canvas id="canvas"></canvas>
+            <canvas [hidden]="true" id="canvas2"></canvas>
           </div>
         </div>
       </div>

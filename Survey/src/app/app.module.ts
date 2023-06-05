@@ -9,7 +9,7 @@ import { TabsModule } from "ngx-bootstrap/tabs";
 import { ButtonsModule } from "ngx-bootstrap/buttons";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsModalService, ModalModule } from "ngx-bootstrap/modal";
-import { TypeaheadModule } from "ngx-bootstrap/typeahead";
+import { ProgressbarModule } from "ngx-bootstrap/progressbar";
 
 import { AppComponent } from "./app.component";
 import { UserLoginComponent } from "./user/user-login/user-login.component";
@@ -40,6 +40,7 @@ const appRoutes: Routes = [
   { path: "admin/surveys/add/success", component: SurveyLinkComponent },
   { path: "admin/surveys/add/assign-survey", component: AssignSurveyComponent },
   { path: "admin/surveys/edit/:id", component: EditSurveyComponent },
+  { path: "admin/surveys/results", component: SurveyResultsComponent },
   { path: "admin/surveys/results/:id", component: SurveyResultsComponent },
   { path: "admin/users/manage", component: UserManageComponent },
   { path: "admin/users/manage/edit/:userName", component: UserEditComponent },
@@ -80,7 +81,7 @@ const appRoutes: Routes = [
     ButtonsModule.forRoot(),
     AccordionModule.forRoot(),
     ModalModule.forRoot(),
-    TypeaheadModule.forRoot(),
+    ProgressbarModule.forRoot(),
   ],
   providers: [AlertifyService, SurveyService, AuthService, BsModalService],
   bootstrap: [AppComponent],

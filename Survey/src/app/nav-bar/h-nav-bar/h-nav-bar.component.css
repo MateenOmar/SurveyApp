@@ -21,3 +21,25 @@
   display: block;
   color: rgba(255, 0, 0, 0.685);
 }
+
+li > a {
+  display: inline-block;
+  vertical-align: center;
+  width: calc(100% - 48px);
+}
+
+.urgent {
+  color: red;
+  text-decoration: underline;
+}
+
+.urgent a {
+  color: red;
+  text-decoration: underline;
+}
+
+.dropDown {
+  margin: 0;
+  inset: 100% auto auto auto !important;
+  background-color: aqua;
+}
