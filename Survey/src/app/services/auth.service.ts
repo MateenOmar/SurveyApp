@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { UserData, UserForLogin, UserForRegister } from "../model/user";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { BehaviorSubject } from "rxjs";
 import { NgForm } from "@angular/forms";
@@ -57,22 +57,48 @@ export class AuthService {
   }
 
   registerUser(user: UserForRegister) {
-    return this.http.post(this.baseURL + "/account/register", user);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+    return this.http.post(this.baseURL + "/account/register", user, httpOptions);
   }
 
   getUsers() {
-    return this.http.get(this.baseURL + "/account/users");
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+    return this.http.get(this.baseURL + "/account/users", httpOptions);
   }
 
   getUserByUser(userName: string) {
-    return this.http.get(this.baseURL + "/account/users/" + userName);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+    return this.http.get(this.baseURL + "/account/users/" + userName, httpOptions);
   }
 
   deleteUser(userName: string) {
-    return this.http.delete(this.baseURL + "/account/users/delete/" + userName);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+    return this.http.delete(this.baseURL + "/account/users/delete/" + userName, httpOptions);
   }
 
   updateUser(userName: string, user: UserForRegister, userData: UserData) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
     var payload = [];
     for (var key in user) {
       if (Object(user)[key] != null && Object(user)[key] != Object(userData)[key]) {
@@ -80,6 +106,10 @@ export class AuthService {
       }
     }
 
-    return this.http.patch(this.baseURL + "/account/users/update/" + userName, payload);
+    return this.http.patch(
+      this.baseURL + "/account/users/update/" + userName,
+      payload,
+      httpOptions
+    );
   }
 }
