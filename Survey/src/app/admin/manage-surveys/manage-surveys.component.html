@@ -7,6 +7,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col-2 m-auto">
+            <h2 class="link-animate highlight" id="All" (click)="setSurveyFilter('All')">All</h2>
             <h2 class="link-animate" id="Draft" (click)="setSurveyFilter('Draft')">Draft</h2>
             <h2 class="link-animate" id="Published" (click)="setSurveyFilter('Published')">Published</h2>
             <h2 class="link-animate" id="Finished" (click)="setSurveyFilter('Finished')">Finished</h2>
@@ -18,11 +19,13 @@
             </div>
             <div *ngIf="Surveys.length != 0">
               <div
-                *ngFor="let survey of Surveys | filter : SearchByStatus : 'Status'"
-                class="shadow-sm mb-3">
-                <accordion [isAnimated]="true"
-                  ><app-survey-card [survey]="survey" [parent]="this" [userType]="'admin'"></app-survey-card
-                ></accordion>
+                *ngFor="let survey of Surveys | filter : SearchByStatus : 'status'"
+                >
+                <div class="mb-1">
+                  <accordion [isAnimated]="true"
+                    ><app-survey-card class="shadow-sm" [survey]="survey" [parent]="this" [userType]="'admin'"></app-survey-card
+                  ></accordion>
+                </div>
               </div>
             </div>
             <button type="button" class="newsurvey-btn btn btn-success me-2" routerLink="/admin/surveys/add">Add survey</button>

@@ -1,7 +1,7 @@
 import { Question } from "./question";
 
 export interface Survey {
-    surveyID: number;
+    surveyID?: number;
     title: string;
     dueDate: Date;
     description: string;
