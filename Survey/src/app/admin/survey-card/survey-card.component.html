@@ -81,7 +81,31 @@
       <div *ngIf="assignedSurvey.completionStatus == 'In-Progress'">
         <h3 class="link-animate" routerLinkActive="" routerLink="fill-out/{{assignedSurvey.surveyID}}">Continue</h3>
       </div>
-      <div *ngIf="assignedSurvey.status == 'Completed'">
+      <div *ngIf="assignedSurvey.completionStatus == 'Completed'">
+        <div>
+          <button type="button" class="btn btn-primary" (click)="openModal(template)">Preview Answers</button>
+          <br>
+          <ng-template #template class="modal">
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Your Answers</h4>
+              <button
+                type="button"
+                class="btn-close close pull-right"
+                aria-label="Close"
+                (click)="modalRef?.hide()">
+                <span aria-hidden="true" class="visually-hidden">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h2> {{assignedSurvey.title}} </h2>
+              <h4> {{assignedSurvey.description}} </h4>
+              <h4> Questions and Your Answers:</h4>
+              <div *ngFor=" let question of userAnswers.questionsAndAnswers" class="row">
+                <h4> {{question.question}} - {{question.answer}}</h4>
+              </div>
+            </div>
+          </ng-template>
+        </div>
         <h3 class="link-animate" routerLink="/survey-results/{{assignedSurvey.surveyID}}">View Results</h3>
       </div>
     </div>

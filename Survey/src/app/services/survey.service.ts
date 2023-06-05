@@ -31,6 +31,10 @@ export class SurveyService {
     return this.http.get<Survey[]>(this.baseURL + "/survey/completeSurveys");
   }
 
+  getSurveyAnswersFromUser(surveyID: number, userName: string) {
+    return this.http.get(this.baseURL + "/survey/user/answers/" + userName + "/" + surveyID);
+  }
+
   getSurveyAnswers(surveyID: number) {
     return this.http.get(this.baseURL + "/survey/answers/" + surveyID);
   }
