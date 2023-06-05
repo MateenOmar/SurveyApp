@@ -22,7 +22,6 @@ export class UserManageComponent implements OnInit {
   }
 
   onDelete(userName: string) {
-    console.log(userName);
     Swal.fire({
       title: "Remove " + userName + " from the system?",
       text: "You won't be able to revert this!",
@@ -33,6 +32,10 @@ export class UserManageComponent implements OnInit {
       confirmButtonText: "Yes, remove",
     }).then((result) => {
       if (result.isConfirmed) {
+        this.users.splice(
+          this.users.findIndex((u) => u.userName == userName),
+          1
+        );
         this.auth.deleteUser(userName).subscribe((res: any) => {});
         Swal.fire("Deleted!", "The user has been removed.", "success");
       }

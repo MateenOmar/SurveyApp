@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
             var signingCredentials = new SigningCredentials(key,SecurityAlgorithms.HmacSha256Signature);
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(1000),
                 SigningCredentials = signingCredentials
             };
 
@@ -72,6 +72,7 @@ namespace WebAPI.Controllers
 
         // POST api/account/register -- Register user
         [HttpPost("register")]
+        [Authorize]
         public async Task<IActionResult> Register(RegisterReqDto registerReq){
             // ApiError apiError = new ApiError();
 
@@ -95,6 +96,7 @@ namespace WebAPI.Controllers
 
         // GET api/account/users -- Get all users
         [HttpGet("users")]
+        [Authorize]
         public async Task<IActionResult> GetUsers() {
             var users = await uow.UserRepository.GetUsersAsync();
             var usersDto = mapper.Map<IEnumerable<UserDto>>(users);
@@ -103,6 +105,7 @@ namespace WebAPI.Controllers
 
         // GET api/account/users/{userName} -- Get user by userName
         [HttpGet("users/{userName}")]
+        [Authorize]
         public async Task<IActionResult> GetUser(string userName) {
             var user = await uow.UserRepository.GetUserAsync(userName);
             var userDto =  mapper.Map<UserDto>(user);
@@ -111,7 +114,7 @@ namespace WebAPI.Controllers
 
         // DELETE api/account/users/delete/{userName} -- Delete user by userName
         [HttpDelete("users/delete/{userName}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> DeleteUser(string userName) {
             uow.UserRepository.DeleteUser(userName);
             await uow.SaveAsync();
@@ -120,7 +123,7 @@ namespace WebAPI.Controllers
 
         // PATCH api/account/users/update/{userName} -- Update user by userName
         [HttpPatch("users/update/{userName}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> UpdateUserPatch(string userName, JsonPatchDocument<User> userToPatch) {
             var userFromDB = await uow.UserRepository.GetUserAsync(userName);
             userToPatch.ApplyTo(userFromDB, ModelState);

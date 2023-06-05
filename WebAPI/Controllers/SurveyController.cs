@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
 
         // GET api/survey/surveys -- Get all surveys, WITHOUT Q&A
         [HttpGet("surveys")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetAllSurveys()
         {
             var surveys = await uow.SurveyRepository.GetAllSurveysAsync();
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
 
         // GET api/survey/completeSurveys -- Get all surveys, WITH Q&A
         [HttpGet("completeSurveys")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetAllCompleteSurveys()
         {
             var surveyIDs = await uow.SurveyRepository.GetAllSurveyIDsAsync();
@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
 
         // GET api/survey/surveys/{id}-- Get survey WITH Q&A using id
         [HttpGet("surveys/{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetSurveyAsync(int id)
         {
             var survey = await uow.SurveyRepository.FindSurvey(id);
@@ -95,6 +95,7 @@ namespace WebAPI.Controllers
 
         // POST api/survey/post -- Post data in JSON format
         [HttpPost("post")]
+        [Authorize]
         public async Task<IActionResult> AddSurvey(SurveyCompleteDto SurveyDto)
         {
             var survey = mapper.Map<Survey>(SurveyDto);
@@ -127,7 +128,7 @@ namespace WebAPI.Controllers
 
         // GET api/survey/answers/{surveyID} -- Get all answers for a survey
         [HttpGet("answers/{surveyID}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetSurveyAnswers(int surveyID)
         {
             var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
@@ -193,6 +194,7 @@ namespace WebAPI.Controllers
 
         }
         [HttpPost("submitAnswers/{username}/{surveyID}/{questionID}/{answerID}")]
+        [Authorize]
         public async Task<IActionResult> AddUserAnswer(int surveyID, int questionID, int answerID, string username) {
             var user = await uow.UserRepository.GetUserAsync(username);
             if (user == null) {
@@ -213,7 +215,7 @@ namespace WebAPI.Controllers
 
         // POST api/survey/submitAnswers -- Add user's answers to survey once submitted
         [HttpPost("submitAnswers")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> ProcessUserAnswers(SurveyUserAnswerDto UserAnswerDto)
         {
             foreach (var userAnswer in UserAnswerDto.questionAndAnswerIDs)
@@ -226,6 +228,7 @@ namespace WebAPI.Controllers
 
         // PUT api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
         [HttpPut("update/{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateSurvey(int id, SurveyDto SurveyDto)
         {
             try {
@@ -247,6 +250,7 @@ namespace WebAPI.Controllers
 
         // PATCH api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
         [HttpPatch("update/{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateSurveyPatch(int id, JsonPatchDocument<Survey> surveyToPatch)
         {
             var surveyFromDB = await uow.SurveyRepository.FindSurvey(id);
@@ -257,6 +261,7 @@ namespace WebAPI.Controllers
 
         // PATCH api/survey/update/{id} -- Update SurveyAssignee information (i.e. title, description, question, answers)
         [HttpPatch("assignee/update/{username}/{surveyID}")]
+        [Authorize]
         public async Task<IActionResult> UpdateSurveyAssigneePatch(int surveyID, string username, JsonPatchDocument<SurveyAssignee> surveyToPatch)
         {
             var user = await uow.UserRepository.GetUserAsync(username);
@@ -273,6 +278,7 @@ namespace WebAPI.Controllers
 
         // DELETE api/survey/delete/{id} -- Delete Survey
         [HttpDelete("delete/{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteSurvey(int id)
         {
             uow.SurveyRepository.DeleteSurvey(id);
@@ -282,7 +288,7 @@ namespace WebAPI.Controllers
 
         // POST api/survey/assign/{surveyID}/{userID} -- Assign survey to user
         [HttpPost("assign/{surveyID}/{userName}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> AssignSurvey(int surveyID, string userName)
         {
             var user = await uow.UserRepository.GetUserAsync(userName);
@@ -305,9 +311,9 @@ namespace WebAPI.Controllers
             return StatusCode(201);
         }
 
-        // POST api/survey/assign/{surveyID} -- Assign survey to multiple users
+        // POST api/survey/assign -- Assign survey to multiple users
         [HttpPost("assign")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> AssignUsersSurvey(SurveyAssignReq surveyAssignReq)
         {
             foreach (var userName in surveyAssignReq.assignees){
@@ -319,7 +325,7 @@ namespace WebAPI.Controllers
 
         // POST api/survey/remove/{surveyID}/{userID} -- Remove survey from user
         [HttpDelete("unassign/{surveyID}/{userName}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> RemoveSurvey(int surveyID, string userName)
         {
             var user = await uow.UserRepository.GetUserAsync(userName);
@@ -337,7 +343,7 @@ namespace WebAPI.Controllers
 
         // GET api/survey/assignees/{surveyID} -- Get all users assigned to survey
         [HttpGet("assignees/{surveyID}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetSurveyAssigneesBySurvey(int surveyID)
         {
             var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
@@ -346,7 +352,7 @@ namespace WebAPI.Controllers
 
         // GET api/survey/assignees/{surveyID} -- Get all users assigned to survey, with their name
         [HttpGet("assignees/name/{surveyID}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetSurveyAssigneesBySurveyWithName(int surveyID)
         {
             var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
@@ -361,7 +367,7 @@ namespace WebAPI.Controllers
 
         // GET api/survey/assignees/user/{userName} -- Get all surveys assigned to user
         [HttpGet("assignees/user/{userName}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetSurveysAssignedToUser(string userName)
         {
             var user = await uow.UserRepository.GetUserAsync(userName);
@@ -382,7 +388,7 @@ namespace WebAPI.Controllers
 
         // GET api/survey/assignees/{username}/{surveyID} -- Get single survey assigned to user
         [HttpGet("assignees/{username}/{surveyID}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetAssignedSurvey(string userName, int surveyID)
         {
             var user = await uow.UserRepository.GetUserAsync(userName);
@@ -396,10 +402,6 @@ namespace WebAPI.Controllers
             var assignedSurveyDto = mapper.Map<SurveyAssigneeDto>(assignedSurvey);
             return Ok(assignedSurveyDto);
         }
-
-        // ---------------------------------------------------------------------------
-
-        // USER FUNCTIONS ----------------------------------------------------------------
 
         public void SendEmail(string email, string name, string surveyName, int surveyID) {
             var smtpClient = new SmtpClient("smtp.gmail.com")
