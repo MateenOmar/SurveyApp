@@ -46,7 +46,6 @@ input[readOnly] {
 }
 
 .btn-primary, .disabled.btn-primary {
-  transition: 0.2s all ease;
   background-color: #ebf0ff;
   border-color: #ebf0ff;
   color: black;

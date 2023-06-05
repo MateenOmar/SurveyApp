@@ -3,10 +3,10 @@
     <div class="card mb-2">
       <div class="card-body">
         <!-- Vertical Navbar -->
-        <div *ngFor="let question of allQuestions">
+        <div *ngFor="let question of allQuestions; let i = index;">
           <div class="card mb-3">
             <div class="card-body p-1 shadow-sm">
-              <h4 class="link-animate text-center" (click)="changeQuestion(question.questionID - 1)">
+              <h4 class="link-animate text-center" [ngClass]="{'highlight': i == 0}" id={{i.toString()}} (click)="changeQuestion(question.questionID - 1)">
                 Question {{question.questionID}}
               </h4>
             </div>
