@@ -81,7 +81,7 @@ export class SurveyResultsComponent implements OnInit {
       for (let i = 0; i < this.surveys.length; i++) {
         if (this.surveys[i].status != "Drafted") {
           this.surveyNames.push(this.surveys[i].title);
-          this.surveyIDs.push(this.surveys[i].surveyID);
+          this.surveyIDs.push(this.surveys[i].surveyID!);
         }
       }
       if (this.currentSurvey != null) {

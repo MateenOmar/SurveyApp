@@ -24,8 +24,12 @@
                       <h5 class="link-animate" (click)="onSelectQuestion(i)">
                         {{ question.question }}
                       </h5>
-                      <div *ngIf="currSurvey.questionsAndAnswers.length > 1" class="mt-auto mb-auto">
-                        <i class="link-animate fas fa-trash fa-xl" (click)="onDeleteQuestion(i)"></i>
+                      <div
+                        *ngIf="currSurvey.questionsAndAnswers.length > 1"
+                        class="mt-auto mb-auto">
+                        <i
+                          class="link-animate fas fa-trash fa-xl"
+                          (click)="onDeleteQuestion(i)"></i>
                       </div>
                     </div>
                   </div>
@@ -51,7 +55,7 @@
                       <div class="error-block" *ngIf="Title.invalid && Title.touched">
                         Please enter a title
                       </div>
-  
+
                       <label for="due">Due date</label>
                       <input
                         type="date"
@@ -78,7 +82,7 @@
                       <div class="error-block" *ngIf="Description.invalid && Description.touched">
                         Please enter description
                       </div>
-  
+
                       <label for="priority">Priority</label>
                       <select
                         class="form-control"
@@ -139,7 +143,11 @@
               <button type="button" class="btn btn-primary me-2" (click)="openModal(template)">
                 Assign users
               </button>
-              <button type="button" class="btn btn-danger" style="float: right" (click)="onDiscard()">
+              <button
+                type="button"
+                class="btn btn-danger"
+                style="float: right"
+                (click)="onDiscard()">
                 Discard
               </button>
             </div>
@@ -148,53 +156,53 @@
       </div>
     </div>
   </div>
-</div>
 
-<ng-template #template class="modal">
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Survey Participants</h4>
-    <button
-      type="button"
-      class="btn-close close pull-right"
-      aria-label="Close"
-      (click)="modalRef?.hide()">
-      <span aria-hidden="true" class="visually-hidden">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <tabset>
-      <tab heading="Invite" id="tab1">
-        <div *ngFor="let user of users" class="row custom-checkbox">
-          <div class="form-group">
-            <p class="user-info">
-              <i class="bi bi-person-fill"></i>
-              {{ user.userName }}
-            </p>
-            <input
-              type="checkbox"
-              name="week"
-              id="{{ user.userName }}"
-              (change)="onChange(user.userName, $any($event.target).checked)" />
-            <label for="{{ user.userName }}" class="float-end"
-              ><i class="bi bi-check-lg"></i
-            ></label>
+  <ng-template #template class="modal">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Survey Participants</h4>
+      <button
+        type="button"
+        class="btn-close close pull-right"
+        aria-label="Close"
+        (click)="modalRef?.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <tabset>
+        <tab heading="Invite" id="tab1">
+          <div *ngFor="let user of users" class="row custom-checkbox">
+            <div class="form-group">
+              <p class="user-info">
+                <i class="bi bi-person-fill"></i>
+                {{ user.userName }}
+              </p>
+              <input
+                type="checkbox"
+                name="week"
+                id="{{ user.userName }}"
+                (change)="onChange(user.userName, $any($event.target).checked)" />
+              <label for="{{ user.userName }}" class="float-end"
+                ><i class="bi bi-check-lg"></i
+              ></label>
+            </div>
           </div>
-        </div>
-        <button type="button" class="btn btn-primary float-end m-1" (click)="invite()">
-          Invite!
-        </button>
-      </tab>
-      <tab heading="Invited">
-        <div *ngFor="let user of addedUsers" class="row custom-checkbox">
-          <div class="form-group">
-            <p class="user-info">
-              <i class="bi bi-person-fill"></i>
-              {{ user }}
-            </p>
-            <label for="{{ user }}" class="float-end"><i class="bi bi-check-lg"></i></label>
+          <button type="button" class="btn btn-primary float-end m-1" (click)="invite()">
+            Invite!
+          </button>
+        </tab>
+        <tab heading="Invited">
+          <div *ngFor="let user of addedUsers" class="row custom-checkbox">
+            <div class="form-group">
+              <p class="user-info">
+                <i class="bi bi-person-fill"></i>
+                {{ user }}
+              </p>
+              <label for="{{ user }}" class="float-end"><i class="bi bi-check-lg"></i></label>
+            </div>
           </div>
-        </div>
-      </tab>
-    </tabset>
-  </div>
-</ng-template>
+        </tab>
+      </tabset>
+    </div>
+  </ng-template>
+</div>

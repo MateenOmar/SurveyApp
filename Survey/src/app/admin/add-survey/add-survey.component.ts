@@ -78,9 +78,9 @@ export class AddSurveyComponent implements OnInit {
             ],
           },
         ],
-      }
-      this.surveyService.getBasicSurveys().subscribe(data => {
-        this.currSurvey.surveyID = data[data.length - 1].surveyID + 1
+      };
+      this.surveyService.getBasicSurveys().subscribe((data) => {
+        this.currSurvey.surveyID = data[data.length - 1].surveyID + 1;
       });
     }
     this.getAddedUsers();
@@ -196,7 +196,7 @@ export class AddSurveyComponent implements OnInit {
 
   generateSurveyID(): number {
     let surveys: BasicSurvey[] = [];
-    this.surveyService.getBasicSurveys().subscribe(data => {
+    this.surveyService.getBasicSurveys().subscribe((data) => {
       surveys = data;
     });
     return surveys[surveys.length - 1].surveyID;
@@ -242,7 +242,7 @@ export class AddSurveyComponent implements OnInit {
 
   invite() {
     this.modalRef?.hide();
-    this.survey.assignSurveyToUsers(this.currSurvey.surveyID, this.addUsers).subscribe((res) => {
+    this.survey.assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers).subscribe((res) => {
       this.addedUsers.push(...this.addUsers);
       this.users = this.users.filter((x) => !this.addedUsers.includes(x.userName));
     });
@@ -259,7 +259,7 @@ export class AddSurveyComponent implements OnInit {
 
   getAddedUsers() {
     this.survey
-      .getSurveyAssigneesBySurveyIDWithName(this.currSurvey.surveyID)
+      .getSurveyAssigneesBySurveyIDWithName(this.currSurvey.surveyID!)
       .subscribe((res: any) => {
         for (let i = 0; i < res.length; i++) {
           this.addedUsers.push(res[i].userName);
