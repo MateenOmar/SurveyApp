@@ -288,6 +288,20 @@ namespace WebAPI.Controllers
             return Ok(assignees);
         }
 
+        [HttpGet("assignees/name/{surveyID}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSurveyAssigneesBySurveyWithName(int surveyID)
+        {
+            var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
+            var users = new List<UserDto>();
+            foreach (var assignee in assignees) {
+                var user = await uow.UserRepository.GetUserNameAsync(assignee.userID);
+                var user2 = mapper.Map<UserDto>(user);
+                users.Add(user2);
+            }
+            return Ok(users);
+        }
+
         // GET api/survey/assignees/user/{userName} -- Get all surveys assigned to user
         [HttpGet("assignees/user/{userName}")]
         [AllowAnonymous]
