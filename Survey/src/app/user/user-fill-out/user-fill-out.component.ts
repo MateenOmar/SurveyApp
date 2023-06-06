@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Answer } from 'src/app/model/answer';
@@ -95,14 +95,14 @@ export class UserFillOutComponent implements OnInit {
               });
             }
           });
-
-          if (this.survey.questionsAndAnswers.length == 1) {
-            let forwardButton = document.getElementById("forward") as HTMLInputElement
-            forwardButton.classList.add("disabled")
-          }
         });
-      },
-      (error) => {
+
+        if (this.survey.questionsAndAnswers.length == 1) {
+          let forwardButton = document.getElementById("forward") as HTMLInputElement;
+          forwardButton.classList.add("disabled");
+        }
+
+      }, error => {
         console.log("httperror:");
         console.log(error);
       }
@@ -133,6 +133,9 @@ export class UserFillOutComponent implements OnInit {
   changeQuestion(questionID: number) {
     // Index is 0-based
     const newQuestion = questionID;
+
+    this.setHighlight(questionID);
+
     let backButton = document.getElementById("back") as HTMLInputElement;
     let forwardButton = document.getElementById("forward") as HTMLInputElement;
 
@@ -223,5 +226,13 @@ export class UserFillOutComponent implements OnInit {
     } else {
       console.log("Cannot submit");
     }
+  }
+
+  setHighlight(newID: number) {
+    let prevItem = document.getElementById(this.currQuestionID.toString());
+    let item = document.getElementById(newID.toString());
+
+    prevItem?.classList.remove("highlight");
+    item?.classList.add("highlight");
   }
 }
