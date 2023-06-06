@@ -27,8 +27,7 @@ export class SurveyCardComponent implements OnInit {
   userAnswers: CompleteUserAnswers;
   loggedInUser: string;
 
-  constructor(private modalService: BsModalService,
-              private surveyService: SurveyService) { }
+  constructor(private modalService: BsModalService, private surveyService: SurveyService) {}
 
   ngOnInit() {}
 
@@ -45,21 +44,18 @@ export class SurveyCardComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
-    
     const userName = localStorage.getItem("userName");
     if (userName !== null) {
       this.loggedInUser = userName;
-    } 
-    else{
+    } else {
       console.error("User is not valid");
     }
-    this.surveyService.getSurveyAnswersFromUser(this.survey.surveyID!, this.loggedInUser).subscribe(
-      (data) => {
+    this.surveyService
+      .getSurveyAnswersFromUser(this.survey.surveyID!, this.loggedInUser)
+      .subscribe((data) => {
         this.userAnswers = data as CompleteUserAnswers;
         console.log(data);
         this.modalRef = this.modalService.show(template, this.config);
-      }
-    )
+      });
   }
-
 }
