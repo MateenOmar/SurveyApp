@@ -22,18 +22,18 @@
             </div> -->
             <div>
               <h2> Status:</h2>
-              <h3 class="link-animate" id="All_Statuses" (click)="setStatusFilter('All_Statuses')">All</h3>
-              <h3 class="link-animate" id="Assigned" (click)="setStatusFilter('Assigned')">Open</h3>
-              <h3 class="link-animate" id="In-Progress" (click)="setStatusFilter('In-Progress')">In-Progress</h3>
-              <h3 class="link-animate" id="Completed" (click)="setStatusFilter('Completed')">Completed</h3>
+              <h3 class="link-animate list-inline-item d-block" id="All_Statuses" (click)="setStatusFilter('All_Statuses')">All</h3>
+              <h3 class="link-animate list-inline-item d-block" id="Assigned" (click)="setStatusFilter('Assigned')">Open</h3>
+              <h3 class="link-animate list-inline-item d-block" id="In-Progress" (click)="setStatusFilter('In-Progress')">In-Progress</h3>
+              <h3 class="link-animate list-inline-item d-block" id="Completed" (click)="setStatusFilter('Completed')">Completed</h3>
             </div>
             <hr />
             <div>
               <h2> Priority:</h2>
-              <h3 class="link-animate" id="All_Priorities" (click)="setPriorityFilter('All_Priorities')">All</h3>
-              <h3 class="link-animate" id="Low" (click)="setPriorityFilter('Low')">Low</h3>
-              <h3 class="link-animate" id="Medium" (click)="setPriorityFilter('Medium')">Medium</h3>
-              <h3 class="link-animate" id="High" (click)="setPriorityFilter('High')">High</h3>
+              <h3 class="link-animate list-inline-item d-block" id="All_Priorities" (click)="setPriorityFilter('All_Priorities')">All</h3>
+              <h3 class="link-animate list-inline-item d-block" id="Low" (click)="setPriorityFilter('Low')">Low</h3>
+              <h3 class="link-animate list-inline-item d-block" id="Medium" (click)="setPriorityFilter('Medium')">Medium</h3>
+              <h3 class="link-animate list-inline-item d-block" id="High" (click)="setPriorityFilter('High')">High</h3>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@
           <div *ngIf="(surveysAssigned | filter:statusFilter:'completionStatus' | filter:priorityFilter:'priority').length === 0">
             <h3> No surveys to display!</h3>
           </div>
-          <div *ngFor="let survey of (surveysAssigned | filter:statusFilter:'completionStatus' | filter:priorityFilter:'priority' )" class="shadow-sm mb-3">
+          <div *ngFor="let survey of (surveysAssigned | filter:statusFilter:'completionStatus' | filter:priorityFilter:'priority' )" class="mb-2">
             <accordion [isAnimated]="true">
               <div *ngIf="survey">
                 <app-survey-card [survey]="survey" [assignedSurvey]="survey" [parent]="this" [userType]="'user'"></app-survey-card>

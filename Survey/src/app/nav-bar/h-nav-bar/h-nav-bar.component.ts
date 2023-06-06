@@ -28,6 +28,11 @@ export class HNavBarComponent implements OnInit {
     if (!this.admin && this.loggedInUser != null) {
       this.getNotifications();
     }
+
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+    this.router.onSameUrlNavigation = "reload";
   }
 
   getNotifications() {

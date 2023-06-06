@@ -438,7 +438,7 @@ namespace WebAPI.Controllers
             <h2>Admin has assigned survey '{surveyName}' to you</h2>
             <p>Click the link below to access it:</p>
             <div style='background-color: #ebf0ff; border-width: 2px; border-color: #a0d2f3; border-style: dashed; width: 40%; padding: 25px; text-align: center'>
-                <a href='http://localhost:4200/fill-out/{surveyID}'><h3>Complete the survey</h3></a>
+                <a href='http://localhost:4200/user/surveys/fill-out/{surveyID}'><h3>Complete the survey</h3></a>
             </div>";
             var msg = new MailMessage("eazy5notifications@gmail.com", email, $"Survey '{surveyName}' is available for you", body);
             msg.IsBodyHtml = true;

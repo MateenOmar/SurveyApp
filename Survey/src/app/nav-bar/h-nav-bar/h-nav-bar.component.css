@@ -1,8 +1,6 @@
 .navbar {
-  margin-left: 20px;
-  margin-right: 20px;
+  background-color: #ebf0ff;
   border-bottom: 3px solid #d3d8ff;
-  border-radius: 5px;
 }
 
 .iconClass {
@@ -41,4 +39,18 @@ li > a {
 .dropDown {
   margin: 0;
   inset: 100% auto auto auto !important;
+}
+
+.nav-item {
+  display: inline-block;
+  background-image: linear-gradient(#d3d8ff 0 0);
+  background-position: 0 100%; /*OR bottom left*/
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s, background-position 0s 0.3s;
+}
+
+.nav-item:hover {
+  background-position: 100% 100%; /*OR bottom right*/
+  background-size: 100% 2px;
 }

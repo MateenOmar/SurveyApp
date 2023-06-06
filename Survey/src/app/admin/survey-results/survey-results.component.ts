@@ -109,11 +109,12 @@ export class SurveyResultsComponent implements OnInit {
       }
 
       for (let i = 0; i < res.length; i++) {
-        for (let j = 0; j < res[0].questionAndAnswerIDs.length; j++)
+        for (let j = 0; j < res[i].questionAndAnswerIDs.length; j++) {
           // @ts-ignore: Argument of type 'string' is not assignable to parameter of type 'number'
           this.surveyData[res[i].questionAndAnswerIDs[j].questionID - 1].data[
             res[i].questionAndAnswerIDs[j].answerID - 1
           ] += 1;
+        }
       }
       this.onQuestionSelect(this.currentQuestion);
     });
