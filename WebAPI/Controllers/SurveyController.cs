@@ -102,7 +102,6 @@ namespace WebAPI.Controllers
             await uow.SaveAsync();
 
             SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
-            Console.WriteLine(questions);
             foreach (JObject q in SurveyDto.questionsAndAnswers) {
                 SurveyQuestion surveyQuestion = new SurveyQuestion();
                 surveyQuestion.questionID = int.Parse(q["questionID"].ToString());
@@ -226,7 +225,7 @@ namespace WebAPI.Controllers
 
         // PUT api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateSurvey(int id, SurveyDto SurveyDto)
+        public async Task<IActionResult> UpdateSurvey(int id, SurveyCompleteDto SurveyDto)
         {
             try {
                 if (id != SurveyDto.surveyID) {
