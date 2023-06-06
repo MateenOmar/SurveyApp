@@ -103,7 +103,6 @@ namespace WebAPI.Controllers
             await uow.SaveAsync();
 
             SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
-            Console.WriteLine(questions);
             foreach (JObject q in SurveyDto.questionsAndAnswers) {
                 SurveyQuestion surveyQuestion = new SurveyQuestion();
                 surveyQuestion.questionID = int.Parse(q["questionID"].ToString());
@@ -229,21 +228,45 @@ namespace WebAPI.Controllers
         // PUT api/survey/update/{id} -- Update Survey information (i.e. title, description, question, answers)
         [HttpPut("update/{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateSurvey(int id, SurveyDto SurveyDto)
+        public async Task<IActionResult> UpdateSurvey(int id, SurveyCompleteDto SurveyDto)
         {
             try {
-                if (id != SurveyDto.surveyID) {
-                    return BadRequest("Update not allowed");
+                // if (id != SurveyDto.surveyID) {
+                //     return BadRequest("Update not allowed");
+                // }
+                var survey = await uow.SurveyRepository.FindSurvey(id);
+                if (survey == null) {
+                    return BadRequest("Update not allowed 2");
                 }
-                var surveyFromDB = await uow.SurveyRepository.FindSurvey(id);
-                if (surveyFromDB == null) {
-                    return BadRequest("Update not allowed");
-                }
-                mapper.Map(SurveyDto, surveyFromDB);
+                uow.SurveyRepository.DeleteSurvey(id);
                 await uow.SaveAsync();
+                mapper.Map(SurveyDto, survey);
+                uow.SurveyRepository.AddSurvey(survey);
+                await uow.SaveAsync();
+                SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
+                Console.WriteLine(questions);
+                foreach (JObject q in SurveyDto.questionsAndAnswers) {
+                    SurveyQuestion surveyQuestion = new SurveyQuestion();
+                    surveyQuestion.questionID = int.Parse(q["questionID"].ToString());
+                    surveyQuestion.surveyID = survey.surveyID;
+                    surveyQuestion.question = q["question"].ToString();
+                    surveyQuestion.numberOfAnswers = int.Parse(q["numberOfAnswers"].ToString());
+                    uow.SurveyRepository.AddSurveyQuestion(surveyQuestion);
+                    await uow.SaveAsync();
+                    JArray qOptions = (JArray) q["options"];
+                    foreach (JObject o in qOptions) {
+                        SurveyOption surveyOption = new SurveyOption();
+                        surveyOption.answerID = int.Parse(o["answerID"].ToString());
+                        surveyOption.surveyID = survey.surveyID;
+                        surveyOption.questionID = surveyQuestion.questionID;
+                        surveyOption.answer = o["answer"].ToString();
+                        uow.SurveyRepository.AddSurveyOption(surveyOption);
+                        await uow.SaveAsync();
+                    }
+            }
                 return StatusCode(200);
-            } catch {
-                return BadRequest(400);
+            } catch (Exception e) {
+                return BadRequest(e);
 
             }
         }

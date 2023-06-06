@@ -5,10 +5,10 @@
 
       <div class="card-body">
         <!-- Vertical Navbar -->
-        <div *ngFor="let question of allQuestions">
+        <div *ngFor="let question of allQuestions; let i = index;">
           <div class="card mb-3">
             <div class="card-body p-1 shadow-sm">
-              <h4 class="link-animate text-center" (click)="changeQuestion(question.questionID - 1)">
+              <h4 class="link-animate text-center" [ngClass]="{'highlight': i == 0}" id={{i.toString()}} (click)="changeQuestion(question.questionID - 1)">
                 Question {{question.questionID}}
               </h4>
             </div>
@@ -50,26 +50,30 @@
         <div class="card-body">
           <div class="col-sm-6 m-auto" *ngIf="survey">
             <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2 form-check" btnRadioGroup>
-              <div class="d-flex justify-content-center">
+              <div class="d-flex justify-content-center align-items-baseline">
                 <input class="form-check-input me-1" type="radio" [id]="answer.answerID" [value]="answer.answerID"
                 (click)="updateSelectedAnswer(answer.answerID)"
                 formControlName="question{{currQuestion.questionID}}">
-                <label class="form-check-label me-2" for="{{answer.answerID}}"> {{ answer.answer }} </label>
+                <label class="form-check-label me-2" for="{{answer.answerID}}" style="font-size: 24px;"> {{ answer.answer }} </label>
               </div>         
             </div>
           </div>
           <div class="form-group col-12 mt-3">
-            <div class="btn-group w-100">
-              <button type="button" class="btn btn-primary col-12 mt-3 me-2 disabled" id="back"
-              (click)="changeQuestion(currQuestionID - 1)">
+            <div *ngIf="totalQuestions > 1" class="btn-group w-100">
+              <button type="button" class="btn btn-primary col-12 mt-3 me-2" id="back"
+              (click)="changeQuestion(currQuestionID - 1)"
+              [disabled]="currQuestionID == 0"
+              [class.disabled-button]="currQuestionID == 0">
                 Back
               </button>
               <button type="button" class="btn btn-primary col-12 mt-3" id="forward"
-              (click)="changeQuestion(currQuestionID + 1)">
+              (click)="changeQuestion(currQuestionID + 1)"
+              [disabled]="currQuestionID == totalQuestions - 1"
+              [class.disabled-button]="currQuestionID == totalQuestions - 1">
                 Next
               </button>
             </div>
-            <button type="button" class="btn btn-light col-12 mt-3"
+            <button type="button" class="btn btn-outline-primary col-12 mt-3"
             (click)="saveAsDraft()">
               Save
             </button>

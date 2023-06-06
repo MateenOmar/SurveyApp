@@ -113,10 +113,19 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onSelectQuestion(id: number) {
-    this.currQuestion = this.currSurvey.questionsAndAnswers.find((q) => {
+    if (this.displayGeneralInfo) {
+      this.displayGeneralInfo = false;
+      document.getElementById("generalInfo")?.classList.remove("highlight");
+    } else {
+      document.getElementById(this.currQuestion.questionID.toString())?.classList.remove("highlight");
+    }
+    this.currQuestion = this.currSurvey.questionsAndAnswers.find(q => {
       return q.questionID == id;
     })!;
-    this.displayGeneralInfo = false;
+    setTimeout(() => {
+      document.getElementById(this.currQuestion.questionID.toString())?.classList.add("highlight");
+    }, 10);
+    
   }
 
   onDeleteQuestion(id: number) {
@@ -152,6 +161,8 @@ export class AddSurveyComponent implements OnInit {
 
   onSelectGeneralInfo() {
     this.displayGeneralInfo = true;
+    document.getElementById(this.currQuestion.questionID.toString())?.classList.remove("highlight");
+    document.getElementById("generalInfo")?.classList.add("highlight")
   }
 
   addWeeks(date: Date, weeks: number) {

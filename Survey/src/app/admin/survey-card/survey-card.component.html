@@ -38,15 +38,12 @@
       <div *ngIf="survey.status == 'Draft'">
         <ul class="list-inline m-auto float-end">
           <li class="list-inline-item">
-            <h3
-              class="link-animate float-end"
-              routerLinkActive=""
-              routerLink="/admin/surveys/edit/{{ survey.surveyID }}">
+            <h3 class="link-animate me-2 float-end" routerLinkActive="" routerLink="/admin/surveys/edit/{{ survey.surveyID }}">
               Edit
             </h3>
           </li>
           <li class="list-inline-item">
-            <h3 class="link-animate float-end" (click)="onPublish()">Publish</h3>
+            <h3 class="link-animate me-2 float-end" (click)="onPublish()">Publish</h3>
           </li>
           <li class="list-inline-item">
             <h3 class="link-animate float-end" (click)="onDelete()">Delete</h3>
@@ -57,9 +54,7 @@
       <div *ngIf="survey.status == 'Published'">
         <ul class="list-inline m-auto float-end">
           <li class="list-inline-item">
-            <h3
-              class="link-animate float-end"
-              routerLink="/admin/surveys/results/{{ survey.surveyID }}">
+            <h3 class="link-animate float-end me-2" routerLink="/admin/surveys/results/{{ survey.surveyID }}">
               View results
             </h3>
           </li>
