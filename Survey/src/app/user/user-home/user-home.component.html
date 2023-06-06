@@ -1,39 +1,28 @@
 <app-h-nav-bar></app-h-nav-bar>
 <div class="row mt-3">
-  <div class="col-sm-2 p-0 me-2">
+  <div class="col-sm-2 p-0 me-3">
     <div class="card mb-2">
-      <div class="card-header">
+      <div class="card-header p-2">
         <h2>Filter</h2>
       </div>
-      <div class="card-body">
+      <div class="card-body p-1 shadow-sm">
         <!-- Vertical Navbar -->
-        <div class="card mb-3">
-          <div class="card-body p-1 shadow-sm">
-                        <!--<div>
-              <label>Sort by &nbsp;</label>
-              <select [(ngModel)]="sortByParam">
-                <option value="Priorty">Priority</option>
-                <option value="Due Date">Due Date</option>
-              </select>
-              <button type="button" (click)="onSortDirection()">
-                <i *ngIf="sortDirection==='asc'" class="fa-solid fa-sort-up"></i>
-                <i *ngIf="sortDirection==='desc'" class="fa-solid fa-sort-down"></i>
-              </button>
-            </div> -->
+        <div class="card m-2">
+          <div class="card-body m-2 p-1">
             <div>
               <h2> Status:</h2>
-              <h3 class="link-animate list-inline-item d-block" id="All_Statuses" (click)="setStatusFilter('All_Statuses')">All</h3>
-              <h3 class="link-animate list-inline-item d-block" id="Assigned" (click)="setStatusFilter('Assigned')">Open</h3>
-              <h3 class="link-animate list-inline-item d-block" id="In-Progress" (click)="setStatusFilter('In-Progress')">In-Progress</h3>
-              <h3 class="link-animate list-inline-item d-block" id="Completed" (click)="setStatusFilter('Completed')">Completed</h3>
+              <h3 class="link-animate list-inline-item d-block mb-2" id="All_Statuses" (click)="setStatusFilter('All_Statuses')">All</h3>
+              <h3 class="link-animate list-inline-item d-block mb-2" id="Assigned" (click)="setStatusFilter('Assigned')">Assigned</h3>
+              <h3 class="link-animate list-inline-item d-block mb-2" id="In-Progress" (click)="setStatusFilter('In-Progress')">In-Progress</h3>
+              <h3 class="link-animate list-inline-item d-block mb-2" id="Completed" (click)="setStatusFilter('Completed')">Completed</h3>
             </div>
-            <hr />
+            <hr/>
             <div>
               <h2> Priority:</h2>
-              <h3 class="link-animate list-inline-item d-block" id="All_Priorities" (click)="setPriorityFilter('All_Priorities')">All</h3>
-              <h3 class="link-animate list-inline-item d-block" id="Low" (click)="setPriorityFilter('Low')">Low</h3>
-              <h3 class="link-animate list-inline-item d-block" id="Medium" (click)="setPriorityFilter('Medium')">Medium</h3>
-              <h3 class="link-animate list-inline-item d-block" id="High" (click)="setPriorityFilter('High')">High</h3>
+              <h3 class="link-animate list-inline-item d-block mb-2" id="All_Priorities" (click)="setPriorityFilter('All_Priorities')">All</h3>
+              <h3 class="link-animate list-inline-item d-block mb-2" id="Low" (click)="setPriorityFilter('Low')">Low</h3>
+              <h3 class="link-animate list-inline-item d-block mb-2" id="Medium" (click)="setPriorityFilter('Medium')">Medium</h3>
+              <h3 class="link-animate list-inline-item d-block mb-2" id="High" (click)="setPriorityFilter('High')">High</h3>
             </div>
           </div>
         </div>
