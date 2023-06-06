@@ -1,11 +1,29 @@
 .navbar {
-  background-color: #ebf0ff;
+  background-color: rgb(12, 117, 173);
   border-bottom: 3px solid #d3d8ff;
 }
 
+.navbar-brand {
+  color: white;
+  margin: 2px;
+}
+
+.dropdown-toggle{
+  color: white !important;
+}
+
+.nav-item .nav-link {
+  color: white;
+}
+
+.nav-link.nav-icon:hover {
+  cursor: pointer;
+}
+
+
 .iconClass {
   position: relative;
-  color: rgba(0, 0, 0, 0.473);
+  color: white;
 }
 
 .iconClass:hover {
@@ -15,7 +33,7 @@
 .iconClass span {
   position: absolute;
   top: 0px;
-  right: 3px;
+  right: 5px;
   display: block;
   color: rgba(255, 0, 0, 0.685);
 }

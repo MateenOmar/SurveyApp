@@ -31,9 +31,7 @@ export class SurveyCardComponent implements OnInit {
   constructor(private modalService: BsModalService,
               private surveyService: SurveyService) { }
 
-  ngOnInit() {
-    console.log(this.assignedSurvey);
-  }
+  ngOnInit() {}
 
   onDelete() {
     this.parent.removeSurvey(this.survey.surveyID, this.survey.title);
