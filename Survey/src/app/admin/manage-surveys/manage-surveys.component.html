@@ -7,7 +7,7 @@
       </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-2 m-auto">
+          <div class="col-2 position-fixed" id="filters">
             <h2 class="link-animate highlight" id="All" (click)="setSurveyFilter('All')">All</h2>
             <h2 class="link-animate" id="Draft" (click)="setSurveyFilter('Draft')">Draft</h2>
             <h2 class="link-animate" id="Published" (click)="setSurveyFilter('Published')">
@@ -18,7 +18,7 @@
             </h2>
           </div>
 
-          <div class="col-10 container-btn pb-5">
+          <div class="col-10 container-btn pb-5 ms-auto">
             <div *ngIf="Surveys.length == 0">
               <h3>There are no surveys to display</h3>
             </div>

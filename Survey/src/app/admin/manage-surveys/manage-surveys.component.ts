@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from "@angular/core";
+import { Component, HostBinding, HostListener, OnInit } from "@angular/core";
 import { Route, Router } from "@angular/router";
 import { BasicSurvey } from "src/app/model/basicSurvey";
 import { Survey } from "src/app/model/survey";
@@ -23,8 +23,19 @@ export class ManageSurveysComponent implements OnInit {
     });
   }
 
+  @HostListener("window:scroll", [])
+  onScrollEvent() {
+    let elem = document.getElementById('filters');
+    console.log(elem!.offsetTop)
+    if (window.scrollY < 60) {
+      elem!.style.top = (129 - window.scrollY) + "px";
+    } else if (elem!.offsetTop == 129) {
+      elem!.style.top = (129 - 60) + "px";
+    }
+  }
+
   removeSurvey(surveyID: number, surveyTitle: string) {
-    this.Surveys = this.Surveys.filter((survey) => survey.title != surveyTitle);
+    this.Surveys = this.Surveys.filter((survey) => survey.surveyID != surveyID);
     this.surveyService.deleteSurvey(surveyID).subscribe();
     this.alertify.success("You have successfully removed survey \"" + surveyTitle + "\"");
   }
