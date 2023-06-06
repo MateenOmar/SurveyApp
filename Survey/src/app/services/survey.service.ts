@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { UserForLogin, UserForRegister } from "../model/user";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { Observable } from "rxjs";
 import { Survey } from "../model/survey";
@@ -10,99 +10,232 @@ import { BasicSurvey } from "../model/basicSurvey";
 @Injectable({
   providedIn: "root",
 })
-
 export class SurveyService {
   baseURL = environment.baseUrl;
   constructor(private http: HttpClient) {}
 
   getBasicSurveys() {
-    return this.http.get<BasicSurvey[]>(this.baseURL + "/survey/surveys");
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.get<BasicSurvey[]>(this.baseURL + "/survey/surveys", httpOptions);
   }
 
   getCompleteSurveys() {
-    return this.http.get<Survey[]>(this.baseURL + "/survey/completeSurveys");
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.get<Survey[]>(this.baseURL + "/survey/completeSurveys", httpOptions);
   }
 
   getCompleteSurveyByID(surveyID: number) {
-    return this.http.get<Survey>(this.baseURL + "/survey/surveys/" + surveyID);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.get<Survey>(this.baseURL + "/survey/surveys/" + surveyID, httpOptions);
   }
 
   getAllCompleteSurveys() {
-    return this.http.get<Survey[]>(this.baseURL + "/survey/completeSurveys");
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.get<Survey[]>(this.baseURL + "/survey/completeSurveys", httpOptions);
+  }
+
+  getSurveyAnswersFromUser(surveyID: number, userName: string) {
+    return this.http.get(this.baseURL + "/survey/user/answers/" + userName + "/" + surveyID);
   }
 
   getSurveyAnswers(surveyID: number) {
-    return this.http.get(this.baseURL + "/survey/answers/" + surveyID);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.get(this.baseURL + "/survey/answers/" + surveyID, httpOptions);
   }
 
   getAssignedSurvey(surveyID: number, userName: string) {
-    return this.http.get(this.baseURL + "/survey/assignees/" + userName + "/" + surveyID);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.get(
+      this.baseURL + "/survey/assignees/" + userName + "/" + surveyID,
+      httpOptions
+    );
   }
 
   getSurveyAssigneesBySurveyID(surveyID: number) {
-    return this.http.get(this.baseURL + "/survey/assignees/" + surveyID);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.get(this.baseURL + "/survey/assignees/" + surveyID, httpOptions);
   }
 
   getSurveyAssigneesBySurveyIDWithName(surveyID: number) {
-    return this.http.get(this.baseURL + "/survey/assignees/name/" + surveyID);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.get(this.baseURL + "/survey/assignees/name/" + surveyID, httpOptions);
   }
 
   getSurveyAssigneesByUser(userName: string) {
-    return this.http.get(this.baseURL + "/survey/assignees/user/" + userName);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.get(this.baseURL + "/survey/assignees/user/" + userName, httpOptions);
   }
 
   assignSurveyToUser(surveyID: number, userName: string) {
-    return this.http.post(this.baseURL + "/survey/assign/" + surveyID + "/" + userName, null);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.post(
+      this.baseURL + "/survey/assign/" + surveyID + "/" + userName,
+      null,
+      httpOptions
+    );
   }
 
   assignSurveyToUsers(surveyID: number, userNames: string[]) {
-    return this.http.post(this.baseURL + "/survey/assign", {
-      surveyID: surveyID,
-      assignees: userNames,
-    });
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.post(
+      this.baseURL + "/survey/assign",
+      {
+        surveyID: surveyID,
+        assignees: userNames,
+      },
+      httpOptions
+    );
   }
 
   unassignSurveyFromUser(surveyID: number, userName: string) {
-    return this.http.delete(this.baseURL + "/survey/unassign/" + surveyID + "/" + userName);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.delete(
+      this.baseURL + "/survey/unassign/" + surveyID + "/" + userName,
+      httpOptions
+    );
   }
 
   submitUserAnswers(userAnswers: UserAnswers) {
-    return this.http.post(this.baseURL + "/survey/submitAnswers", userAnswers);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.post(this.baseURL + "/survey/submitAnswers", userAnswers, httpOptions);
   }
 
   addSurvey(survey: Survey) {
-    return this.http.post(this.baseURL + "/survey/post", this.surveyCleanup(survey));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.post(this.baseURL + "/survey/post", this.surveyCleanup(survey), httpOptions);
   }
 
   updateSurvey(surveyID: number, survey: Survey) {
-    return this.http.put(this.baseURL + "/survey/update/" + surveyID, this.surveyCleanup(survey));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.put(
+      this.baseURL + "/survey/update/" + surveyID,
+      this.surveyCleanup(survey),
+      httpOptions
+    );
   }
 
   patchSurvey(surveyID: number, patchDoc: Array<any>) {
-    return this.http.patch(this.baseURL + "/survey/update/" + surveyID, patchDoc);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.patch(this.baseURL + "/survey/update/" + surveyID, patchDoc, httpOptions);
   }
 
   changeCompletionStatus(surveyID: number, username: string, patchDoc: Object) {
-    return this.http.patch(this.baseURL + "/survey/assignee/update/" + username + "/" + surveyID, patchDoc);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.patch(
+      this.baseURL + "/survey/assignee/update/" + username + "/" + surveyID,
+      patchDoc,
+      httpOptions
+    );
   }
 
   deleteSurvey(surveyID: number) {
-    return this.http.delete(this.baseURL + "/survey/delete/" + surveyID);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.delete(this.baseURL + "/survey/delete/" + surveyID, httpOptions);
   }
 
   surveyCleanup(survey: Survey) {
     //Remove empty options
-    survey.questionsAndAnswers.forEach(qa => {
-      qa.options = qa.options.filter(option => {
-        return option.answer != ""
-      })
+    survey.questionsAndAnswers.forEach((qa) => {
+      qa.options = qa.options.filter((option) => {
+        return option.answer != "";
+      });
       if (qa.options.length == 0) {
         qa.options.push({
           answer: "",
-          answerID: 0
-        })
+          answerID: 0,
+        });
       }
-      qa.numberOfAnswers = qa.options.length
+      qa.numberOfAnswers = qa.options.length;
     });
 
     //Remove questions with empty question values

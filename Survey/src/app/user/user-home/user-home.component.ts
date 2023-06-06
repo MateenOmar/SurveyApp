@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Survey } from "src/app/model/survey";
 import { SurveyService } from "src/app/services/survey.service";
 import { SurveyCardComponent } from "../../admin/survey-card/survey-card.component";
-import { SurveyAssignee } from "src/app/model/surveyAssignee";
+import { AssignedSurvey } from "src/app/model/assignedSurvey";
 
 @Component({
   selector: "app-user-home",
@@ -11,18 +11,22 @@ import { SurveyAssignee } from "src/app/model/surveyAssignee";
   styleUrls: ["./user-home.component.css"],
 })
 export class UserHomeComponent implements OnInit {
-  surveysAssigned: Array<SurveyAssignee>;
+  surveysAssigned: Array<AssignedSurvey>;
   priorityFilter: string = "";
   statusFilter: string = "";
   sortByParam = "";
   sortDirection = "desc";
   loggedInUser: string = "";
 
-  constructor(private surveyService: SurveyService) {
+  constructor(private surveyService: SurveyService, private router: Router) {
     this.surveysAssigned = [];
   }
 
   ngOnInit(): void {
+    if (localStorage.getItem("token") == null || localStorage.getItem("admin") === "true") {
+      this.router.navigate(["/"]);
+    }
+
     let item = document.getElementById("All_Statuses");
     item?.classList.add("highlight");
     item = document.getElementById("All_Priorities");
@@ -31,28 +35,19 @@ export class UserHomeComponent implements OnInit {
     const userName = localStorage.getItem("userName");
     if (userName !== null) {
       this.loggedInUser = userName;
-    } 
-    else{
+    } else {
       console.error("User is not valid");
     }
 
     this.surveyService.getSurveyAssigneesByUser(this.loggedInUser).subscribe(
       (data) => {
-        this.surveysAssigned = data as SurveyAssignee[];
+        this.surveysAssigned = data as AssignedSurvey[];
         console.log(data)
       }, error => {
         console.log("httperror:");
         console.log(error);
       }
-    )
-  }
-
-  onSortDirection() {
-    if (this.sortDirection === "desc") {
-      this.sortDirection = "asc";
-    } else {
-      this.sortDirection = "desc";
-    }
+    );
   }
 
   setStatusFilter(filter: string) {
@@ -62,16 +57,14 @@ export class UserHomeComponent implements OnInit {
     let prevItem;
     if (this.statusFilter === "") {
       prevItem = document.getElementById("All_Statuses");
-    }
-    else {
+    } else {
       prevItem = document.getElementById(this.statusFilter);
     }
     prevItem?.classList.remove("highlight");
 
     if (filter === "All_Statuses") {
       this.statusFilter = "";
-    }
-    else {
+    } else {
       this.statusFilter = filter;
     }
   }
@@ -83,16 +76,14 @@ export class UserHomeComponent implements OnInit {
     let prevItem;
     if (this.priorityFilter === "") {
       prevItem = document.getElementById("All_Priorities");
-    }
-    else {
+    } else {
       prevItem = document.getElementById(this.priorityFilter);
     }
     prevItem?.classList.remove("highlight");
 
     if (filter === "All_Priorities") {
       this.priorityFilter = "";
-    }
-    else {
+    } else {
       this.priorityFilter = filter;
     }
   }
