@@ -238,11 +238,26 @@ namespace WebAPI.Controllers
                 if (survey == null) {
                     return BadRequest("Update not allowed 2");
                 }
+
+                var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(id);
+
                 uow.SurveyRepository.DeleteSurvey(id);
                 await uow.SaveAsync();
                 mapper.Map(SurveyDto, survey);
                 uow.SurveyRepository.AddSurvey(survey);
                 await uow.SaveAsync();
+
+                var usersDto = new List<UserDto>();
+                foreach (var assignee in assignees) {
+                    var user = await uow.UserRepository.GetUserNameAsync(assignee.userID);
+                    var user2 = mapper.Map<UserDto>(user);
+                    usersDto.Add(user2);
+                }
+
+                foreach (var user in usersDto) {
+                    await AssignSurvey(survey.surveyID, user.userName);
+                }
+
                 SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
                 Console.WriteLine(questions);
                 foreach (JObject q in SurveyDto.questionsAndAnswers) {

@@ -41,7 +41,10 @@
 
           <div *ngIf="currentSurvey != undefined">
             <h5 class="ms-2">Question</h5>
-            <div class="question">{{ currentQuestionText }}</div>
+            <div class="question">
+              {{ currentQuestionText }}
+              <span class="float-end me-5">Total Answers: {{ currentQuestionTotal }}</span>
+            </div>
           </div>
 
           <div class="col-2 m-auto">
