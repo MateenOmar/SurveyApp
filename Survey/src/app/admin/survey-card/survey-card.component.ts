@@ -3,7 +3,6 @@ import { Survey } from "src/app/model/survey";
 import { AssignedSurvey } from "src/app/model/assignedSurvey";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { SurveyService } from "src/app/services/survey.service";
-import { CompleteAnsweredQuestions } from "src/app/model/completeAnsweredQuestion";
 import { CompleteUserAnswers } from "src/app/model/completeUserAnswer";
 
 @Component({

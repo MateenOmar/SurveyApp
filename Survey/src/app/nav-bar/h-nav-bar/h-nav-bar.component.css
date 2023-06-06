@@ -5,7 +5,8 @@
 
 .navbar-brand {
   color: white;
-  margin: 2px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .dropdown-toggle{
