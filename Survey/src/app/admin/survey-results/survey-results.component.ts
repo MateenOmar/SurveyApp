@@ -27,6 +27,7 @@ export class SurveyResultsComponent implements OnInit {
   currentSurveyName: string = "Select Survey";
   currentQuestion: number = 0;
   currentQuestionText: string = "";
+  showDetails = true;
   defaultColors = [
     "#3366CC",
     "#DC3912",
@@ -84,7 +85,7 @@ export class SurveyResultsComponent implements OnInit {
           this.surveyIDs.push(this.surveys[i].surveyID!);
         }
       }
-      if (this.currentSurvey != null) {
+      if (this.currentSurveyID != null) {
         this.onSurveySelect(this.currentSurveyID);
       }
     });
@@ -137,14 +138,10 @@ export class SurveyResultsComponent implements OnInit {
       },
       options: this.chartOptions,
     });
+  }
 
-    // this.reportsService.generatePDFContent(
-    //   this.surveys[this.currentSurvey],
-    //   this.surveyData,
-    //   this.surveyLabels,
-    //   this.chart,
-    //   document.getElementById("canvas") as HTMLCanvasElement
-    // );
+  onDetailSelect() {
+    this.showDetails = true;
   }
 
   onTabSelect(event: any) {
@@ -173,15 +170,8 @@ export class SurveyResultsComponent implements OnInit {
     this.surveyQuestions = [];
     this.surveyLabels = [];
     this.surveyData = [];
-    //this.router.navigate(["/admin/surveys/results/" + surveyID]);
     this.location.go("/admin/surveys/results/" + this.currentSurveyID);
     this.populateData();
-
-    // this.reportsService.generateCSVContent(
-    //   this.surveys[this.currentSurvey],
-    //   this.surveyData,
-    //   this.surveyLabels
-    // );
   }
 
   downloadCSV() {

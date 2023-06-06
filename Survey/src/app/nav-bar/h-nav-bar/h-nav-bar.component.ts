@@ -17,7 +17,6 @@ export class HNavBarComponent implements OnInit {
   loggedInUser!: string;
   admin!: boolean;
   constructor(
-    private alertify: AlertifyService,
     private router: Router,
     public auth: AuthService,
     public surveyService: SurveyService
@@ -26,13 +25,9 @@ export class HNavBarComponent implements OnInit {
   ngOnInit() {
     this.loggedInUser = localStorage.getItem("userName")!;
     this.admin = localStorage.getItem("admin") === "true";
-    if (!this.admin) {
+    if (!this.admin && this.loggedInUser != null) {
       this.getNotifications();
     }
-    this.router.routeReuseStrategy.shouldReuseRoute = function () {
-      return false;
-    };
-    this.router.onSameUrlNavigation = "reload";
   }
 
   getNotifications() {

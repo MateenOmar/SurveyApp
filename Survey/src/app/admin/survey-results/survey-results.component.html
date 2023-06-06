@@ -1,8 +1,9 @@
+<app-h-nav-bar></app-h-nav-bar>
 <div class="row mt-3">
   <div class="col-12 m-auto">
     <div class="card">
       <div class="card-header">
-        <h3>{{ currentQuestionText }}</h3>
+        <h3 *ngIf="currentSurvey">{{ currentSurvey.title }}</h3>
         <div *ngIf="currentSurvey" class="btn-group float-end" dropdown>
           <button
             id="button-basic"
@@ -35,6 +36,11 @@
             <tab heading="Pie Graph" id="pie" (selectTab)="onTabSelect($event)"></tab>
           </tabset>
 
+          <div *ngIf="currentSurvey != undefined">
+            <h5 class="ms-2">Question</h5>
+            <div class="question">{{ currentQuestionText }}</div>
+          </div>
+
           <div class="col-2 m-auto">
             <div class="btn-group" dropdown placement="bottom right ">
               <button
@@ -61,16 +67,14 @@
                 </div>
               </ul>
             </div>
-            <h2 *ngIf="currentSurvey != undefined" class="link-animate highlight" id="details">
-              Details
-            </h2>
+
             <div *ngFor="let question of surveyQuestions; let i = index">
               <h2 class="link-animate" id="{{ i }}" (click)="onQuestionSelect(i)">
                 Question {{ i + 1 }}
               </h2>
             </div>
           </div>
-          <div id="graphs" class="col-10 pb-5">
+          <div id="graphs" class="col-10 pb-3">
             <canvas id="canvas"></canvas>
             <canvas [hidden]="true" id="canvas2"></canvas>
           </div>

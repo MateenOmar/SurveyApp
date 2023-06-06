@@ -33,6 +33,9 @@ export class UserEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (localStorage.getItem("token") == null || localStorage.getItem("admin") === "false") {
+      this.router.navigate(["/"]);
+    }
     this.auth.getUserByUser(this.username!).subscribe((res: any) => {
       this.user = res;
       this.createRegistrationForm();

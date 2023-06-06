@@ -39,7 +39,6 @@ export class AddSurveyComponent implements OnInit {
     private router: Router,
     private surveyService: SurveyService,
     private modalService: BsModalService,
-    private survey: SurveyService,
     private auth: AuthService
   ) {}
 
@@ -83,6 +82,7 @@ export class AddSurveyComponent implements OnInit {
         this.currSurvey.surveyID = data[data.length - 1].surveyID + 1;
       });
     }
+
     this.getAddedUsers();
     this.auth.getUsers().subscribe((res: any) => {
       this.users = res as UserData[];
@@ -101,7 +101,13 @@ export class AddSurveyComponent implements OnInit {
     if (this.surveyForEdit) {
       this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe();
     } else {
-      this.surveyService.addSurvey(this.currSurvey).subscribe();
+      this.surveyService.addSurvey(this.currSurvey).subscribe((res) => {
+        console.log(this.addUsers);
+        console.log(this.currSurvey.surveyID);
+        this.surveyService
+          .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
+          .subscribe();
+      });
     }
     this.router.navigate(["/admin/surveys/add/success"], {
       state: { id: this.currSurvey.surveyID },
@@ -109,10 +115,19 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onSelectQuestion(id: number) {
+    if (this.displayGeneralInfo) {
+      this.displayGeneralInfo = false;
+      document.getElementById("generalInfo")?.classList.remove("highlight");
+    } else {
+      document.getElementById(this.currQuestion.questionID.toString())?.classList.remove("highlight");
+    }
     this.currQuestion = this.currSurvey.questionsAndAnswers.find(q => {
-      return q.questionID == id
+      return q.questionID == id;
     })!;
-    this.displayGeneralInfo = false;
+    setTimeout(() => {
+      document.getElementById(this.currQuestion.questionID.toString())?.classList.add("highlight");
+    }, 10);
+    
   }
 
   onDeleteQuestion(id: number) {
@@ -148,6 +163,8 @@ export class AddSurveyComponent implements OnInit {
 
   onSelectGeneralInfo() {
     this.displayGeneralInfo = true;
+    document.getElementById(this.currQuestion.questionID.toString())?.classList.remove("highlight");
+    document.getElementById("generalInfo")?.classList.add("highlight")
   }
 
   addWeeks(date: Date, weeks: number) {
@@ -248,10 +265,10 @@ export class AddSurveyComponent implements OnInit {
 
   invite() {
     this.modalRef?.hide();
-    this.survey.assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers).subscribe((res) => {
-      this.addedUsers.push(...this.addUsers);
-      this.users = this.users.filter((x) => !this.addedUsers.includes(x.userName));
-    });
+    //this.survey.assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers).subscribe((res) => {
+    this.addedUsers.push(...this.addUsers);
+    this.users = this.users.filter((x) => !this.addedUsers.includes(x.userName));
+    //});
     Swal.fire({
       title: "Users invited!",
       icon: "success",
@@ -264,7 +281,7 @@ export class AddSurveyComponent implements OnInit {
   }
 
   getAddedUsers() {
-    this.survey
+    this.surveyService
       .getSurveyAssigneesBySurveyIDWithName(this.currSurvey.surveyID!)
       .subscribe((res: any) => {
         for (let i = 0; i < res.length; i++) {

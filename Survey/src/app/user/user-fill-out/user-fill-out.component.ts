@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Question } from 'src/app/model/question';
@@ -13,10 +13,9 @@ import { SurveyAssignee } from 'src/app/model/surveyAssignee';
   templateUrl: "./user-fill-out.component.html",
   styleUrls: ["./user-fill-out.component.css"],
 })
-
 export class UserFillOutComponent implements OnInit {
-  @ViewChild('radioButtons') radioButtonsRef: ElementRef;
-  
+  @ViewChild("radioButtons") radioButtonsRef: ElementRef;
+
   public surveyID!: number;
   userSubmissionForm: FormGroup = this.formBuilder.group({});;
   allQuestions: Array<Question> = [];
@@ -26,14 +25,20 @@ export class UserFillOutComponent implements OnInit {
   currQuestionID: number = 0;
   survey: Survey;
   loggedInUser: string;
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private surveyService: SurveyService,
-              private alertify: AlertifyService,
-              private formBuilder: FormBuilder) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private surveyService: SurveyService,
+    private alertify: AlertifyService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit() {
-    this.surveyID = +this.route.snapshot.params['id'];
+    if (localStorage.getItem("token") == null || localStorage.getItem("admin") === "true") {
+      this.router.navigate(["/"]);
+    }
+    this.userSubmissionForm = this.formBuilder.group({});
+    this.surveyID = +this.route.snapshot.params["id"];
     const username = localStorage.getItem("userName");
     if (username !== null) {
       this.loggedInUser = username;
@@ -117,8 +122,7 @@ export class UserFillOutComponent implements OnInit {
   }
 
   changeQuestion(questionID: number) {
-    let item = document.getElementById("question" + (this.currQuestionID + 1));
-    item?.classList.remove("highlight");
+    this.setHighlight(questionID);
 
     this.currQuestionID = questionID;
     this.currQuestion = this.allQuestions[this.currQuestionID];
@@ -130,10 +134,15 @@ export class UserFillOutComponent implements OnInit {
 
   updateSelectedAnswer(selectedAnswerID: number) {
     const questionID = this.currQuestionID + 1;
-    const existingAnswer = this.currSubmission.questionAndAnswerIDs.find(item => item.questionID === questionID);
-  
+    const existingAnswer = this.currSubmission.questionAndAnswerIDs.find(
+      (item) => item.questionID === questionID
+    );
+
     if (!existingAnswer) {
-      this.currSubmission.questionAndAnswerIDs.push({ "questionID": questionID, "answerID": selectedAnswerID });
+      this.currSubmission.questionAndAnswerIDs.push({
+        questionID: questionID,
+        answerID: selectedAnswerID,
+      });
     } else {
       existingAnswer.answerID = selectedAnswerID;
       console.log("Answer updated for question ID:", questionID);
@@ -148,7 +157,9 @@ export class UserFillOutComponent implements OnInit {
       userDraft = JSON.parse(existingData);
     }
 
-    const index = userDraft.findIndex((item: UserAnswers) => item.surveyID === this.currSubmission.surveyID);
+    const index = userDraft.findIndex(
+      (item: UserAnswers) => item.surveyID === this.currSubmission.surveyID
+    );
     if (index !== -1) {
       // Item exists, update it
       userDraft[index] = this.currSubmission;
@@ -158,40 +169,50 @@ export class UserFillOutComponent implements OnInit {
     }
 
     localStorage.setItem("userDraft", JSON.stringify(userDraft));
-    var patchDoc = [{
-      "op": "replace",
-      "path": "/completionStatus",
-      "value": "In-Progress"
-    }];
-    this.surveyService.changeCompletionStatus(this.surveyID, this.loggedInUser, patchDoc).subscribe(
-      () => {
-        this.alertify.success('Answers saved as a draft!');
-        this.router.navigate(['/user/surveys']);
+    var patchDoc = [
+      {
+        op: "replace",
+        path: "/completionStatus",
+        value: "In-Progress",
+      },
+    ];
+    this.surveyService
+      .changeCompletionStatus(this.surveyID, this.loggedInUser, patchDoc)
+      .subscribe(() => {
+        this.alertify.success("Answers saved as a draft!");
+        this.router.navigate(["/user/surveys"]);
       });
   }
 
   onSubmit() {
     if (this.userSubmissionForm.valid && this.currQuestionID == this.totalQuestions - 1) {
-      this.surveyService.submitUserAnswers(this.currSubmission).subscribe(
-        () => {
-          this.alertify.success('Answers submitted');
-          console.log(this.userSubmissionForm);
-        }
-      );
-      var patchDoc = [{
-        "op": "replace",
-        "path": "/completionStatus",
-        "value": "Completed"
-      }];
+      this.surveyService.submitUserAnswers(this.currSubmission).subscribe(() => {
+        this.alertify.success("Answers submitted");
+        console.log(this.userSubmissionForm);
+      });
+      var patchDoc = [
+        {
+          op: "replace",
+          path: "/completionStatus",
+          value: "Completed",
+        },
+      ];
 
-      this.surveyService.changeCompletionStatus(this.surveyID, this.currSubmission.username, patchDoc).subscribe(
-        () => {
-          this.router.navigate(['/user/surveys']);
-        }
-      );
-    }
-    else {
+      this.surveyService
+        .changeCompletionStatus(this.surveyID, this.currSubmission.username, patchDoc)
+        .subscribe(() => {
+          this.router.navigate(["/user/surveys"]);
+        });
+    } else {
       console.log("Cannot submit");
     }
+  }
+
+  setHighlight(newID: number) {
+    let prevItem = document.getElementById(this.currQuestionID.toString());
+    let item = document.getElementById(newID.toString());
+
+    prevItem?.classList.remove("highlight");
+    item?.classList.add("highlight");
   }
 }

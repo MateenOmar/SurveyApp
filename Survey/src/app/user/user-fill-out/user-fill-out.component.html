@@ -1,12 +1,14 @@
+<app-h-nav-bar></app-h-nav-bar>
 <div class="row">
   <div class="col-sm-2 p-0 me-2">
     <div class="card mb-2">
+
       <div class="card-body">
         <!-- Vertical Navbar -->
-        <div *ngFor="let question of allQuestions">
+        <div *ngFor="let question of allQuestions; let i = index;">
           <div class="card mb-3">
             <div class="card-body p-1 shadow-sm">
-              <h4 class="link-animate text-center" id="question{{question.questionID}}" (click)="changeQuestion(question.questionID - 1)">
+              <h4 class="link-animate text-center" [ngClass]="{'highlight': i == 0}" id={{i.toString()}} (click)="changeQuestion(question.questionID - 1)">
                 Question {{question.questionID}}
               </h4>
             </div>
@@ -48,11 +50,11 @@
         <div class="card-body">
           <div class="col-sm-6 m-auto" *ngIf="survey">
             <div *ngFor="let answer of currQuestion.options; let i=index" class="mb-2 form-check" btnRadioGroup>
-              <div class="d-flex justify-content-center">
+              <div class="d-flex justify-content-center align-items-baseline">
                 <input class="form-check-input me-1" type="radio" [id]="answer.answerID" [value]="answer.answerID"
                 (click)="updateSelectedAnswer(answer.answerID)"
                 formControlName="question{{currQuestion.questionID}}">
-                <label class="form-check-label me-2" for="{{answer.answerID}}"> {{ answer.answer }} </label>
+                <label class="form-check-label me-2" for="{{answer.answerID}}" style="font-size: 24px;"> {{ answer.answer }} </label>
               </div>         
             </div>
           </div>

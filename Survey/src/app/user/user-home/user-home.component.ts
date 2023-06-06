@@ -15,11 +15,15 @@ export class UserHomeComponent implements OnInit {
   sortDirection = "desc";
   loggedInUser: string = "";
 
-  constructor(private surveyService: SurveyService) {
+  constructor(private surveyService: SurveyService, private router: Router) {
     this.surveysAssigned = [];
   }
 
   ngOnInit(): void {
+    if (localStorage.getItem("token") == null || localStorage.getItem("admin") === "true") {
+      this.router.navigate(["/"]);
+    }
+
     let item = document.getElementById("All_Statuses");
     item?.classList.add("highlight");
     item = document.getElementById("All_Priorities");
@@ -28,8 +32,7 @@ export class UserHomeComponent implements OnInit {
     const userName = localStorage.getItem("userName");
     if (userName !== null) {
       this.loggedInUser = userName;
-    } 
-    else{
+    } else {
       console.error("User is not valid");
     }
 
@@ -41,7 +44,7 @@ export class UserHomeComponent implements OnInit {
         console.log("httperror:");
         console.log(error);
       }
-    )
+    );
   }
 
   setStatusFilter(filter: string) {
@@ -51,16 +54,14 @@ export class UserHomeComponent implements OnInit {
     let prevItem;
     if (this.statusFilter === "") {
       prevItem = document.getElementById("All_Statuses");
-    }
-    else {
+    } else {
       prevItem = document.getElementById(this.statusFilter);
     }
     prevItem?.classList.remove("highlight");
 
     if (filter === "All_Statuses") {
       this.statusFilter = "";
-    }
-    else {
+    } else {
       this.statusFilter = filter;
     }
   }
@@ -72,16 +73,14 @@ export class UserHomeComponent implements OnInit {
     let prevItem;
     if (this.priorityFilter === "") {
       prevItem = document.getElementById("All_Priorities");
-    }
-    else {
+    } else {
       prevItem = document.getElementById(this.priorityFilter);
     }
     prevItem?.classList.remove("highlight");
 
     if (filter === "All_Priorities") {
       this.priorityFilter = "";
-    }
-    else {
+    } else {
       this.priorityFilter = filter;
     }
   }
