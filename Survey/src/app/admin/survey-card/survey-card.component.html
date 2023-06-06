@@ -1,57 +1,73 @@
 <accordion-group [isOpen]="false" #accGroup class="p-1">
   <span class="header" accordion-heading class="float-start" style="width: 100%">
-    <h1 style="display: inline; position: relative; bottom: 7px; font-size: 33px;">{{ survey.title }}</h1>
+    <h2 style="display: inline; position: relative; font-size: 25px">
+      {{ survey.title }} - {{assignedSurvey.completionStatus}}
+    </h2>
     <i
-      class="fa float-end fa-lg pt-3"
+      class="fa float-end fa-lg pt-2"
       [ngClass]="{
         'fas fa-angle-double-up': accGroup?.isOpen,
         'fas fa-angle-double-down': !accGroup?.isOpen
       }"></i>
+    <i
+      *ngIf="survey.priority == 'High'"
+      class="bi bi-exclamation-square-fill float-end me-5"
+      style="color: #f32013; font-size: 25px"></i>
+    <i
+      *ngIf="survey.priority == 'Medium'"
+      class="bi bi-exclamation-square-fill float-end me-5"
+      style="color: #e9d502; font-size: 25px"></i>
   </span>
   <div class="row">
     <div class="col-6">
       <div class="mb-1">
-        <h5 class="d-inline">Description: </h5>
+        <h5 class="d-inline"> Description:&nbsp; </h5>
         <div class="d-inline">{{ survey.description }}</div>
       </div>
       <div>
-        <h5 class="d-inline">Due date: </h5>
+        <h5 class="d-inline"> Due date:&nbsp; </h5>
         <div class="d-inline">{{ survey.dueDate.toString().slice(0, 10) }}</div>
       </div>
     </div>
     <div class="col-6">
       <div class="mb-1">
-        <h5 class="d-inline">Priority: </h5>
+        <h5 class="d-inline">Priority:&nbsp;</h5>
         <div class="d-inline">{{ survey.priority }}</div>
       </div>
       <div>
-        <h5 class="d-inline">Number of questions: </h5>
+        <h5 class="d-inline">Number of questions:&nbsp;</h5>
         <div class="d-inline">{{ survey.numberOfQuestions }}</div>
       </div>
     </div>
   </div>
-  
+
   <div *ngIf="userType === 'admin'">
     <div class="my-auto p-3">
       <div *ngIf="survey.status == 'Draft'">
         <ul class="list-inline m-auto float-end">
           <li class="list-inline-item">
-            <h3 class="link-animate me-2" routerLinkActive="" routerLink="/admin/surveys/edit/{{ survey.surveyID }}">
+            <h3
+              class="link-animate me-2 float-end"
+              routerLinkActive=""
+              routerLink="/admin/surveys/edit/{{ survey.surveyID }}">
               Edit
             </h3>
           </li>
           <li class="list-inline-item">
-            <h3 class="link-animate me-2" (click)="onPublish()">Publish</h3>
+            <h3 class="link-animate me-2 float-end" (click)="onPublish()">Publish</h3>
           </li>
           <li class="list-inline-item">
-            <h3 class="link-animate" (click)="onDelete()">Delete</h3>
+            <h3 class="link-animate float-end" (click)="onDelete()">Delete</h3>
           </li>
+          &nbsp;
         </ul>
       </div>
       <div *ngIf="survey.status == 'Published'">
         <ul class="list-inline m-auto float-end">
           <li class="list-inline-item">
-            <h3 class="link-animate float-end me-2" routerLink="/admin/surveys/results/{{ survey.surveyID }}">
+            <h3
+              class="link-animate float-end me-2"
+              routerLink="/admin/surveys/results/{{ survey.surveyID }}">
               View results
             </h3>
           </li>
@@ -61,30 +77,47 @@
         </ul>
       </div>
       <div *ngIf="survey.status == 'Finished'">
-        <h3 class="link-animate float-end" routerLink="/admin/surveys/results/{{ survey.surveyID }}">
-          View results
-        </h3>
+        <ul class="list-inline m-auto float-end">
+          <li class="list-inline-item">
+            <h3
+              class="link-animate float-end"
+              routerLink="/admin/surveys/results/{{ survey.surveyID }}">
+              View results
+            </h3>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
   <div *ngIf="userType == 'user'">
-    <div class="my-auto p-3">
+    <div class="mt-3 mb-3">
       <div *ngIf="assignedSurvey.completionStatus == 'Assigned'">
-        <ul class="list-inline m-auto">
-          <li class="list-inline-item">
-            <h3 class="link-animate" 
-            routerLinkActive="" routerLink="fill-out/{{assignedSurvey.surveyID}}"
-            >Fill Out</h3>
-          </li>
-        </ul>
+        <button
+        type="button"
+        class="btn btn-primary list-inline-item float-start mb-3"
+        routerLinkActive=""
+        routerLink="fill-out/{{ assignedSurvey.surveyID }}">
+        Fill Out
+        </button>
       </div>
       <div *ngIf="assignedSurvey.completionStatus == 'In-Progress'">
-        <h3 class="link-animate" routerLinkActive="" routerLink="fill-out/{{assignedSurvey.surveyID}}">Continue</h3>
+        <button
+          type="button"
+          class="btn btn-primary float-lg-start mb-3"
+          routerLinkActive=""
+          routerLink="fill-out/{{ assignedSurvey.surveyID }}">
+          Continue
+        </button>
       </div>
       <div *ngIf="assignedSurvey.completionStatus == 'Completed'">
         <div>
-          <button type="button" class="btn btn-primary" (click)="openModal(template)">Preview Answers</button>
-          <br>
+          <button
+            type="button"
+            class="btn btn-primary list-inline-item float-start mb-3"
+            (click)="openModal(template)">
+            Preview Answers
+          </button>
+          <br/>
           <ng-template #template class="modal">
             <div class="modal-header">
               <h4 class="modal-title pull-left">Your Answers</h4>
@@ -97,16 +130,15 @@
               </button>
             </div>
             <div class="modal-body">
-              <h2> {{assignedSurvey.title}} </h2>
-              <h4> {{assignedSurvey.description}} </h4>
-              <h4> Questions and Your Answers:</h4>
-              <div *ngFor=" let question of userAnswers.questionsAndAnswers" class="row">
-                <h4> {{question.question}} - {{question.answer}}</h4>
+              <h2>{{ assignedSurvey.title }}</h2>
+              <h4>{{ assignedSurvey.description }}</h4>
+              <h4>Questions and Your Answers:</h4>
+              <div *ngFor="let question of userAnswers.questionsAndAnswers" class="row">
+                <h4>{{ question.question }} - {{ question.answer }}</h4>
               </div>
             </div>
           </ng-template>
         </div>
-        <h3 class="link-animate" routerLink="/survey-results/{{assignedSurvey.surveyID}}">View Results</h3>
       </div>
     </div>
   </div>

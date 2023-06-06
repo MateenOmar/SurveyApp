@@ -1,12 +1,12 @@
 .container-btn {
-    position: relative;
+  position: relative;
 }
 
 .newsurvey-btn {
-    position: absolute;
-    bottom: 0;
+  position: absolute;
+  bottom: 0;
 }
 
 .card-header {
-    background-color: #212529;
-  }
+  background-color: #a5affd;
+}

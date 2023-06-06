@@ -1,13 +1,30 @@
 .navbar {
-  margin-left: 20px;
-  margin-right: 20px;
+  background-color: rgb(12, 117, 173);
   border-bottom: 3px solid #d3d8ff;
-  border-radius: 5px;
 }
+
+.navbar-brand {
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.dropdown-toggle{
+  color: white !important;
+}
+
+.nav-item .nav-link {
+  color: white;
+}
+
+.nav-link.nav-icon:hover {
+  cursor: pointer;
+}
+
 
 .iconClass {
   position: relative;
-  color: rgba(0, 0, 0, 0.473);
+  color: white;
 }
 
 .iconClass:hover {
@@ -17,7 +34,7 @@
 .iconClass span {
   position: absolute;
   top: 0px;
-  right: 3px;
+  right: 5px;
   display: block;
   color: rgba(255, 0, 0, 0.685);
 }
@@ -41,4 +58,18 @@ li > a {
 .dropDown {
   margin: 0;
   inset: 100% auto auto auto !important;
+}
+
+.nav-item {
+  display: inline-block;
+  background-image: linear-gradient(#d3d8ff 0 0);
+  background-position: 0 100%; /*OR bottom left*/
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s, background-position 0s 0.3s;
+}
+
+.nav-item:hover {
+  background-position: 100% 100%; /*OR bottom right*/
+  background-size: 100% 2px;
 }

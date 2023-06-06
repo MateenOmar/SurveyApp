@@ -7,13 +7,29 @@
       </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-2 position-fixed" id="filters">
-            <h2 class="link-animate highlight" id="All" (click)="setSurveyFilter('All')">All</h2>
-            <h2 class="link-animate" id="Draft" (click)="setSurveyFilter('Draft')">Draft</h2>
-            <h2 class="link-animate" id="Published" (click)="setSurveyFilter('Published')">
+          <div class="col-2 m-auto position-fixed" id="filters">
+            <h2
+              class="link-animate highlight list-inline-item d-block"
+              id="All"
+              (click)="setSurveyFilter('All')">
+              All
+            </h2>
+            <h2
+              class="link-animate list-inline-item d-block"
+              id="Draft"
+              (click)="setSurveyFilter('Draft')">
+              Draft
+            </h2>
+            <h2
+              class="link-animate list-inline-item d-block"
+              id="Published"
+              (click)="setSurveyFilter('Published')">
               Published
             </h2>
-            <h2 class="link-animate" id="Finished" (click)="setSurveyFilter('Finished')">
+            <h2
+              class="link-animate list-inline-item d-block"
+              id="Finished"
+              (click)="setSurveyFilter('Finished')">
               Finished
             </h2>
           </div>

@@ -3,7 +3,6 @@ import { Survey } from "src/app/model/survey";
 import { AssignedSurvey } from "src/app/model/assignedSurvey";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { SurveyService } from "src/app/services/survey.service";
-import { CompleteAnsweredQuestions } from "src/app/model/completeAnsweredQuestion";
 import { CompleteUserAnswers } from "src/app/model/completeUserAnswer";
 
 @Component({
@@ -31,9 +30,7 @@ export class SurveyCardComponent implements OnInit {
   constructor(private modalService: BsModalService,
               private surveyService: SurveyService) { }
 
-  ngOnInit() {
-    console.log(this.assignedSurvey);
-  }
+  ngOnInit() {}
 
   onDelete() {
     this.parent.removeSurvey(this.survey.surveyID, this.survey.title);

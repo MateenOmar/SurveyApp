@@ -21,7 +21,6 @@
 .card-header {
   height: 42px;
   padding: 4px 10px !important;
-  /*background-color: #212529 !important;*/
 }
 
 .link-animate:hover {
@@ -35,6 +34,7 @@
 
 .highlight {
   color: #d3d8ff;
+  text-decoration: underline;
 }
 
 input[readOnly] {
@@ -45,7 +45,9 @@ input[readOnly] {
   transition: 0.2s all ease;
 }
 
-.btn-primary, .disabled.btn-primary {
+.btn-primary,
+.disabled.btn-primary {
+  transition: 0.2s all ease;
   background-color: #ebf0ff;
   border-color: #ebf0ff;
   color: black;
@@ -54,4 +56,20 @@ input[readOnly] {
 .btn-primary:hover {
   background-color: #d3d8ff;
   border-color: #d3d8ff;
+}
+
+.list-inline-item {
+  margin: 0;
+  background-image: linear-gradient(#d3d8ff 0 0);
+  background-position: 0 100%; /*OR bottom left*/
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s, background-position 0s 0.3s;
+  width: fit-content;
+}
+
+.list-inline-item:hover {
+  width: fit-content;
+  background-position: 100% 100%; /*OR bottom right*/
+  background-size: 100% 2px;
 }

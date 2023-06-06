@@ -119,20 +119,24 @@ export class AddSurveyComponent implements OnInit {
   onSubmit() {
     this.currSurvey.status = "Published";
     if (this.surveyForEdit) {
-      this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe(() => {
+      this.surveyService
+        .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
+        .subscribe((res) => {
+          this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe(() => {
         this.router.navigate(["/admin/surveys/add/success"], {
           state: { id: this.currSurvey.surveyID },
         });
-      });
+        });
     } else {
       this.surveyService.addSurvey(this.currSurvey).subscribe((res) => {
-        this.surveyService
-          .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
-          .subscribe(() => {
+        if (this.addUsers.length > 0) {
+          this.surveyService
+            .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
+            .subscribe(() => {
             this.router.navigate(["/admin/surveys/add/success"], {
               state: { id: this.currSurvey.surveyID },
             });
-          });
+        }
       });
     }
   }
@@ -142,15 +146,16 @@ export class AddSurveyComponent implements OnInit {
       this.displayGeneralInfo = false;
       document.getElementById("generalInfo")?.classList.remove("highlight");
     } else {
-      document.getElementById(this.currQuestion.questionID.toString())?.classList.remove("highlight");
+      document
+        .getElementById(this.currQuestion.questionID.toString())
+        ?.classList.remove("highlight");
     }
-    this.currQuestion = this.currSurvey.questionsAndAnswers.find(q => {
+    this.currQuestion = this.currSurvey.questionsAndAnswers.find((q) => {
       return q.questionID == id;
     })!;
     setTimeout(() => {
       document.getElementById(this.currQuestion.questionID.toString())?.classList.add("highlight");
     }, 10);
-    
   }
 
   onDeleteQuestion(id: number) {
@@ -190,7 +195,7 @@ export class AddSurveyComponent implements OnInit {
   onSelectGeneralInfo() {
     this.displayGeneralInfo = true;
     document.getElementById(this.currQuestion.questionID.toString())?.classList.remove("highlight");
-    document.getElementById("generalInfo")?.classList.add("highlight")
+    document.getElementById("generalInfo")?.classList.add("highlight");
   }
 
   addWeeks(date: Date, weeks: number) {
@@ -232,12 +237,21 @@ export class AddSurveyComponent implements OnInit {
     //     );
     //   }
     if (this.surveyForEdit) {
-      this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe(() => {
-        this.router.navigate(["/admin/surveys/manage"]);
-      });
+      this.surveyService
+        .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
+        .subscribe((res) => {
+          this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe(() => {
+            this.router.navigate(["/admin/surveys/manage"]);
+          });
+        });
     } else {
-      this.surveyService.addSurvey(this.currSurvey).subscribe(() => {
+      this.surveyService.addSurvey(this.currSurvey).subscribe((res) => {
         this.router.navigate(["/admin/surveys/manage"]);
+        if (this.addUsers.length > 0) {
+          this.surveyService
+            .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
+            .subscribe();
+        }
       });
     }
   }
@@ -299,15 +313,15 @@ export class AddSurveyComponent implements OnInit {
   }
 
   invite() {
+    console.log(this.addUsers);
+    console.log(this.addedUsers);
     this.modalRef?.hide();
-    //this.survey.assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers).subscribe((res) => {
     this.addedUsers.push(...this.addUsers);
     this.users = this.users.filter((x) => !this.addedUsers.includes(x.userName));
-    //});
     Swal.fire({
       title: "Users invited!",
       icon: "success",
-      timer: 2000,
+      timer: 1000,
       showCancelButton: false,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",

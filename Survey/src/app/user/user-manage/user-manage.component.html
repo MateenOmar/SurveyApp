@@ -7,6 +7,13 @@
       </div>
       <div class="card-body">
         <div class="row">
+          <btn
+            type="button"
+            class="btn btn-primary m-auto mt-3"
+            style="width: 98%"
+            routerLink="/admin/users/manage/register"
+            >Add User</btn
+          >
           <accordion [isAnimated]="true" [closeOthers]="oneAtATime">
             <accordion-group [isOpen]="false" #accGroup *ngFor="let item of users" class="p-1">
               Username: {{ item.userName }} <br />
@@ -24,25 +31,18 @@
               <ul class="list-inline m-auto float-end">
                 <li class="list-inline-item">
                   <h3
-                    class="link-animate"
+                    class="link-animate float-end"
                     routerLinkActive=""
                     routerLink="/admin/users/manage/edit/{{ item.userName }}">
                     Edit
                   </h3>
                 </li>
                 <li class="list-inline-item">
-                  <h3 class="link-animate" (click)="onDelete(item.userName)">Delete</h3>
+                  <h3 class="link-animate float-end" (click)="onDelete(item.userName)">Delete</h3>
                 </li>
               </ul>
             </accordion-group>
           </accordion>
-          <btn
-            type="button"
-            class="btn btn-primary m-auto mt-3"
-            style="width: 98%"
-            routerLink="/admin/users/manage/register"
-            >Add User</btn
-          >
         </div>
       </div>
     </div>

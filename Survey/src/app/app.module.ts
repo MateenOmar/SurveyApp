@@ -74,7 +74,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(appRoutes, { onSameUrlNavigation: "reload" }),
+    RouterModule.forRoot(appRoutes),
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),

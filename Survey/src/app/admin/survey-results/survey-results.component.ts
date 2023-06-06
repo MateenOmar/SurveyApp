@@ -27,6 +27,7 @@ export class SurveyResultsComponent implements OnInit {
   currentSurveyName: string = "Select Survey";
   currentQuestion: number = 0;
   currentQuestionText: string = "";
+  currentQuestionTotal: number = 0;
   showDetails = true;
   defaultColors = [
     "#3366CC",
@@ -109,11 +110,12 @@ export class SurveyResultsComponent implements OnInit {
       }
 
       for (let i = 0; i < res.length; i++) {
-        for (let j = 0; j < res[0].questionAndAnswerIDs.length; j++)
+        for (let j = 0; j < res[i].questionAndAnswerIDs.length; j++) {
           // @ts-ignore: Argument of type 'string' is not assignable to parameter of type 'number'
           this.surveyData[res[i].questionAndAnswerIDs[j].questionID - 1].data[
             res[i].questionAndAnswerIDs[j].answerID - 1
           ] += 1;
+        }
       }
       this.onQuestionSelect(this.currentQuestion);
     });
@@ -152,6 +154,11 @@ export class SurveyResultsComponent implements OnInit {
     document.getElementById("" + this.currentQuestion)?.classList.remove("highlight");
     this.currentQuestion = questionID;
     this.currentQuestionText = this.surveyQuestions[questionID];
+    this.currentQuestionTotal = 0;
+    // @ts-ignore: Argument of type 'string' is not assignable to parameter of type 'number'
+    for (let i = 0; i < this.surveyData[questionID]["data" as keyof object].length; i++) {
+      this.currentQuestionTotal += this.surveyData[questionID]["data" as keyof object][i];
+    }
     this.tabset.tabs[0].active = true;
     document.getElementById("" + questionID)?.classList.add("highlight");
     this.createChart("doughnut");

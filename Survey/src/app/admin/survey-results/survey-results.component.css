@@ -1,7 +1,11 @@
 .question {
   margin-bottom: 20px;
   padding: 10px;
-  border: 2px solid #edc3c2;
+  border: 2px solid #d3d8ff;
   border-radius: 5px;
-  background-color: #f0b70d4d;
+  background-color: #eff1ff;
+}
+
+.card-header {
+  background-color: #a5affd;
 }
