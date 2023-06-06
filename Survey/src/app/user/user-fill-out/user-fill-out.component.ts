@@ -1,10 +1,8 @@
 import { Component, ElementRef, Input, OnInit, QueryList, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Answer } from 'src/app/model/answer';
 import { Question } from 'src/app/model/question';
 import { Survey } from 'src/app/model/survey';
-import { AssignedSurvey } from 'src/app/model/assignedSurvey';
 import { UserAnswers } from 'src/app/model/userAnswers';
 import { AlertifyService } from 'src/app/services/alertify.service';
 import { SurveyService } from 'src/app/services/survey.service';
@@ -19,7 +17,7 @@ export class UserFillOutComponent implements OnInit {
   @ViewChild("radioButtons") radioButtonsRef: ElementRef;
 
   public surveyID!: number;
-  userSubmissionForm!: FormGroup;
+  userSubmissionForm: FormGroup = this.formBuilder.group({});;
   allQuestions: Array<Question> = [];
   totalQuestions: number = 0;
   currSubmission: UserAnswers = { surveyID: 0, username: "", questionAndAnswerIDs: [] };
@@ -44,8 +42,9 @@ export class UserFillOutComponent implements OnInit {
     const username = localStorage.getItem("userName");
     if (username !== null) {
       this.loggedInUser = username;
-    } else {
-      console.error("Invalid");
+    }
+    else {
+      this.alertify.error("Invalid user");
     }
     this.surveyService.getAssignedSurvey(this.surveyID, this.loggedInUser).subscribe(
       (data) => {
@@ -54,63 +53,55 @@ export class UserFillOutComponent implements OnInit {
           this.alertify.error("You already completed this survey!");
           this.router.navigate(["/user/surveys"]);
         }
-      });
-    this.userSubmissionForm = this.formBuilder.group({});
-    // Initialize currSubmission form
-    const currDraft = this.findCurrentDraft();
-    if (currDraft !== null) {
-      this.currSubmission = currDraft;
-      console.log(this.currSubmission);
-    } else {
-      this.currSubmission.surveyID = this.surveyID;
-      this.currSubmission.username = this.loggedInUser;
-    }
+    });
+    this.initializeUserCurrSubmission();
     this.surveyService.getCompleteSurveyByID(this.surveyID).subscribe(
       (data) => {
         this.survey = data;
-        console.log(this.survey);
         this.allQuestions = this.survey.questionsAndAnswers;
         this.totalQuestions = this.allQuestions.length;
         this.currQuestion = this.allQuestions[this.currQuestionID];
 
-        // Initialize form control
-        for (const questionKey in this.allQuestions) {
-          const question = this.allQuestions[questionKey];
-          this.userSubmissionForm.addControl(
-            `question${question.questionID}`,
-            new FormControl(null, Validators.required)
-          );
-        }
-
-        // Fill in existing answers
-        this.allQuestions.forEach((question) => {
-          question.options.forEach((answer) => {
-            if (
-              this.currSubmission.questionAndAnswerIDs.some(
-                (obj) => obj.answerID === answer.answerID && obj.questionID === question.questionID
-              )
-            ) {
-              this.userSubmissionForm.patchValue({
-                ["question" + question.questionID]: answer.answerID,
-              });
-            }
-          });
-        });
-
-        if (this.survey.questionsAndAnswers.length == 1) {
-          let forwardButton = document.getElementById("forward") as HTMLInputElement;
-          forwardButton.classList.add("disabled");
-        }
-
+        this.initializeFormBuilder();
+        let item = document.getElementById("question1");
+        console.log(item);
+        item?.classList.add("highlight");
       }, error => {
         console.log("httperror:");
         console.log(error);
-      }
-    );
-    // console.log(this.allQuestions);
-    // console.log(this.currQuestionID);
-    // console.log(this.currQuestion);
-    // console.log(this.userSubmissionForm);
+      });
+  }
+
+  initializeUserCurrSubmission() {
+    // Initialize currSubmission form
+    const currDraft = this.findCurrentDraft();
+    if (currDraft !== null) {
+        this.currSubmission = currDraft;
+    }
+    else {
+      this.currSubmission.surveyID = this.surveyID;
+      this.currSubmission.username = this.loggedInUser;
+    }
+  }
+
+  initializeFormBuilder() {
+    // Add form controls
+    for (const questionKey in this.allQuestions) {
+      const question = this.allQuestions[questionKey];
+      this.userSubmissionForm.addControl(`question${question.questionID}`, new FormControl(null, Validators.required));
+    }
+
+    // Fill in existing answers
+    this.allQuestions.forEach((question) => {
+      question.options.forEach((answer) => {
+        if (this.currSubmission.questionAndAnswerIDs.some(obj => obj.answerID === answer.answerID &&
+                                                          obj.questionID === question.questionID)) {
+          this.userSubmissionForm.patchValue({
+            ['question' + question.questionID]: answer.answerID
+          });
+        }
+      });
+    });
   }
 
   findCurrentDraft() {
@@ -131,25 +122,14 @@ export class UserFillOutComponent implements OnInit {
   }
 
   changeQuestion(questionID: number) {
-    // Index is 0-based
-    const newQuestion = questionID;
-
     this.setHighlight(questionID);
-
-    let backButton = document.getElementById("back") as HTMLInputElement;
-    let forwardButton = document.getElementById("forward") as HTMLInputElement;
 
     this.currQuestionID = questionID;
     this.currQuestion = this.allQuestions[this.currQuestionID];
-    if (newQuestion == 0) {
-      //this.alertify.error("Invalid");
-      backButton.classList.add("disabled");
-    } else if (newQuestion == this.totalQuestions - 1) {
-      forwardButton.classList.add("disabled");
-    } else {
-      backButton.classList.remove("disabled");
-      forwardButton.classList.remove("disabled");
-    }
+    
+    item = document.getElementById("question" + (this.currQuestionID + 1));
+    console.log(item);
+    item?.classList.add("highlight");
   }
 
   updateSelectedAnswer(selectedAnswerID: number) {

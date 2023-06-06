@@ -103,7 +103,6 @@ namespace WebAPI.Controllers
             await uow.SaveAsync();
 
             SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
-            Console.WriteLine(questions);
             foreach (JObject q in SurveyDto.questionsAndAnswers) {
                 SurveyQuestion surveyQuestion = new SurveyQuestion();
                 surveyQuestion.questionID = int.Parse(q["questionID"].ToString());
