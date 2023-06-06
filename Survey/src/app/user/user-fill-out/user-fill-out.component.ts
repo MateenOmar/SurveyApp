@@ -123,13 +123,8 @@ export class UserFillOutComponent implements OnInit {
 
   changeQuestion(questionID: number) {
     this.setHighlight(questionID);
-
     this.currQuestionID = questionID;
     this.currQuestion = this.allQuestions[this.currQuestionID];
-    
-    item = document.getElementById("question" + (this.currQuestionID + 1));
-    console.log(item);
-    item?.classList.add("highlight");
   }
 
   updateSelectedAnswer(selectedAnswerID: number) {
