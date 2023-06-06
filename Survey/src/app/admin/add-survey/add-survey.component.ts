@@ -18,11 +18,28 @@ import Swal from "sweetalert2";
 import { HttpClient } from "@angular/common/http";
 import { Question } from "src/app/model/question";
 import { BasicSurvey } from "src/app/model/basicSurvey";
+import { animate, state, style, transition, trigger } from "@angular/animations";
 
 @Component({
   selector: "app-add-survey",
   templateUrl: "./add-survey.component.html",
   styleUrls: ["./add-survey.component.css"],
+  animations: [
+    trigger('addNew', [
+      state('start', style({
+        height: '0px',
+        width: '0px',
+        opacity: '0'
+        
+      })),
+      state('end', style({
+        height: '*'
+      })),
+      transition('start => end', [
+        animate('0.4s')
+      ])
+    ])
+  ]
 })
 export class AddSurveyComponent implements OnInit {
   @Input() surveyForEdit: Survey;
@@ -34,6 +51,8 @@ export class AddSurveyComponent implements OnInit {
 
   currQuestion: Question;
   currSurvey: Survey;
+
+  isAdded: boolean[];
 
   constructor(
     private router: Router,
@@ -85,6 +104,8 @@ export class AddSurveyComponent implements OnInit {
         this.currSurvey.surveyID = data[data.length - 1].surveyID + 1;
       });
     }
+    
+    this.isAdded = new Array(this.currSurvey.questionsAndAnswers.length).fill(true)
 
     this.getAddedUsers();
     this.auth.getUsers().subscribe((res: any) => {
@@ -100,27 +121,27 @@ export class AddSurveyComponent implements OnInit {
 
   onSubmit() {
     this.currSurvey.status = "Published";
-    console.log(this.currSurvey);
-    console.log(this.addUsers);
     if (this.surveyForEdit) {
       this.surveyService
         .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
         .subscribe((res) => {
-          this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe();
+          this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe(() => {
+        this.router.navigate(["/admin/surveys/add/success"], {
+          state: { id: this.currSurvey.surveyID },
+        });
         });
     } else {
-      console.log("publish from scratch " + this.currSurvey.surveyID!);
       this.surveyService.addSurvey(this.currSurvey).subscribe((res) => {
         if (this.addUsers.length > 0) {
           this.surveyService
             .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
-            .subscribe();
+            .subscribe(() => {
+            this.router.navigate(["/admin/surveys/add/success"], {
+              state: { id: this.currSurvey.surveyID },
+            });
         }
       });
     }
-    this.router.navigate(["/admin/surveys/add/success"], {
-      state: { id: this.currSurvey.surveyID },
-    });
   }
 
   onSelectQuestion(id: number) {
@@ -142,6 +163,7 @@ export class AddSurveyComponent implements OnInit {
 
   onDeleteQuestion(id: number) {
     this.currSurvey.questionsAndAnswers.splice(id, 1);
+    this.isAdded.splice(0, 1);
   }
 
   onDeleteAnswer(id: number) {
@@ -149,6 +171,7 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onAddQuestion() {
+    this.isAdded.push(false);
     let qid =
       this.currSurvey.questionsAndAnswers[this.currSurvey.questionsAndAnswers.length - 1]
         .questionID + 1;
@@ -164,6 +187,7 @@ export class AddSurveyComponent implements OnInit {
       ],
     });
     this.onSelectQuestion(qid);
+    setTimeout(() => this.isAdded[this.isAdded.length - 1] = true, 1);
   }
 
   onAddAnswer() {
@@ -185,7 +209,11 @@ export class AddSurveyComponent implements OnInit {
 
   setDefaultDate(date: Date) {
     let myDate: HTMLInputElement = document.getElementById("due") as HTMLInputElement;
-    myDate.value = date.toISOString().substring(0, 10);
+    if (date.toString().startsWith("2")) {
+      myDate.value = date.toString().substring(0, 10);
+    } else {
+      myDate.value = date.toISOString().substring(0, 10);
+    }
   }
 
   dueDateValidator(fc: AbstractControl): ValidationErrors | null {
@@ -215,11 +243,13 @@ export class AddSurveyComponent implements OnInit {
       this.surveyService
         .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
         .subscribe((res) => {
-          this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe();
+          this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe(() => {
+            this.router.navigate(["/admin/surveys/manage"]);
+          });
         });
     } else {
-      console.log("save as draft from scratch " + this.currSurvey.surveyID!);
       this.surveyService.addSurvey(this.currSurvey).subscribe((res) => {
+        this.router.navigate(["/admin/surveys/manage"]);
         if (this.addUsers.length > 0) {
           this.surveyService
             .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
@@ -227,15 +257,16 @@ export class AddSurveyComponent implements OnInit {
         }
       });
     }
-    console.log(this.currSurvey);
-    this.router.navigate(["/admin/surveys/manage"]);
   }
 
   onDiscard() {
     if (this.surveyForEdit) {
-      this.surveyService.deleteSurvey(this.currSurvey.surveyID!).subscribe();
+      this.surveyService.deleteSurvey(this.currSurvey.surveyID!).subscribe(() => {
+        this.router.navigate(["/admin/surveys/manage"]);
+      });
+    } else {
+      this.router.navigate(["/admin/surveys/manage"]);
     }
-    this.router.navigate(["/admin/surveys/manage"]);
   }
 
   generateSurveyID(): number {
