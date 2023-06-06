@@ -102,8 +102,6 @@ export class AddSurveyComponent implements OnInit {
       this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe();
     } else {
       this.surveyService.addSurvey(this.currSurvey).subscribe((res) => {
-        console.log(this.addUsers);
-        console.log(this.currSurvey.surveyID);
         this.surveyService
           .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
           .subscribe();
@@ -115,8 +113,8 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onSelectQuestion(id: number) {
-    this.currQuestion = this.currSurvey.questionsAndAnswers.find(q => {
-      return q.questionID == id
+    this.currQuestion = this.currSurvey.questionsAndAnswers.find((q) => {
+      return q.questionID == id;
     })!;
     this.displayGeneralInfo = false;
   }
@@ -191,9 +189,19 @@ export class AddSurveyComponent implements OnInit {
     //     );
     //   }
     if (this.surveyForEdit) {
-      this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe();
+      this.surveyService
+        .updateSurvey(this.currSurvey.surveyID!, this.currSurvey)
+        .subscribe((res) => {
+          this.surveyService
+            .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
+            .subscribe();
+        });
     } else {
-      this.surveyService.addSurvey(this.currSurvey).subscribe();
+      this.surveyService.addSurvey(this.currSurvey).subscribe((res) => {
+        this.surveyService
+          .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
+          .subscribe();
+      });
     }
     console.log(this.currSurvey);
     this.router.navigate(["/admin/surveys/manage"]);
