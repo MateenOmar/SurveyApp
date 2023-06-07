@@ -25,21 +25,24 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
   templateUrl: "./add-survey.component.html",
   styleUrls: ["./add-survey.component.css"],
   animations: [
-    trigger('addNew', [
-      state('start', style({
-        height: '0px',
-        width: '0px',
-        opacity: '0'
-        
-      })),
-      state('end', style({
-        height: '*'
-      })),
-      transition('start => end', [
-        animate('0.4s')
-      ])
-    ])
-  ]
+    trigger("addNew", [
+      state(
+        "start",
+        style({
+          height: "0px",
+          width: "0px",
+          opacity: "0",
+        })
+      ),
+      state(
+        "end",
+        style({
+          height: "*",
+        })
+      ),
+      transition("start => end", [animate("0.4s")]),
+    ]),
+  ],
 })
 export class AddSurveyComponent implements OnInit {
   @Input() surveyForEdit: Survey;
@@ -104,8 +107,8 @@ export class AddSurveyComponent implements OnInit {
         this.currSurvey.surveyID = data[data.length - 1].surveyID + 1;
       });
     }
-    
-    this.isAdded = new Array(this.currSurvey.questionsAndAnswers.length).fill(true)
+
+    this.isAdded = new Array(this.currSurvey.questionsAndAnswers.length).fill(true);
 
     this.getAddedUsers();
     this.auth.getUsers().subscribe((res: any) => {
@@ -124,20 +127,24 @@ export class AddSurveyComponent implements OnInit {
     if (this.surveyForEdit) {
       this.surveyService
         .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
-        .subscribe((res) => {
-          this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe(() => {
-        this.router.navigate(["/admin/surveys/add/success"], {
-          state: { id: this.currSurvey.surveyID },
-        });
+        .subscribe(() => {
+          this.surveyService
+            .updateSurvey(this.currSurvey.surveyID!, this.currSurvey)
+            .subscribe(() => {
+              this.router.navigate(["/admin/surveys/add/success"], {
+                state: { id: this.currSurvey.surveyID },
+              });
+            });
         });
     } else {
-      this.surveyService.addSurvey(this.currSurvey).subscribe((res) => {
+      this.surveyService.addSurvey(this.currSurvey).subscribe(() => {
         if (this.addUsers.length > 0) {
           this.surveyService
             .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
             .subscribe(() => {
-            this.router.navigate(["/admin/surveys/add/success"], {
-              state: { id: this.currSurvey.surveyID },
+              this.router.navigate(["/admin/surveys/add/success"], {
+                state: { id: this.currSurvey.surveyID },
+              });
             });
         }
       });
@@ -187,7 +194,7 @@ export class AddSurveyComponent implements OnInit {
       ],
     });
     this.onSelectQuestion(qid);
-    setTimeout(() => this.isAdded[this.isAdded.length - 1] = true, 1);
+    setTimeout(() => (this.isAdded[this.isAdded.length - 1] = true), 1);
   }
 
   onAddAnswer() {
@@ -243,9 +250,11 @@ export class AddSurveyComponent implements OnInit {
       this.surveyService
         .assignSurveyToUsers(this.currSurvey.surveyID!, this.addUsers)
         .subscribe((res) => {
-          this.surveyService.updateSurvey(this.currSurvey.surveyID!, this.currSurvey).subscribe(() => {
-            this.router.navigate(["/admin/surveys/manage"]);
-          });
+          this.surveyService
+            .updateSurvey(this.currSurvey.surveyID!, this.currSurvey)
+            .subscribe(() => {
+              this.router.navigate(["/admin/surveys/manage"]);
+            });
         });
     } else {
       this.surveyService.addSurvey(this.currSurvey).subscribe((res) => {
@@ -316,8 +325,6 @@ export class AddSurveyComponent implements OnInit {
   }
 
   invite() {
-    console.log(this.addUsers);
-    console.log(this.addedUsers);
     this.modalRef?.hide();
     this.addedUsers.push(...this.addUsers);
     this.users = this.users.filter((x) => !this.addedUsers.includes(x.userName));

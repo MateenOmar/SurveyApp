@@ -1,7 +1,8 @@
 <accordion-group [isOpen]="false" #accGroup class="p-1">
   <span class="header" accordion-heading class="float-start" style="width: 100%">
     <h2 style="display: inline; position: relative; font-size: 25px">
-      {{ survey.title }} - {{assignedSurvey.completionStatus}}
+      {{ survey.title }}
+      <!-- {{ survey.title }} - {{assignedSurvey.completionStatus}} -->
     </h2>
     <i
       class="fa float-end fa-lg pt-2"
@@ -21,11 +22,11 @@
   <div class="row">
     <div class="col-6">
       <div class="mb-1">
-        <h5 class="d-inline"> Description:&nbsp; </h5>
+        <h5 class="d-inline">Description:&nbsp;</h5>
         <div class="d-inline">{{ survey.description }}</div>
       </div>
       <div>
-        <h5 class="d-inline"> Due date:&nbsp; </h5>
+        <h5 class="d-inline">Due date:&nbsp;</h5>
         <div class="d-inline">{{ survey.dueDate.toString().slice(0, 10) }}</div>
       </div>
     </div>
@@ -93,11 +94,11 @@
     <div class="mt-3 mb-3">
       <div *ngIf="assignedSurvey.completionStatus == 'Assigned'">
         <button
-        type="button"
-        class="btn btn-primary list-inline-item float-start mb-3"
-        routerLinkActive=""
-        routerLink="fill-out/{{ assignedSurvey.surveyID }}">
-        Fill Out
+          type="button"
+          class="btn btn-primary list-inline-item float-start mb-3"
+          routerLinkActive=""
+          routerLink="fill-out/{{ assignedSurvey.surveyID }}">
+          Fill Out
         </button>
       </div>
       <div *ngIf="assignedSurvey.completionStatus == 'In-Progress'">
@@ -117,7 +118,7 @@
             (click)="openModal(template)">
             Preview Answers
           </button>
-          <br/>
+          <br />
           <ng-template #template class="modal">
             <div class="modal-header">
               <h4 class="modal-title pull-left">Your Answers</h4>
