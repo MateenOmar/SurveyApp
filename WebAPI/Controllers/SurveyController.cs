@@ -343,8 +343,8 @@ namespace WebAPI.Controllers
             uow.SurveyRepository.AssignUser(surveyAssignee);
             await uow.SaveAsync();
 
-            var survey = await uow.SurveyRepository.FindSurvey(surveyID);
-            SendEmail(user.email, user.userName, survey.title, surveyID);
+            //var survey = await uow.SurveyRepository.FindSurvey(surveyID);
+            //SendEmail(user.email, user.userName, survey.title, surveyID);
 
             return StatusCode(201);
         }
@@ -439,6 +439,22 @@ namespace WebAPI.Controllers
             var assignedSurvey = await uow.SurveyRepository.FindAssignedSurvey(surveyID, userID);
             var assignedSurveyDto = mapper.Map<SurveyAssigneeDto>(assignedSurvey);
             return Ok(assignedSurveyDto);
+        }
+
+        // Post api/survey/email{surveyID} -- Send email to all users assigned to survey
+        [HttpPost("email/{surveyID}")]
+        [Authorize]
+        public async Task<IActionResult> SendEmailToAssignedUsers(int surveyID)
+        {
+            var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
+            var survey = await uow.SurveyRepository.FindSurvey(surveyID);
+            
+            foreach (var assignee in assignees) {
+                var user = await uow.UserRepository.GetUserNameAsync(assignee.userID);
+                SendEmail(user.email, user.userName, survey.title, surveyID);
+            }
+
+            return StatusCode(201);
         }
 
         public void SendEmail(string email, string name, string surveyName, int surveyID) {
