@@ -72,6 +72,12 @@
       <div *ngIf="survey.status == 'Published'">
         <ul class="list-inline m-auto float-start">
           <li class="list-inline-item">
+            <button type="button" class="btn btn-primary list-inline-item float-start mb-3"
+            (click)="openInviteModal(template)">
+              Assign users
+            </button>
+          </li>
+          <li class="list-inline-item">
             <button class="btn btn-primary list-inline-item float-start mb-3"
             routerLink="/admin/surveys/results/{{ survey.surveyID }}">
               View results
@@ -123,7 +129,7 @@
           <button
             type="button"
             class="btn btn-primary list-inline-item float-start mb-3"
-            (click)="openModal(template)">
+            (click)="openAnswersModal(template)">
             Preview Answers
           </button>
           <br />
@@ -151,4 +157,52 @@
       </div>
     </div>
   </div>
+  <ng-template #template class="modal">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Survey Participants</h4>
+      <button
+        type="button"
+        class="btn-close close pull-right"
+        aria-label="Close"
+        (click)="modalRef?.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" style="border-radius: 0px;">
+      <tabset>
+        <tab heading="Invite" id="tab1">
+          <div *ngFor="let user of users" class="row custom-checkbox">
+            <div class="form-group">
+              <p class="user-info">
+                <i class="bi bi-person-fill"></i>
+                {{ user.userName }}
+              </p>
+              <input
+                type="checkbox"
+                name="week"
+                id="{{ user.userName }}"
+                (change)="onChange(user.userName, $any($event.target).checked)" />
+              <label for="{{ user.userName }}" class="float-end"
+                ><i class="bi bi-check-lg"></i
+              ></label>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary float-end m-1" (click)="invite()">
+            Invite!
+          </button>
+        </tab>
+        <tab heading="Invited">
+          <div *ngFor="let user of addedUsers" class="row custom-checkbox">
+            <div class="form-group">
+              <p class="user-info">
+                <i class="bi bi-person-fill"></i>
+                {{ user }}
+              </p>
+              <label for="{{ user }}" class="float-end"><i class="bi bi-check-lg"></i></label>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </ng-template>
 </accordion-group>
