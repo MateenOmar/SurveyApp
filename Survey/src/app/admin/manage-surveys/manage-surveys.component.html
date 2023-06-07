@@ -37,6 +37,14 @@
             Add survey
         </button>
       </div>
+      <div class="card-footer p-4 mt-1">
+        <button
+        type="button"
+        class="newsurvey-btn btn align-content-center btn-success mb-1"
+        routerLink="/admin/surveys/add">
+        Add survey
+      </button>
+      </div>
     </div>
   </div>
   <div class="col-sm-9 p-4">
@@ -48,8 +56,8 @@
         <div class="col-12">
           <div *ngIf="(Surveys | filter : SearchByStatus : 'status').length == 0">
           <h3>There are no surveys to display</h3>
-        </div>
-        <div *ngIf="Surveys.length != 0" class="mb-5">
+          </div>
+        <div *ngIf="Surveys.length != 0">
           <div *ngFor="let survey of Surveys | filter : SearchByStatus : 'status'">
             <div class="mb-3">
               <accordion [isAnimated]="true">
@@ -64,6 +72,5 @@
         </div>
       </div>
     </div>
-  </div>
   </div>
 </div>
