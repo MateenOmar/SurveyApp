@@ -32,12 +32,12 @@ export class ManageSurveysComponent implements OnInit {
 
   @HostListener("window:scroll", [])
   onScrollEvent() {
-    let elem = document.getElementById('filters');
-    console.log(elem!.offsetTop)
+    let elem = document.getElementById("filters");
+    console.log(elem!.offsetTop);
     if (window.scrollY < 60) {
-      elem!.style.top = (129 - window.scrollY) + "px";
+      elem!.style.top = 129 - window.scrollY + "px";
     } else if (elem!.offsetTop == 129) {
-      elem!.style.top = (129 - 60) + "px";
+      elem!.style.top = 129 - 60 + "px";
     }
   }
 
@@ -62,7 +62,9 @@ export class ManageSurveysComponent implements OnInit {
       },
     ];
     console.log(patchDoc);
-    this.surveyService.patchSurvey(surveyID, patchDoc).subscribe();
+    this.surveyService.patchSurvey(surveyID, patchDoc).subscribe(() => {
+      this.surveyService.sendEmails(surveyID).subscribe();
+    });
     this.alertify.success("You have successfully published survey with ID" + surveyID);
   }
 

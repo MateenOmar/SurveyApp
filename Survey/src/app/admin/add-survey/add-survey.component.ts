@@ -135,6 +135,7 @@ export class AddSurveyComponent implements OnInit {
                 state: { id: this.currSurvey.surveyID },
               });
             });
+          this.surveyService.sendEmails(this.currSurvey.surveyID!).subscribe();
         });
     } else {
       this.surveyService.addSurvey(this.currSurvey).subscribe(() => {
@@ -145,6 +146,7 @@ export class AddSurveyComponent implements OnInit {
               this.router.navigate(["/admin/surveys/add/success"], {
                 state: { id: this.currSurvey.surveyID },
               });
+              this.surveyService.sendEmails(this.currSurvey.surveyID!).subscribe();
             });
         }
       });
