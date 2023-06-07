@@ -1,98 +1,41 @@
 <app-h-nav-bar></app-h-nav-bar>
 <div class="row mt-3">
-  <div class="col-sm-2 p-0 me-3">
+  <div class="col-sm-2 p-4 me-3">
     <div class="card mb-2">
-      <div class="card-header p-2">
+      <div class="card-header ">
         <h2>Filter</h2>
       </div>
-      <div class="card-body p-1 shadow-sm">
+      <div class="card-body p-2 m-2">
         <!-- Vertical Navbar -->
-        <div class="card m-2">
-          <div class="card-body m-2 p-1">
-            <div>
-              <h2>Status:</h2>
-              <h3
-                class="link-animate list-inline-item d-block mb-2"
-                id="All_Statuses"
-                (click)="setStatusFilter('All_Statuses')">
-                All
-              </h3>
-              <h3
-                class="link-animate list-inline-item d-block mb-2"
-                id="Assigned"
-                (click)="setStatusFilter('Assigned')">
-                Assigned
-              </h3>
-              <h3
-                class="link-animate list-inline-item d-block mb-2"
-                id="In-Progress"
-                (click)="setStatusFilter('In-Progress')">
-                In-Progress
-              </h3>
-              <h3
-                class="link-animate list-inline-item d-block mb-2"
-                id="Completed"
-                (click)="setStatusFilter('Completed')">
-                Completed
-              </h3>
-            </div>
-            <hr />
-            <div>
-              <h2>Priority:</h2>
-              <h3
-                class="link-animate list-inline-item d-block mb-2"
-                id="All_Priorities"
-                (click)="setPriorityFilter('All_Priorities')">
-                All
-              </h3>
-              <h3
-                class="link-animate list-inline-item d-block mb-2"
-                id="Low"
-                (click)="setPriorityFilter('Low')">
-                Low
-              </h3>
-              <h3
-                class="link-animate list-inline-item d-block mb-2"
-                id="Medium"
-                (click)="setPriorityFilter('Medium')">
-                Medium
-              </h3>
-              <h3
-                class="link-animate list-inline-item d-block mb-2"
-                id="High"
-                (click)="setPriorityFilter('High')">
-                High
-              </h3>
-            </div>
-          </div>
+        <div>
+          <h2> Status:</h2>
+          <h3 class="link-animate list-inline-item d-block mb-2" id="All_Statuses" (click)="setStatusFilter('All_Statuses')">All</h3>
+          <h3 class="link-animate list-inline-item d-block mb-2" id="Assigned" (click)="setStatusFilter('Assigned')">Assigned</h3>
+          <h3 class="link-animate list-inline-item d-block mb-2" id="In-Progress" (click)="setStatusFilter('In-Progress')">In-Progress</h3>
+          <h3 class="link-animate list-inline-item d-block mb-2" id="Completed" (click)="setStatusFilter('Completed')">Completed</h3>
+        </div>
+        <hr/>
+        <div>
+          <h2> Priority:</h2>
+          <h3 class="link-animate list-inline-item d-block mb-2" id="All_Priorities" (click)="setPriorityFilter('All_Priorities')">All</h3>
+          <h3 class="link-animate list-inline-item d-block mb-2" id="Low" (click)="setPriorityFilter('Low')">Low</h3>
+          <h3 class="link-animate list-inline-item d-block mb-2" id="Medium" (click)="setPriorityFilter('Medium')">Medium</h3>
+          <h3 class="link-animate list-inline-item d-block mb-2" id="High" (click)="setPriorityFilter('High')">High</h3>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-sm-9 p-0">
+  <div class="col-sm-9 p-4">
     <div class="card">
       <div class="card-header">
         <h3>View Surveys</h3>
       </div>
       <div class="card-body">
-        <div class="col-10">
-          <div
-            *ngIf="
-              (
-                surveysAssigned
-                | filter : statusFilter : 'completionStatus'
-                | filter : priorityFilter : 'priority'
-              ).length === 0
-            ">
-            <h3>No surveys to display!</h3>
+        <div class="col-12">
+          <div *ngIf="(surveysAssigned | filter:statusFilter:'completionStatus' | filter:priorityFilter:'priority').length === 0">
+            <h3> No surveys to display!</h3>
           </div>
-          <div
-            *ngFor="
-              let survey of surveysAssigned
-                | filter : statusFilter : 'completionStatus'
-                | filter : priorityFilter : 'priority'
-            "
-            class="mb-2">
+          <div *ngFor="let survey of (surveysAssigned | filter:statusFilter:'completionStatus' | filter:priorityFilter:'priority' )" class="mb-3">
             <accordion [isAnimated]="true">
               <div *ngIf="survey">
                 <app-survey-card

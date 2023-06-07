@@ -1,8 +1,10 @@
 <accordion-group [isOpen]="false" #accGroup class="p-1">
   <span class="header" accordion-heading class="float-start" style="width: 100%">
-    <h2 style="display: inline; position: relative; font-size: 25px">
+    <h2 *ngIf="userType == 'user'" style="display: inline; position: relative; font-size: 25px">
+      {{ survey.title }} - {{assignedSurvey.completionStatus}}
+    </h2>
+    <h2 *ngIf="userType == 'admin'" style="display: inline; position: relative; font-size: 25px">
       {{ survey.title }}
-      <!-- {{ survey.title }} - {{assignedSurvey.completionStatus}} -->
     </h2>
     <i
       class="fa float-end fa-lg pt-2"
@@ -45,46 +47,52 @@
   <div *ngIf="userType === 'admin'">
     <div class="my-auto p-3">
       <div *ngIf="survey.status == 'Draft'">
-        <ul class="list-inline m-auto float-end">
+        <ul class="list-inline m-auto float-start">
           <li class="list-inline-item">
-            <h3
-              class="link-animate me-2 float-end"
-              routerLinkActive=""
-              routerLink="/admin/surveys/edit/{{ survey.surveyID }}">
+            <button
+            type="button"
+            class="btn btn-primary list-inline-item float-start mb-3"
+            routerLinkActive="" routerLink="/admin/surveys/edit/{{ survey.surveyID }}">
               Edit
-            </h3>
+            </button>
           </li>
           <li class="list-inline-item">
-            <h3 class="link-animate me-2 float-end" (click)="onPublish()">Publish</h3>
+            <button 
+            class="btn btn-primary list-inline-item float-start mb-3"
+            (click)="onPublish()">Publish</button>
           </li>
           <li class="list-inline-item">
-            <h3 class="link-animate float-end" (click)="onDelete()">Delete</h3>
+            <button 
+            class="btn btn-primary list-inline-item float-start mb-3"
+            (click)="onDelete()">Delete</button>
           </li>
           &nbsp;
         </ul>
       </div>
       <div *ngIf="survey.status == 'Published'">
-        <ul class="list-inline m-auto float-end">
+        <ul class="list-inline m-auto float-start">
           <li class="list-inline-item">
-            <h3
-              class="link-animate float-end me-2"
-              routerLink="/admin/surveys/results/{{ survey.surveyID }}">
+            <button class="btn btn-primary list-inline-item float-start mb-3"
+            routerLink="/admin/surveys/results/{{ survey.surveyID }}">
               View results
-            </h3>
+            </button>
           </li>
           <li class="list-inline-item">
-            <h3 class="link-animate float-end" (click)="onClose()">Close survey</h3>
+            <button class="btn btn-primary list-inline-item float-start mb-3"
+            (click)="onClose()">
+            Close survey
+            </button>
           </li>
         </ul>
       </div>
       <div *ngIf="survey.status == 'Finished'">
         <ul class="list-inline m-auto float-end">
           <li class="list-inline-item">
-            <h3
-              class="link-animate float-end"
+            <button
+              class="btn btn-primary list-inline-item float-start mb-3"
               routerLink="/admin/surveys/results/{{ survey.surveyID }}">
               View results
-            </h3>
+            </button>
           </li>
         </ul>
       </div>
