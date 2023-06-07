@@ -30,15 +30,15 @@
 
               <ul class="list-inline m-auto float-end">
                 <li class="list-inline-item">
-                  <h3
-                    class="link-animate float-end"
+                  <button
+                    class="btn btn-primary list-inline-item float-start mb-3"
                     routerLinkActive=""
                     routerLink="/admin/users/manage/edit/{{ item.userName }}">
                     Edit
-                  </h3>
+                  </button>
                 </li>
                 <li class="list-inline-item">
-                  <h3 class="link-animate float-end" (click)="onDelete(item.userName)">Delete</h3>
+                  <button class="btn btn-primary list-inline-item float-start mb-3" (click)="onDelete(item.userName)">Delete</button>
                 </li>
               </ul>
             </accordion-group>
