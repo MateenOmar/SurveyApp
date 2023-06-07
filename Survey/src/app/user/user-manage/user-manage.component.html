@@ -9,7 +9,7 @@
         <div class="row">
           <btn
             type="button"
-            class="btn btn-primary m-auto mt-3"
+            class="btn btn-success m-auto mt-3 mb-3"
             style="width: 98%"
             routerLink="/admin/users/manage/register"
             >Add User</btn
@@ -38,7 +38,7 @@
                   </button>
                 </li>
                 <li class="list-inline-item">
-                  <button class="btn btn-primary list-inline-item float-start mb-3" (click)="onDelete(item.userName)">Delete</button>
+                  <button class="btn btn-danger list-inline-item float-start mb-3" (click)="onDelete(item.userName)">Delete</button>
                 </li>
               </ul>
             </accordion-group>
