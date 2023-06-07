@@ -238,11 +238,26 @@ namespace WebAPI.Controllers
                 if (survey == null) {
                     return BadRequest("Update not allowed 2");
                 }
+
+                var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(id);
+
                 uow.SurveyRepository.DeleteSurvey(id);
                 await uow.SaveAsync();
                 mapper.Map(SurveyDto, survey);
                 uow.SurveyRepository.AddSurvey(survey);
                 await uow.SaveAsync();
+
+                var usersDto = new List<UserDto>();
+                foreach (var assignee in assignees) {
+                    var user = await uow.UserRepository.GetUserNameAsync(assignee.userID);
+                    var user2 = mapper.Map<UserDto>(user);
+                    usersDto.Add(user2);
+                }
+
+                foreach (var user in usersDto) {
+                    await AssignSurvey(survey.surveyID, user.userName);
+                }
+
                 SurveyQuestion[] questions = new SurveyQuestion[SurveyDto.questionsAndAnswers.Count];
                 Console.WriteLine(questions);
                 foreach (JObject q in SurveyDto.questionsAndAnswers) {
@@ -328,8 +343,8 @@ namespace WebAPI.Controllers
             uow.SurveyRepository.AssignUser(surveyAssignee);
             await uow.SaveAsync();
 
-            var survey = await uow.SurveyRepository.FindSurvey(surveyID);
-            SendEmail(user.email, user.userName, survey.title, surveyID);
+            //var survey = await uow.SurveyRepository.FindSurvey(surveyID);
+            //SendEmail(user.email, user.userName, survey.title, surveyID);
 
             return StatusCode(201);
         }
@@ -424,6 +439,22 @@ namespace WebAPI.Controllers
             var assignedSurvey = await uow.SurveyRepository.FindAssignedSurvey(surveyID, userID);
             var assignedSurveyDto = mapper.Map<SurveyAssigneeDto>(assignedSurvey);
             return Ok(assignedSurveyDto);
+        }
+
+        // Post api/survey/email{surveyID} -- Send email to all users assigned to survey
+        [HttpPost("email/{surveyID}")]
+        [Authorize]
+        public async Task<IActionResult> SendEmailToAssignedUsers(int surveyID)
+        {
+            var assignees = await uow.SurveyRepository.GetSurveyAssigneesBySurveyAsync(surveyID);
+            var survey = await uow.SurveyRepository.FindSurvey(surveyID);
+            
+            foreach (var assignee in assignees) {
+                var user = await uow.UserRepository.GetUserNameAsync(assignee.userID);
+                SendEmail(user.email, user.userName, survey.title, surveyID);
+            }
+
+            return StatusCode(201);
         }
 
         public void SendEmail(string email, string name, string surveyName, int surveyID) {

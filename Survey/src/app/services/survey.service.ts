@@ -142,6 +142,16 @@ export class SurveyService {
     );
   }
 
+  sendEmails(surveyID: number) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      }),
+    };
+
+    return this.http.post(this.baseURL + "/survey/email/" + surveyID, null, httpOptions);
+  }
+
   unassignSurveyFromUser(surveyID: number, userName: string) {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -240,7 +250,7 @@ export class SurveyService {
 
     //Remove questions with empty question values
     if (survey.questionsAndAnswers.length > 1) {
-      survey.questionsAndAnswers = survey.questionsAndAnswers.filter(qa => {
+      survey.questionsAndAnswers = survey.questionsAndAnswers.filter((qa) => {
         return qa.question != "";
       });
     }

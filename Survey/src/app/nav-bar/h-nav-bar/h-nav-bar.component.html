@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-lg fixed-top">
   <div class="container-fluid">
     <a *ngIf="admin" class="navbar-brand" routerLink="/admin/surveys/manage">
-      <p [class.navbar-brand]="true"> EAZY5</p> </a>
+      <p [class.navbar-brand]="true">EAZY5</p>
+    </a>
     <a *ngIf="!admin" class="navbar-brand" routerLink="/user/surveys">EAZY5 </a>
     <button
       class="navbar-toggler"
@@ -46,7 +47,8 @@
               ><i class="fa fa-bell-o pt-2 fa-lg"></i>
               <span *ngIf="notifications && !admin" class="bi bi-badge bs-danger">{{
                 notifications
-              }}</span></a>
+              }}</span></a
+            >
 
             <ul
               *dropdownMenu

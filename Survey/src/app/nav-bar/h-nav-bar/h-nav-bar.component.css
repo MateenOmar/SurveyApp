@@ -1,6 +1,5 @@
 .navbar {
   background-color: rgb(12, 117, 173);
-  border-bottom: 3px solid #d3d8ff;
 }
 
 .navbar-brand {
@@ -9,7 +8,7 @@
   margin-right: 10px;
 }
 
-.dropdown-toggle{
+.dropdown-toggle {
   color: white !important;
 }
 
@@ -20,7 +19,6 @@
 .nav-link.nav-icon:hover {
   cursor: pointer;
 }
-
 
 .iconClass {
   position: relative;

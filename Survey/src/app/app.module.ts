@@ -31,21 +31,34 @@ import { UserFillOutComponent } from "./user/user-fill-out/user-fill-out.compone
 import { AssignSurveyComponent } from "./admin/assign-survey/assign-survey.component";
 import { SurveyLinkComponent } from "./admin/survey-link/survey-link.component";
 import { AuthService } from "./services/auth.service";
+import { AuthGuard } from "./guards/auth.guard";
 
 const appRoutes: Routes = [
   { path: "", component: UserLoginComponent },
-  { path: "admin/users/manage/register", component: UserAddComponent },
-  { path: "admin/surveys/manage", component: ManageSurveysComponent },
-  { path: "admin/surveys/add", component: AddSurveyComponent },
-  { path: "admin/surveys/add/success", component: SurveyLinkComponent },
-  { path: "admin/surveys/add/assign-survey", component: AssignSurveyComponent },
-  { path: "admin/surveys/edit/:id", component: EditSurveyComponent },
-  { path: "admin/surveys/results", component: SurveyResultsComponent },
-  { path: "admin/surveys/results/:id", component: SurveyResultsComponent },
-  { path: "admin/users/manage", component: UserManageComponent },
-  { path: "admin/users/manage/edit/:userName", component: UserEditComponent },
-  { path: "user/surveys/fill-out/:id", component: UserFillOutComponent },
-  { path: "user/surveys", component: UserHomeComponent },
+  { path: "admin/users/manage/register", component: UserAddComponent, canActivate: [AuthGuard] },
+  { path: "admin/surveys/manage", component: ManageSurveysComponent, canActivate: [AuthGuard] },
+  { path: "admin/surveys/add", component: AddSurveyComponent, canActivate: [AuthGuard] },
+  { path: "admin/surveys/add/success", component: SurveyLinkComponent, canActivate: [AuthGuard] },
+  {
+    path: "admin/surveys/add/assign-survey",
+    component: AssignSurveyComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: "admin/surveys/edit/:id", component: EditSurveyComponent, canActivate: [AuthGuard] },
+  { path: "admin/surveys/results", component: SurveyResultsComponent, canActivate: [AuthGuard] },
+  {
+    path: "admin/surveys/results/:id",
+    component: SurveyResultsComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: "admin/users/manage", component: UserManageComponent, canActivate: [AuthGuard] },
+  {
+    path: "admin/users/manage/edit/:userName",
+    component: UserEditComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: "user/surveys/fill-out/:id", component: UserFillOutComponent, canActivate: [AuthGuard] },
+  { path: "user/surveys", component: UserHomeComponent, canActivate: [AuthGuard] },
   { path: "**", component: UserLoginComponent },
 ];
 
@@ -83,7 +96,7 @@ const appRoutes: Routes = [
     ModalModule.forRoot(),
     ProgressbarModule.forRoot(),
   ],
-  providers: [AlertifyService, SurveyService, AuthService, BsModalService],
+  providers: [AlertifyService, SurveyService, AuthService, BsModalService, AuthGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

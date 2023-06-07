@@ -27,6 +27,7 @@ export class SurveyResultsComponent implements OnInit {
   currentSurveyName: string = "Select Survey";
   currentQuestion: number = 0;
   currentQuestionText: string = "";
+  currentQuestionTotal: number = 0;
   showDetails = true;
   defaultColors = [
     "#3366CC",
@@ -59,6 +60,9 @@ export class SurveyResultsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (localStorage.getItem("token") == null || localStorage.getItem("admin") === "false") {
+      this.router.navigate(["/"]);
+    }
     this.getSurveys();
   }
 
@@ -153,6 +157,11 @@ export class SurveyResultsComponent implements OnInit {
     document.getElementById("" + this.currentQuestion)?.classList.remove("highlight");
     this.currentQuestion = questionID;
     this.currentQuestionText = this.surveyQuestions[questionID];
+    this.currentQuestionTotal = 0;
+    // @ts-ignore: Argument of type 'string' is not assignable to parameter of type 'number'
+    for (let i = 0; i < this.surveyData[questionID]["data" as keyof object].length; i++) {
+      this.currentQuestionTotal += this.surveyData[questionID]["data" as keyof object][i];
+    }
     this.tabset.tabs[0].active = true;
     document.getElementById("" + questionID)?.classList.add("highlight");
     this.createChart("doughnut");

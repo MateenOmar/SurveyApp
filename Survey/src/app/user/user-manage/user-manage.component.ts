@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
+import { Router } from "@angular/router";
 import { AccordionConfig } from "ngx-bootstrap/accordion";
 import { UserData } from "src/app/model/user";
 import { AuthService } from "src/app/services/auth.service";
@@ -13,9 +14,12 @@ export class UserManageComponent implements OnInit {
   oneAtATime = true;
   isContentOpen: boolean = false;
   users: UserData[];
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, public router: Router) {}
 
   ngOnInit() {
+    if (localStorage.getItem("token") == null || localStorage.getItem("admin") === "false") {
+      this.router.navigate(["/"]);
+    }
     this.auth.getUsers().subscribe((res: any) => {
       this.users = res as UserData[];
     });

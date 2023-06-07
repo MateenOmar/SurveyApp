@@ -7,6 +7,13 @@
       </div>
       <div class="card-body">
         <div class="row">
+          <btn
+            type="button"
+            class="btn btn-primary m-auto mt-3"
+            style="width: 98%"
+            routerLink="/admin/users/manage/register"
+            >Add User</btn
+          >
           <accordion [isAnimated]="true" [closeOthers]="oneAtATime">
             <accordion-group [isOpen]="false" #accGroup *ngFor="let item of users" class="p-1">
               Username: {{ item.userName }} <br />
@@ -36,13 +43,6 @@
               </ul>
             </accordion-group>
           </accordion>
-          <btn
-            type="button"
-            class="btn btn-primary m-auto mt-3"
-            style="width: 98%"
-            routerLink="/admin/users/manage/register"
-            >Add User</btn
-          >
         </div>
       </div>
     </div>
