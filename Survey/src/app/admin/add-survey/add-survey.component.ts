@@ -132,10 +132,10 @@ export class AddSurveyComponent implements OnInit {
             .updateSurvey(this.currSurvey.surveyID!, this.currSurvey)
             .subscribe(() => {
               this.router.navigate(["/admin/surveys/add/success"], {
-                state: { id: this.currSurvey.surveyID },
+                state: { id: this.currSurvey.surveyID! + 1},
               });
             });
-          this.surveyService.sendEmails(this.currSurvey.surveyID!).subscribe();
+          this.surveyService.sendEmails(this.currSurvey.surveyID! + 1).subscribe();
         });
     } else {
       this.surveyService.addSurvey(this.currSurvey).subscribe(() => {

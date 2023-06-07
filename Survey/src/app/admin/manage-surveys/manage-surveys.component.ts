@@ -34,10 +34,10 @@ export class ManageSurveysComponent implements OnInit {
   onScrollEvent() {
     let elem = document.getElementById("filters");
     console.log(elem!.offsetTop);
-    if (window.scrollY < 60) {
-      elem!.style.top = 129 - window.scrollY + "px";
-    } else if (elem!.offsetTop == 129) {
-      elem!.style.top = 129 - 60 + "px";
+    if (window.scrollY < 20) {
+      elem!.style.top = 94 - window.scrollY + "px";
+    } else if (elem!.offsetTop == 94) {
+      elem!.style.top = 94 - 20 + "px";
     }
   }
 
@@ -61,11 +61,13 @@ export class ManageSurveysComponent implements OnInit {
         value: "Published",
       },
     ];
-    console.log(patchDoc);
     this.surveyService.patchSurvey(surveyID, patchDoc).subscribe(() => {
-      this.surveyService.sendEmails(surveyID).subscribe();
+      this.surveyService.sendEmails(surveyID).subscribe(() => {
+        this.router.navigate(["/admin/surveys/add/success"], {
+          state: { id: surveyID},
+        });
+      });
     });
-    this.alertify.success("You have successfully published survey with ID" + surveyID);
   }
 
   closeSurvey(surveyID: number) {

@@ -73,3 +73,9 @@ input[readOnly] {
   background-position: 100% 100%; /*OR bottom right*/
   background-size: 100% 2px;
 }
+
+.btn-success {
+  border-color: #affda5;
+  background-color: #affda5;
+  color: black;
+}

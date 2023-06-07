@@ -1,7 +1,7 @@
 <app-h-nav-bar></app-h-nav-bar>
 <div class="row mt-3">
   <div class="col-sm-2 p-4 me-3">
-    <div class="card mb-2">
+    <div class="card mb-2 position-fixed" id="filters">
       <div class="card-header p-2">
         <h2>Filter</h2>
       </div>
@@ -30,6 +30,12 @@
           (click)="setSurveyFilter('Finished')">
           Finished
         </h2>
+        <button
+            type="button"
+            class="newsurvey-btn btn btn-success"
+            routerLink="/admin/surveys/add">
+            Add survey
+        </button>
       </div>
     </div>
   </div>
@@ -55,12 +61,6 @@
               </accordion>
             </div>
           </div>
-          <button
-            type="button"
-            class="newsurvey-btn btn btn-success mt-10 mb-3"
-            routerLink="/admin/surveys/add">
-            Add survey
-          </button>
         </div>
       </div>
     </div>
